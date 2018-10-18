@@ -10,7 +10,6 @@ import com.stazis.subwaystations.R
 import com.stazis.subwaystations.view.info.InfoActivity
 import kotlinx.android.synthetic.main.fragment_map.*
 
-
 class MapFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =

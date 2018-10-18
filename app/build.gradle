@@ -1,7 +1,5 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
 
 android {
@@ -35,6 +33,9 @@ dependencies {
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+//    // Anko
+//    implementation 'org.jetbrains.anko:anko-commons:0.10.6'
 
     // Testing
     testImplementation 'junit:junit:4.12'
