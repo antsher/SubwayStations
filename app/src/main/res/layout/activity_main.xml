@@ -20,7 +20,7 @@
             android:text="@string/map" />
 
         <Button
-            android:id="@+id/listTab"
+            android:id="@+id/stationListTab"
             style="?android:attr/buttonBarStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

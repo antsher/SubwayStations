@@ -12,6 +12,7 @@ class GeneralActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         mapTab.setOnClickListener { navigationController.navigateToMap() }
-        listTab.setOnClickListener { }
+        stationListTab.setOnClickListener { navigationController.navigateToStationList() }
+        navigationController.navigateToMap()
     }
 }

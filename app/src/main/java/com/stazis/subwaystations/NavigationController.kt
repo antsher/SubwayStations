@@ -13,4 +13,11 @@ class NavigationController(activity: GeneralActivity, private val containerId: I
             replace(containerId, fragment)
         }
     }
+
+    fun navigateToStationList() {
+        val fragment = StationsListFragment()
+        fragmentManager.transaction(allowStateLoss = true) {
+            replace(containerId, fragment)
+        }
+    }
 }
