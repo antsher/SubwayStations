@@ -1,11 +1,11 @@
 package com.stazis.subwaystations.data
 
-import com.stazis.subwaystations.data.entities.StationListModel
+import com.stazis.subwaystations.data.entities.Station
 import retrofit2.Call
 import retrofit2.http.GET
 
 interface StationService {
 
-    @GET("/BeeWhy/metro/stations")
-    fun getStations(): Call<StationListModel>
+    @GET("stations/")
+    fun getStations(): Call<List<Station>>
 }

@@ -19,13 +19,17 @@ import kotlinx.android.synthetic.main.fragment_stations_list.*
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import okhttp3.HttpUrl
 
 class StationsListFragment : Fragment(), StationListView {
 
+//    var httpUrl = HttpUrl.Builder()
+//        .host("my-json-server.typicode.com/BeeWhy/metro/")
+//        .scheme("https").build()
     val retrofit = Retrofit.Builder()
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .addConverterFactory(GsonConverterFactory.create(Gson()))
-        .baseUrl("https://my-json-server.typicode.com/")
+        .baseUrl("http://my-json-server.typicode.com/BeeWhy/metro/")
         .build()
     private val presenter = StationListPresenter(
         GetStations(
