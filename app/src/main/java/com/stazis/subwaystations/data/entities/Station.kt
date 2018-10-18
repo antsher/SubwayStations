@@ -1,5 +1,9 @@
 package com.stazis.subwaystations.data.entities
 
-class Station (val name: String, val latitude: Double, val longitude: Double) {
+import com.google.gson.annotations.SerializedName
 
-}
+class Station(
+    @SerializedName("name") val name: String,
+    @SerializedName("latitude") val latitude: Double,
+    @SerializedName("longitude") val longitude: Double
+)

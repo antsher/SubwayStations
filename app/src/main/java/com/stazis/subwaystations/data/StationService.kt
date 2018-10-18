@@ -6,6 +6,6 @@ import retrofit2.http.GET
 
 interface StationService {
 
-    @GET("/stations")
+    @GET("/BeeWhy/metro/stations")
     fun getStations(): Call<StationListModel>
 }
