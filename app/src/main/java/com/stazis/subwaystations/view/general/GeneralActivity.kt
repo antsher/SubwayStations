@@ -7,8 +7,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class GeneralActivity : AppCompatActivity() {
 
-    private val navigationController: NavigationController =
-        NavigationController(this, R.id.fragmentContainer)
+    private val navigationController: NavigationController = NavigationController(this, R.id.fragmentContainer)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
