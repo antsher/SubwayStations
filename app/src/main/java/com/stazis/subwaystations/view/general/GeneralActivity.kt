@@ -1,12 +1,14 @@
-package com.stazis.subwaystations
+package com.stazis.subwaystations.view.general
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.stazis.subwaystations.R
 import kotlinx.android.synthetic.main.activity_main.*
 
 class GeneralActivity : AppCompatActivity() {
 
-    private val navigationController: NavigationController = NavigationController(this, R.id.fragmentContainer)
+    private val navigationController: NavigationController =
+        NavigationController(this, R.id.fragmentContainer)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

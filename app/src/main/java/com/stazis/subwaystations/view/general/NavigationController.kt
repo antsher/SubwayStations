@@ -1,4 +1,4 @@
-package com.stazis.subwaystations
+package com.stazis.subwaystations.view.general
 
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.transaction
