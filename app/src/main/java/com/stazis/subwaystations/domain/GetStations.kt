@@ -3,8 +3,9 @@ package com.stazis.subwaystations.domain
 import com.stazis.subwaystations.data.entities.Station
 import com.stazis.subwaystations.data.repositories.StationRepository
 import io.reactivex.Single
+import javax.inject.Inject
 
-class GetStations(private val stationRepository: StationRepository) {
+class GetStations @Inject constructor(private val stationRepository: StationRepository) {
 
     fun execute(): Single<List<Station>> {
         val stationsList = stationRepository.getStations()

@@ -2,12 +2,13 @@ package com.stazis.subwaystations.presenter
 
 import com.stazis.subwaystations.data.entities.Station
 import com.stazis.subwaystations.domain.GetStations
-import com.stazis.subwaystations.view.general.StationListView
+import com.stazis.subwaystations.view.general.StationsView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class StationListPresenter(private val getStations: GetStations) : BasePresenter<StationListView>() {
+class StationsPresenter @Inject constructor(private val getStations: GetStations) : BasePresenter<StationsView>() {
 
     private var loading = false
 
@@ -22,13 +23,13 @@ class StationListPresenter(private val getStations: GetStations) : BasePresenter
 
     private fun onSuccess(stations: List<Station>) {
         loading = false
-        view?.updateStationsList(stations)
+        view?.updateStations(stations)
         view?.hideLoading()
     }
 
     private fun onFailure() {
         loading = false
         view?.hideLoading()
-        view?.showEmptyListError()
+        view?.showError()
     }
 }

@@ -2,15 +2,15 @@ package com.stazis.subwaystations.view.general
 
 import com.stazis.subwaystations.data.entities.Station
 
-interface StationListView {
+interface StationsView {
 
     fun showLoading()
 
     fun hideLoading()
 
-    fun updateStationsList(stations: List<Station>)
+    fun updateStations(stations: List<Station>)
 
-    fun showEmptyListError()
+    fun showError()
 
-    fun hideEmptyListError()
+    fun hideError()
 }
