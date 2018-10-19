@@ -1,9 +1,14 @@
 package com.stazis.subwaystations.di.modules
 
+import android.content.Context
+import androidx.room.Room
 import com.google.gson.Gson
-import com.stazis.subwaystations.model.StationService
+import com.stazis.subwaystations.SubwayStationsApplication
+import com.stazis.subwaystations.helpers.ConnectionHelper
+import com.stazis.subwaystations.model.persistence.AppDatabase
 import com.stazis.subwaystations.model.repositories.RealStationRepository
 import com.stazis.subwaystations.model.repositories.StationRepository
+import com.stazis.subwaystations.model.services.StationService
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -17,6 +22,7 @@ class ApplicationModule {
     companion object {
 
         private const val BASE_URL = "http://my-json-server.typicode.com/BeeWhy/metro/"
+        private const val DATABASE_NAME = "db-name"
     }
 
     @Provides
@@ -29,7 +35,26 @@ class ApplicationModule {
 
     @Provides
     @Singleton
-    fun provideStationRepository(retrofit: Retrofit): StationRepository = RealStationRepository(
-        retrofit.create(StationService::class.java)
+    fun provideStationRepository(
+        retrofit: Retrofit,
+        database: AppDatabase,
+        connectionHelper: ConnectionHelper
+    ): StationRepository = RealStationRepository(
+        retrofit.create(StationService::class.java),
+        database.stationDao(),
+        connectionHelper
     )
+
+    @Provides
+    @Singleton
+    fun provideAppContext(application: SubwayStationsApplication): Context = application.applicationContext
+
+    @Provides
+    @Singleton
+    fun provideDatabase(context: Context) =
+        Room.databaseBuilder(context, AppDatabase::class.java, DATABASE_NAME).build()
+
+    @Provides
+    @Singleton
+    fun provideConnectionHelper(context: Context) = ConnectionHelper(context)
 }

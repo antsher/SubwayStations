@@ -1,15 +1,26 @@
 package com.stazis.subwaystations.model.repositories
 
-import com.stazis.subwaystations.model.StationService
+import com.stazis.subwaystations.helpers.ConnectionHelper
 import com.stazis.subwaystations.model.entities.Station
+import com.stazis.subwaystations.model.persistence.daos.StationDao
+import com.stazis.subwaystations.model.services.StationService
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
 
-class RealStationRepository(private val stationService: StationService) : StationRepository {
+class RealStationRepository(
+    private val stationService: StationService,
+    private val stationDao: StationDao,
+    private val connectionHelper: ConnectionHelper
+) :
+    StationRepository {
 
     override fun getStations(): Single<List<Station>> {
         return Single.create<List<Station>> { emitter: SingleEmitter<List<Station>> ->
-            loadStationsFromNetwork(emitter)
+            if (connectionHelper.isOnline()) {
+                loadStationsFromNetwork(emitter)
+            } else {
+                loadStationsFromDatabase(emitter)
+            }
         }
     }
 
@@ -17,12 +28,22 @@ class RealStationRepository(private val stationService: StationService) : Statio
         try {
             val stations = stationService.getStations().execute().body()
             if (stations != null) {
+                stationDao.insertAll(stations.subList(0, 8))
                 emitter.onSuccess(stations)
             } else {
-                emitter.onError(Exception("No data received"))
+                emitter.onError(Exception("No data received!"))
             }
         } catch (exception: Exception) {
             emitter.onError(exception)
+        }
+    }
+
+    private fun loadStationsFromDatabase(emitter: SingleEmitter<List<Station>>) {
+        val stations = stationDao.getAll()
+        if (!stations.isEmpty()) {
+            emitter.onSuccess(stations)
+        } else {
+            emitter.onError(Exception("Database is empty!"))
         }
     }
 }

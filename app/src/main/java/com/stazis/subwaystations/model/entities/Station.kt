@@ -1,9 +1,7 @@
 package com.stazis.subwaystations.model.entities
 
-import com.google.gson.annotations.SerializedName
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-class Station(
-    @SerializedName("name") var name: String,
-    @SerializedName("latitude") var latitude: Double,
-    @SerializedName("longitude") var longitude: Double
-)
+@Entity
+data class Station(@PrimaryKey val name: String, val latitude: Double, val longitude: Double)

@@ -1,4 +1,4 @@
-package com.stazis.subwaystations.model
+package com.stazis.subwaystations.model.services
 
 import com.stazis.subwaystations.model.entities.Station
 import retrofit2.Call
