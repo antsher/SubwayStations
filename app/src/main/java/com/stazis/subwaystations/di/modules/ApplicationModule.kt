@@ -1,9 +1,9 @@
 package com.stazis.subwaystations.di.modules
 
 import com.google.gson.Gson
-import com.stazis.subwaystations.data.StationService
-import com.stazis.subwaystations.data.repositories.RealStationRepository
-import com.stazis.subwaystations.data.repositories.StationRepository
+import com.stazis.subwaystations.model.StationService
+import com.stazis.subwaystations.model.repositories.RealStationRepository
+import com.stazis.subwaystations.model.repositories.StationRepository
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit

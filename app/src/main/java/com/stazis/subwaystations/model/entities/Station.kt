@@ -1,4 +1,4 @@
-package com.stazis.subwaystations.data.entities
+package com.stazis.subwaystations.model.entities
 
 import com.google.gson.annotations.SerializedName
 

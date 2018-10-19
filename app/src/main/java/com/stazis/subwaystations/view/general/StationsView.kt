@@ -1,6 +1,6 @@
 package com.stazis.subwaystations.view.general
 
-import com.stazis.subwaystations.data.entities.Station
+import com.stazis.subwaystations.model.entities.Station
 
 interface StationsView {
 

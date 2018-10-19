@@ -8,7 +8,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
 import com.stazis.subwaystations.R
-import com.stazis.subwaystations.data.entities.Station
+import com.stazis.subwaystations.model.entities.Station
 import com.stazis.subwaystations.presenter.StationsPresenter
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_stations_list.*

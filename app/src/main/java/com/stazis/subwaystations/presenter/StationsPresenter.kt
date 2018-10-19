@@ -1,6 +1,6 @@
 package com.stazis.subwaystations.presenter
 
-import com.stazis.subwaystations.data.entities.Station
+import com.stazis.subwaystations.model.entities.Station
 import com.stazis.subwaystations.domain.GetStations
 import com.stazis.subwaystations.view.general.StationsView
 import io.reactivex.android.schedulers.AndroidSchedulers

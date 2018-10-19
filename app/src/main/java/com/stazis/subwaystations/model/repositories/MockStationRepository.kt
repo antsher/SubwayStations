@@ -1,6 +1,6 @@
-package com.stazis.subwaystations.data.repositories
+package com.stazis.subwaystations.model.repositories
 
-import com.stazis.subwaystations.data.entities.Station
+import com.stazis.subwaystations.model.entities.Station
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
 
