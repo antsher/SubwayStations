@@ -64,6 +64,9 @@ dependencies {
     // Location
     implementation 'com.google.android.gms:play-services-location:16.0.0'
 
+    // Maps
+    implementation 'com.google.android.gms:play-services-maps:16.0.0'
+
     // Testing
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
