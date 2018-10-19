@@ -21,7 +21,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import okhttp3.HttpUrl
 
-class StationsListFragment : Fragment(), StationListView {
+class StationListFragment : Fragment(), StationListView {
 
 //    var httpUrl = HttpUrl.Builder()
 //        .host("my-json-server.typicode.com/BeeWhy/metro/")

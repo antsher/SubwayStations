@@ -15,7 +15,7 @@ class NavigationController(activity: GeneralActivity, private val containerId: I
     }
 
     fun navigateToStationList() {
-        val fragment = StationsListFragment()
+        val fragment = StationListFragment()
         fragmentManager.transaction(allowStateLoss = true) {
             replace(containerId, fragment)
         }
