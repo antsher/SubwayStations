@@ -28,7 +28,7 @@ class RealStationRepository(
         try {
             val stations = stationService.getStations().execute().body()
             if (stations != null) {
-                stationDao.insertAll(stations.subList(0, 8))
+                stationDao.insertAll(stations)
                 emitter.onSuccess(stations)
             } else {
                 emitter.onError(Exception("No data received!"))
