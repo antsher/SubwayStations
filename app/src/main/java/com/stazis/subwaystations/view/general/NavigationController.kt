@@ -7,9 +7,9 @@ class NavigationController(activity: GeneralActivity, private val containerId: I
 
     private val fragmentManager: FragmentManager = activity.supportFragmentManager
 
-    fun navigateToMap() {
-        if (getCurrentFragment() !is MapFragment) {
-            val fragment = MapFragment()
+    fun navigateToStationMap() {
+        if (getCurrentFragment() !is StationMapFragment) {
+            val fragment = StationMapFragment()
             fragmentManager.transaction(allowStateLoss = true) {
                 replace(containerId, fragment)
             }

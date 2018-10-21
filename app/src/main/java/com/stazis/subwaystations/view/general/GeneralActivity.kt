@@ -33,12 +33,12 @@ class GeneralActivity : AppCompatActivity() {
             )
         } else {
             setListeners()
-            navigationController.navigateToMap()
+            navigationController.navigateToStationMap()
         }
     }
 
     private fun setListeners() {
-        mapTab.setOnClickListener { navigationController.navigateToMap() }
+        stationMapTab.setOnClickListener { navigationController.navigateToStationMap() }
         stationsListTab.setOnClickListener { navigationController.navigateToStationList() }
     }
 
@@ -47,7 +47,7 @@ class GeneralActivity : AppCompatActivity() {
             PERMISSION_REQUEST_CODE -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     setListeners()
-                    navigationController.navigateToMap()
+                    navigationController.navigateToStationMap()
                 } else {
                     closeAppWithError()
                 }

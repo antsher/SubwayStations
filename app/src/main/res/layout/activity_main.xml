@@ -12,7 +12,7 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/mapTab"
+            android:id="@+id/stationMapTab"
             style="?android:attr/buttonBarStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

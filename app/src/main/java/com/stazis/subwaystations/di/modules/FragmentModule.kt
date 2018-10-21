@@ -1,7 +1,7 @@
 package com.stazis.subwaystations.di.modules
 
-import com.stazis.subwaystations.view.general.MapFragment
 import com.stazis.subwaystations.view.general.StationListFragment
+import com.stazis.subwaystations.view.general.StationMapFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -12,5 +12,5 @@ abstract class FragmentModule {
     abstract fun contributeStationListFragment(): StationListFragment
 
     @ContributesAndroidInjector
-    abstract fun contributeMapFragment(): MapFragment
+    abstract fun contributeStationMapFragment(): StationMapFragment
 }

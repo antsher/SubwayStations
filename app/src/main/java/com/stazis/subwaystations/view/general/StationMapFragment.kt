@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.fragment_map.*
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
-class MapFragment : DaggerFragment(), StationsView {
+class StationMapFragment : DaggerFragment(), StationsView {
 
     @Inject
     lateinit var presenter: StationsPresenter
