@@ -8,16 +8,22 @@ class NavigationController(activity: GeneralActivity, private val containerId: I
     private val fragmentManager: FragmentManager = activity.supportFragmentManager
 
     fun navigateToMap() {
-        val fragment = MapFragment()
-        fragmentManager.transaction(allowStateLoss = true) {
-            replace(containerId, fragment)
+        if (getCurrentFragment() !is MapFragment) {
+            val fragment = MapFragment()
+            fragmentManager.transaction(allowStateLoss = true) {
+                replace(containerId, fragment)
+            }
         }
     }
 
     fun navigateToStationList() {
-        val fragment = StationListFragment()
-        fragmentManager.transaction(allowStateLoss = true) {
-            replace(containerId, fragment)
+        if (getCurrentFragment() !is StationListFragment) {
+            val fragment = StationListFragment()
+            fragmentManager.transaction(allowStateLoss = true) {
+                replace(containerId, fragment)
+            }
         }
     }
+
+    private fun getCurrentFragment() = fragmentManager.findFragmentById(containerId)
 }
