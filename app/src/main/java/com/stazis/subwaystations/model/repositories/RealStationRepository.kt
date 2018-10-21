@@ -11,8 +11,7 @@ class RealStationRepository(
     private val stationService: StationService,
     private val stationDao: StationDao,
     private val connectionHelper: ConnectionHelper
-) :
-    StationRepository {
+) : StationRepository {
 
     override fun getStations(): Single<List<Station>> {
         return Single.create<List<Station>> { emitter: SingleEmitter<List<Station>> ->

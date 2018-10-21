@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.google.gson.Gson
 import com.stazis.subwaystations.SubwayStationsApplication
 import com.stazis.subwaystations.helpers.ConnectionHelper
+import com.stazis.subwaystations.helpers.LocationHelper
 import com.stazis.subwaystations.model.persistence.AppDatabase
 import com.stazis.subwaystations.model.repositories.RealStationRepository
 import com.stazis.subwaystations.model.repositories.StationRepository
@@ -57,4 +58,8 @@ class ApplicationModule {
     @Provides
     @Singleton
     fun provideConnectionHelper(context: Context) = ConnectionHelper(context)
+
+    @Provides
+    @Singleton
+    fun provideLocationHelper(context: Context) = LocationHelper(context)
 }

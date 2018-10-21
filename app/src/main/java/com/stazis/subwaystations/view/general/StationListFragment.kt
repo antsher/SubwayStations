@@ -1,6 +1,5 @@
 package com.stazis.subwaystations.view.general
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.location.Location
 import android.os.Bundle
@@ -10,7 +9,6 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
-import com.google.android.gms.location.LocationServices
 import com.stazis.subwaystations.R
 import com.stazis.subwaystations.model.entities.Station
 import com.stazis.subwaystations.presenter.StationsPresenter
@@ -33,7 +31,7 @@ class StationListFragment : DaggerFragment(), StationsView {
 
         presenter.attachView(this)
         showLoading()
-        presenter.getStations()
+        presenter.getStationsAndLocation()
     }
 
     override fun showLoading() {
@@ -44,18 +42,14 @@ class StationListFragment : DaggerFragment(), StationsView {
         progressBarContainer.visibility = GONE
     }
 
-    @SuppressLint("MissingPermission")
-    override fun updateStations(stations: List<Station>) {
-        var currentLocation = Location("")
-        LocationServices.getFusedLocationProviderClient(activity!!).lastLocation
-            .addOnSuccessListener { location: Location? -> currentLocation = location!! }
-        for (station in stations) {
+    override fun updateStationsAndLocation(stationsAndLocation: Pair<List<Station>, Location>) {
+        for (station in stationsAndLocation.first) {
             val textView = TextView(context)
             val stationLocation = Location("")
             stationLocation.latitude = station.latitude
             stationLocation.longitude = station.longitude
             textView.text = String.format(
-                "${station.name}, distance is ${currentLocation.distanceTo(stationLocation).roundToInt()} meters"
+                "${station.name}, distance is ${stationsAndLocation.second.distanceTo(stationLocation).roundToInt()} m"
             )
             textView.setOnClickListener {
                 startActivity(Intent(context, InfoActivity::class.java).apply {
