@@ -15,9 +15,8 @@ import com.stazis.subwaystations.model.entities.Station
 import com.stazis.subwaystations.presenter.StationsPresenter
 import com.stazis.subwaystations.view.info.InfoActivity
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.fragment_map.*
+import kotlinx.android.synthetic.main.fragment_station_map.*
 import javax.inject.Inject
-import kotlin.math.roundToInt
 
 class StationMapFragment : DaggerFragment(), StationsView {
 
@@ -25,7 +24,7 @@ class StationMapFragment : DaggerFragment(), StationsView {
     lateinit var presenter: StationsPresenter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.fragment_map, container, false)
+        inflater.inflate(R.layout.fragment_station_map, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         presenter.attachView(this)
