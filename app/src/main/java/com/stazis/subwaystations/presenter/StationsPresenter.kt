@@ -1,5 +1,6 @@
 package com.stazis.subwaystations.presenter
 
+import android.annotation.SuppressLint
 import android.location.Location
 import com.stazis.subwaystations.domain.GetLocation
 import com.stazis.subwaystations.domain.GetStations
@@ -19,6 +20,7 @@ class StationsPresenter @Inject constructor(
 
     private var loading = false
 
+    @SuppressLint("CheckResult")
     fun getStationsAndLocation() {
         loading = true
         Single.zip(

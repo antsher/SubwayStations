@@ -1,5 +1,6 @@
 package com.stazis.subwaystations.presenter
 
+import android.annotation.SuppressLint
 import com.stazis.subwaystations.domain.GetStation
 import com.stazis.subwaystations.model.entities.Station
 import com.stazis.subwaystations.view.info.StationInfoRepresentation
@@ -14,6 +15,7 @@ class StationInfoPresenter @Inject constructor(
 
     private var loading = false
 
+    @SuppressLint("CheckResult")
     fun getStation(stationName: String) {
         loading = true
         getStation.execute(stationName)
