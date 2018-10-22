@@ -5,6 +5,8 @@ import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
@@ -17,8 +19,9 @@ import com.stazis.subwaystations.view.info.InfoActivity
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_station_map.*
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
-class StationMapFragment : DaggerFragment(), StationsView {
+class StationMapFragment : DaggerFragment(), StationRepresentation {
 
     @Inject
     lateinit var presenter: StationsPresenter
@@ -34,19 +37,21 @@ class StationMapFragment : DaggerFragment(), StationsView {
     }
 
     override fun showLoading() {
-//        progressBarContainer.visibility = View.VISIBLE
+        progressBarContainer.visibility = VISIBLE
+        map.visibility = GONE
     }
 
     override fun hideLoading() {
-//        progressBarContainer.visibility = View.GONE
+        progressBarContainer.visibility = GONE
+        map.visibility = VISIBLE
     }
 
     override fun updateStationsAndLocation(stationsAndLocation: Pair<List<Station>, Location>) {
-        val currentLatLng = LatLng(stationsAndLocation.second.latitude, stationsAndLocation.second.longitude)
-        val stationMarkers = initStationMarkers(stationsAndLocation.first, currentLatLng)
+        val currentLocation = LatLng(stationsAndLocation.second.latitude, stationsAndLocation.second.longitude)
+        val stationMarkers = initStationMarkers(stationsAndLocation.first, currentLocation)
 
         map.getMapAsync { googleMap ->
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 10f))
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 10f))
             googleMap.setOnInfoWindowClickListener { marker -> navigateToStationInfo(marker.title) }
             for (marker in stationMarkers) {
                 googleMap.addMarker(marker)
@@ -54,12 +59,12 @@ class StationMapFragment : DaggerFragment(), StationsView {
         }
     }
 
-    private fun initStationMarkers(stations: List<Station>, currentLatLng: LatLng): List<MarkerOptions> {
+    private fun initStationMarkers(stations: List<Station>, currentLocation: LatLng): List<MarkerOptions> {
         val markers = ArrayList<MarkerOptions>()
         for (station in stations) {
             val stationLocation = LatLng(station.latitude, station.longitude)
-            val distanceToStation = SphericalUtil.computeDistanceBetween(stationLocation, currentLatLng).roundToInt()
-            markers.add(MarkerOptions().position(stationLocation).title("${station.name}, ${distanceToStation}m"))
+            val distanceToStation = SphericalUtil.computeDistanceBetween(stationLocation, currentLocation).roundToInt()
+            markers.add(MarkerOptions().position(stationLocation).title(station.name).snippet("${distanceToStation}m"))
         }
         return markers
     }

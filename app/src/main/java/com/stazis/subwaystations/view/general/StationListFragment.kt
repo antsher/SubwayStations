@@ -8,7 +8,8 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.TextView
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.SphericalUtil
 import com.stazis.subwaystations.R
 import com.stazis.subwaystations.model.entities.Station
 import com.stazis.subwaystations.presenter.StationsPresenter
@@ -18,7 +19,7 @@ import kotlinx.android.synthetic.main.fragment_stations_list.*
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
-class StationListFragment : DaggerFragment(), StationsView {
+class StationListFragment : DaggerFragment(), StationRepresentation {
 
     @Inject
     lateinit var presenter: StationsPresenter
@@ -42,21 +43,28 @@ class StationListFragment : DaggerFragment(), StationsView {
         progressBarContainer.visibility = GONE
     }
 
-    override fun updateStationsAndLocation(stationsAndLocation: Pair<List<Station>, Location>) {
+    override fun updateStationsAndLocation(stationsAndLocation: Pair<List<Station>, Location>) =
+        addStationsToContainer(initStationViews(stationsAndLocation))
+
+    private fun initStationViews(stationsAndLocation: Pair<List<Station>, Location>): List<Pair<StationView, Int>> {
+        val currentLocation = LatLng(stationsAndLocation.second.latitude, stationsAndLocation.second.longitude)
+        val stationViewsWithDistances = ArrayList<Pair<StationView, Int>>()
         for (station in stationsAndLocation.first) {
-            val textView = TextView(context)
-            val stationLocation = Location("")
-            stationLocation.latitude = station.latitude
-            stationLocation.longitude = station.longitude
-            textView.text = String.format(
-                "${station.name}, distance is ${stationsAndLocation.second.distanceTo(stationLocation).roundToInt()} m"
-            )
-            textView.setOnClickListener {
-                startActivity(Intent(context, InfoActivity::class.java).apply {
-                    putExtra("metro station", station.name)
-                })
-            }
-            stationsContainer.addView(textView)
+            val stationLocation = LatLng(station.latitude, station.longitude)
+            val distance = SphericalUtil.computeDistanceBetween(stationLocation, currentLocation).roundToInt()
+            val stationView =
+                StationView(context, station.name, distance, Runnable { navigateToStationInfo(station.name) })
+            stationViewsWithDistances.add(Pair(stationView, distance))
+        }
+        return stationViewsWithDistances
+    }
+
+    private fun navigateToStationInfo(stationName: String) =
+        startActivity(Intent(context, InfoActivity::class.java).apply { putExtra("metro station", stationName) })
+
+    private fun addStationsToContainer(stationViewsWithDistances: List<Pair<StationView, Int>>) {
+        for (stationViewWithDistance in stationViewsWithDistances.sortedBy { it.second }) {
+            stationsContainer.addView(stationViewWithDistance.first)
         }
     }
 

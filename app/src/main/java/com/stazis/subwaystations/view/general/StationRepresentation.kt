@@ -3,7 +3,7 @@ package com.stazis.subwaystations.view.general
 import android.location.Location
 import com.stazis.subwaystations.model.entities.Station
 
-interface StationsView {
+interface StationRepresentation {
 
     fun showLoading()
 

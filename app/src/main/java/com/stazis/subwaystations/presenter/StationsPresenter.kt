@@ -4,7 +4,7 @@ import android.location.Location
 import com.stazis.subwaystations.domain.GetLocation
 import com.stazis.subwaystations.domain.GetStations
 import com.stazis.subwaystations.model.entities.Station
-import com.stazis.subwaystations.view.general.StationsView
+import com.stazis.subwaystations.view.general.StationRepresentation
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
@@ -15,7 +15,7 @@ import javax.inject.Inject
 class StationsPresenter @Inject constructor(
     private val getStations: GetStations,
     private val getLocation: GetLocation
-) : BasePresenter<StationsView>() {
+) : BasePresenter<StationRepresentation>() {
 
     private var loading = false
 
