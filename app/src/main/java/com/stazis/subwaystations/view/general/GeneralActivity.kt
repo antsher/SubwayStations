@@ -33,13 +33,25 @@ class GeneralActivity : AppCompatActivity() {
             )
         } else {
             setListeners()
-            navigationController.navigateToStationMap()
+            navigateToMap()
         }
     }
 
     private fun setListeners() {
-        stationMapTab.setOnClickListener { navigationController.navigateToStationMap() }
-        stationsListTab.setOnClickListener { navigationController.navigateToStationList() }
+        mapTab.setOnClickListener { navigateToMap() }
+        listTab.setOnClickListener { navigateToList() }
+    }
+
+    private fun navigateToMap() {
+        listTab.makeInactive()
+        mapTab.makeActive()
+        navigationController.navigateToStationMap()
+    }
+
+    private fun navigateToList() {
+        mapTab.makeInactive()
+        listTab.makeActive()
+        navigationController.navigateToStationList()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {

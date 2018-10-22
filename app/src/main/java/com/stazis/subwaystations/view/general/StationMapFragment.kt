@@ -41,7 +41,7 @@ class StationMapFragment : DaggerFragment(), StationsRepresentation {
         val stationMarkers = initStationMarkers(stationsAndLocation.first, currentLocation)
 
         map.getMapAsync { googleMap ->
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 10f))
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 11f))
             googleMap.setOnInfoWindowClickListener { marker -> navigateToStationInfo(marker.title, currentLocation) }
             for (marker in stationMarkers) {
                 googleMap.addMarker(marker)

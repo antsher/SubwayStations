@@ -7,4 +7,7 @@
     <declare-styleable name="EditTextWithFont">
         <attr name="typeface" />
     </declare-styleable>
+    <declare-styleable name="TabView">
+        <attr name="name" format="string" />
+    </declare-styleable>
 </resources>

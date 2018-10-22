@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">SubwayStations</string>
-    <string name="map">map</string>
-    <string name="list">list</string>
+    <string name="map">Map</string>
+    <string name="list">List</string>
     <string name="cannot_work_without_location_access">The app cannot work without location access!</string>
     <string name="right_arrow">Right Arrow</string>
 </resources>
