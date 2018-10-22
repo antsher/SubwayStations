@@ -15,13 +15,13 @@ import com.google.maps.android.SphericalUtil
 import com.stazis.subwaystations.R
 import com.stazis.subwaystations.model.entities.Station
 import com.stazis.subwaystations.presenter.StationsPresenter
-import com.stazis.subwaystations.view.info.InfoActivity
+import com.stazis.subwaystations.view.info.StationInfoActivity
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_station_map.*
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
-class StationMapFragment : DaggerFragment(), StationRepresentation {
+class StationMapFragment : DaggerFragment(), StationsRepresentation {
 
     @Inject
     lateinit var presenter: StationsPresenter
@@ -36,28 +36,13 @@ class StationMapFragment : DaggerFragment(), StationRepresentation {
         map.onCreate(savedInstanceState)
     }
 
-    override fun onDestroyView() {
-        presenter.detachView()
-        super.onDestroyView()
-    }
-
-    override fun showLoading() {
-        progressBarContainer.visibility = VISIBLE
-        map.visibility = GONE
-    }
-
-    override fun hideLoading() {
-        progressBarContainer.visibility = GONE
-        map.visibility = VISIBLE
-    }
-
     override fun updateStationsAndLocation(stationsAndLocation: Pair<List<Station>, Location>) {
         val currentLocation = LatLng(stationsAndLocation.second.latitude, stationsAndLocation.second.longitude)
         val stationMarkers = initStationMarkers(stationsAndLocation.first, currentLocation)
 
         map.getMapAsync { googleMap ->
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 10f))
-            googleMap.setOnInfoWindowClickListener { marker -> navigateToStationInfo(marker.title) }
+            googleMap.setOnInfoWindowClickListener { marker -> navigateToStationInfo(marker.title, currentLocation) }
             for (marker in stationMarkers) {
                 googleMap.addMarker(marker)
             }
@@ -74,8 +59,21 @@ class StationMapFragment : DaggerFragment(), StationRepresentation {
         return markers
     }
 
-    private fun navigateToStationInfo(stationName: String) =
-        startActivity(Intent(context, InfoActivity::class.java).apply { putExtra("metro station", stationName) })
+    private fun navigateToStationInfo(stationName: String, currentLocation: LatLng) =
+        startActivity(Intent(context, StationInfoActivity::class.java).apply {
+            putExtra(StationInfoActivity.STATION_NAME_KEY, stationName)
+            putExtra(StationInfoActivity.CURRENT_LOCATION_KEY, currentLocation)
+        })
+
+    override fun showLoading() {
+        progressBarContainer.visibility = VISIBLE
+        map.visibility = GONE
+    }
+
+    override fun hideLoading() {
+        progressBarContainer.visibility = GONE
+        map.visibility = VISIBLE
+    }
 
     override fun showError() {
 
@@ -93,5 +91,10 @@ class StationMapFragment : DaggerFragment(), StationRepresentation {
     override fun onLowMemory() {
         super.onLowMemory()
         map.onLowMemory()
+    }
+
+    override fun onDestroyView() {
+        presenter.detachView()
+        super.onDestroyView()
     }
 }

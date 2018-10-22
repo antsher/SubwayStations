@@ -45,4 +45,36 @@ class RealStationRepository(
             emitter.onError(Exception("Database is empty!"))
         }
     }
+
+    override fun getStation(stationName: String): Single<Station> {
+        return Single.create<Station> { emitter: SingleEmitter<Station> ->
+            if (connectionHelper.isOnline()) {
+                loadStationFromNetwork(emitter, stationName)
+            } else {
+                loadStationFromDatabase(emitter, stationName)
+            }
+        }
+    }
+
+    private fun loadStationFromNetwork(emitter: SingleEmitter<Station>, stationName: String) {
+        try {
+            val stations = stationService.getStations().execute().body()
+            if (stations != null) {
+                emitter.onSuccess(stations.find { it -> it.name == stationName }!!)
+            } else {
+                emitter.onError(Exception("No data received!"))
+            }
+        } catch (exception: Exception) {
+            emitter.onError(exception)
+        }
+    }
+
+    private fun loadStationFromDatabase(emitter: SingleEmitter<Station>, stationName: String) {
+        val station = stationDao.get(stationName)
+        if (station != null) {
+            emitter.onSuccess(station)
+        } else {
+            emitter.onError(Exception("Station with name $stationName not found!"))
+        }
+    }
 }

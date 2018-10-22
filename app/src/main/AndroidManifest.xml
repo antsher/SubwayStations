@@ -32,6 +32,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.stazis.subwaystations.view.info.InfoActivity" />
+        <activity android:name="com.stazis.subwaystations.view.info.StationInfoActivity" />
     </application>
 </manifest>
