@@ -36,6 +36,11 @@ class StationMapFragment : DaggerFragment(), StationRepresentation {
         map.onCreate(savedInstanceState)
     }
 
+    override fun onDestroyView() {
+        presenter.detachView()
+        super.onDestroyView()
+    }
+
     override fun showLoading() {
         progressBarContainer.visibility = VISIBLE
         map.visibility = GONE

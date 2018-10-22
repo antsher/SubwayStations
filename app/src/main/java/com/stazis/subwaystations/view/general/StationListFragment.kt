@@ -35,6 +35,11 @@ class StationListFragment : DaggerFragment(), StationRepresentation {
         presenter.getStationsAndLocation()
     }
 
+    override fun onDestroyView() {
+        presenter.detachView()
+        super.onDestroyView()
+    }
+
     override fun showLoading() {
         progressBarContainer.visibility = VISIBLE
     }
