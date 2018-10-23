@@ -5,8 +5,6 @@ import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
@@ -26,10 +24,13 @@ class StationMapFragment : DaggerFragmentWithPresenter(), StationsRepresentation
     @Inject
     lateinit var presenter: StationsPresenter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.fragment_station_map, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        root = inflater.inflate(R.layout.fragment_station_map, container, false) as ViewGroup
+        return root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         presenter.attachView(this)
         showLoading()
         presenter.getStationsAndLocation()
@@ -64,16 +65,6 @@ class StationMapFragment : DaggerFragmentWithPresenter(), StationsRepresentation
             putExtra(StationInfoActivity.STATION_NAME_KEY, stationName)
             putExtra(StationInfoActivity.CURRENT_LOCATION_KEY, currentLocation)
         })
-
-    override fun showLoading() {
-        progressBarContainer.visibility = VISIBLE
-        map.visibility = GONE
-    }
-
-    override fun hideLoading() {
-        progressBarContainer.visibility = GONE
-        map.visibility = VISIBLE
-    }
 
     override fun onResume() {
         super.onResume()

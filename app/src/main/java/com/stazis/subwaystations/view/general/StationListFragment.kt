@@ -5,8 +5,6 @@ import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.SphericalUtil
@@ -15,7 +13,7 @@ import com.stazis.subwaystations.model.entities.Station
 import com.stazis.subwaystations.presenter.StationsPresenter
 import com.stazis.subwaystations.view.common.DaggerFragmentWithPresenter
 import com.stazis.subwaystations.view.info.StationInfoActivity
-import kotlinx.android.synthetic.main.fragment_stations_list.*
+import kotlinx.android.synthetic.main.fragment_station_list.*
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
@@ -24,8 +22,10 @@ class StationListFragment : DaggerFragmentWithPresenter(), StationsRepresentatio
     @Inject
     lateinit var presenter: StationsPresenter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.fragment_stations_list, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        root = inflater.inflate(R.layout.fragment_station_list, container, false) as ViewGroup
+        return root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -65,14 +65,6 @@ class StationListFragment : DaggerFragmentWithPresenter(), StationsRepresentatio
         for (stationViewWithDistance in stationViewsWithDistances.sortedBy { it.second }) {
             stationsContainer.addView(stationViewWithDistance.first)
         }
-    }
-
-    override fun showLoading() {
-        progressBarContainer.visibility = VISIBLE
-    }
-
-    override fun hideLoading() {
-        progressBarContainer.visibility = GONE
     }
 
     override fun onDestroyView() {
