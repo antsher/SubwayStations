@@ -7,6 +7,5 @@ interface StationInfoRepresentation {
     fun showLoading()
     fun hideLoading()
     fun updateStationInfo(station: Station)
-    fun showError()
-    fun hideError()
+    fun showError(errorMessage: String)
 }

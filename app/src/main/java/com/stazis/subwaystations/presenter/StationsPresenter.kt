@@ -10,6 +10,7 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
+import java.lang.NullPointerException
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -24,26 +25,31 @@ class StationsPresenter @Inject constructor(
     fun getStationsAndLocation() {
         loading = true
         Single.zip(
-                getStations.execute(),
-                getLocation.execute(),
-                BiFunction<List<Station>, Location, Pair<List<Station>, Location>> { stations, location ->
-                    stations to location
-                })
+            getStations.execute(),
+            getLocation.execute(),
+            BiFunction<List<Station>, Location, Pair<List<Station>, Location>> { stations, location ->
+                stations to location
+            })
             .delay(2000, TimeUnit.MILLISECONDS)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(this::onSuccess) { onFailure() }
+            .subscribe(this::onSuccess, this::onFailure)
     }
 
     private fun onSuccess(stationsAndLocation: Pair<List<Station>, Location>) {
         loading = false
-        view?.updateStationsAndLocation(stationsAndLocation)
         view?.hideLoading()
+        view?.updateStationsAndLocation(stationsAndLocation)
     }
 
-    private fun onFailure() {
+    private fun onFailure(error: Throwable) {
         loading = false
         view?.hideLoading()
-        view?.showError()
+        val errorMessage: String = if (error is NullPointerException) {
+            "Cannot get your current location!"
+        } else {
+            error.localizedMessage
+        }
+        view?.showError(errorMessage)
     }
 }

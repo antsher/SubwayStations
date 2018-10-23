@@ -8,6 +8,5 @@ interface StationsRepresentation {
     fun showLoading()
     fun hideLoading()
     fun updateStationsAndLocation(stationsAndLocation: Pair<List<Station>, Location>)
-    fun showError()
-    fun hideError()
+    fun showError(errorMessage: String)
 }

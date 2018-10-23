@@ -1,5 +1,6 @@
 package com.stazis.subwaystations.view.info
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
 import com.google.android.gms.maps.model.LatLng
@@ -52,12 +53,12 @@ class StationInfoActivity : DaggerActivity(), StationInfoRepresentation {
         progressBarContainer.visibility = View.GONE
     }
 
-    override fun showError() {
-
-    }
-
-    override fun hideError() {
-
+    override fun showError(errorMessage: String) {
+        AlertDialog.Builder(this)
+            .setMessage(errorMessage)
+            .setNeutralButton("OK") { dialog, _ -> dialog?.dismiss() }
+            .create()
+            .show()
     }
 
     override fun onDestroy() {

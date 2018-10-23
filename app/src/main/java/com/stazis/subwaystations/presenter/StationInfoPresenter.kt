@@ -22,7 +22,7 @@ class StationInfoPresenter @Inject constructor(
             .delay(2000, TimeUnit.MILLISECONDS)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(this::onSuccess) { onFailure() }
+            .subscribe(this::onSuccess, this::onFailure)
     }
 
     private fun onSuccess(station: Station) {
@@ -31,9 +31,9 @@ class StationInfoPresenter @Inject constructor(
         view?.hideLoading()
     }
 
-    private fun onFailure() {
+    private fun onFailure(error: Throwable) {
         loading = false
         view?.hideLoading()
-        view?.showError()
+        view?.showError(error.localizedMessage)
     }
 }

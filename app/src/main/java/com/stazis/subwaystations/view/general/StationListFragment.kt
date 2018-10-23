@@ -1,5 +1,6 @@
 package com.stazis.subwaystations.view.general
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.location.Location
 import android.os.Bundle
@@ -75,12 +76,12 @@ class StationListFragment : DaggerFragment(), StationsRepresentation {
         progressBarContainer.visibility = GONE
     }
 
-    override fun showError() {
-
-    }
-
-    override fun hideError() {
-
+    override fun showError(errorMessage: String) {
+        AlertDialog.Builder(context)
+            .setMessage(errorMessage)
+            .setNeutralButton("OK") { dialog, _ -> dialog?.dismiss() }
+            .create()
+            .show()
     }
 
     override fun onDestroyView() {
