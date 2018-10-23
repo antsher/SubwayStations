@@ -10,7 +10,6 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
-import java.lang.NullPointerException
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -24,12 +23,10 @@ class StationsPresenter @Inject constructor(
     @SuppressLint("CheckResult")
     fun getStationsAndLocation() {
         loading = true
-        Single.zip(
-            getStations.execute(),
-            getLocation.execute(),
-            BiFunction<List<Station>, Location, Pair<List<Station>, Location>> { stations, location ->
-                stations to location
-            })
+        val converter = BiFunction<List<Station>, Location, Pair<List<Station>, Location>> { stations, location ->
+            stations to location
+        }
+        Single.zip(getStations.execute(), getLocation.execute(), converter)
             .delay(2000, TimeUnit.MILLISECONDS)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
