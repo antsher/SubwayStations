@@ -61,14 +61,14 @@ class GeneralActivity : AppCompatActivity() {
                     setListeners()
                     navigationController.navigateToStationMap()
                 } else {
-                    closeAppWithError()
+                    closeAppWithError(resources.getString(R.string.cannot_work_without_location_access))
                 }
                 return
             }
         }
     }
 
-    private fun closeAppWithError() {
+    private fun closeAppWithError(errorMessage: String) {
         val thread = object : Thread() {
             override fun run() {
                 try {
@@ -80,7 +80,7 @@ class GeneralActivity : AppCompatActivity() {
 
             }
         }
-        Toast.makeText(this, R.string.cannot_work_without_location_access, Toast.LENGTH_LONG).show()
+        Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
         thread.start()
     }
 }
