@@ -1,6 +1,5 @@
 package com.stazis.subwaystations.view.general
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.location.Location
 import android.os.Bundle
@@ -14,13 +13,13 @@ import com.google.maps.android.SphericalUtil
 import com.stazis.subwaystations.R
 import com.stazis.subwaystations.model.entities.Station
 import com.stazis.subwaystations.presenter.StationsPresenter
+import com.stazis.subwaystations.view.common.DaggerFragmentWithPresenter
 import com.stazis.subwaystations.view.info.StationInfoActivity
-import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_stations_list.*
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
-class StationListFragment : DaggerFragment(), StationsRepresentation {
+class StationListFragment : DaggerFragmentWithPresenter(), StationsRepresentation {
 
     @Inject
     lateinit var presenter: StationsPresenter
@@ -74,14 +73,6 @@ class StationListFragment : DaggerFragment(), StationsRepresentation {
 
     override fun hideLoading() {
         progressBarContainer.visibility = GONE
-    }
-
-    override fun showError(errorMessage: String) {
-        AlertDialog.Builder(context)
-            .setMessage(errorMessage)
-            .setNeutralButton("OK") { dialog, _ -> dialog?.dismiss() }
-            .create()
-            .show()
     }
 
     override fun onDestroyView() {

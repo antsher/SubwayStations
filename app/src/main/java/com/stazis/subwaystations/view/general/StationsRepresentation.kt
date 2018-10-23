@@ -2,11 +2,9 @@ package com.stazis.subwaystations.view.general
 
 import android.location.Location
 import com.stazis.subwaystations.model.entities.Station
+import com.stazis.subwaystations.view.common.Representation
 
-interface StationsRepresentation {
+interface StationsRepresentation : Representation {
 
-    fun showLoading()
-    fun hideLoading()
     fun updateStationsAndLocation(stationsAndLocation: Pair<List<Station>, Location>)
-    fun showError(errorMessage: String)
 }
