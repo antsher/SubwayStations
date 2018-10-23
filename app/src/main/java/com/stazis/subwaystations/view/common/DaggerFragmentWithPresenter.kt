@@ -21,6 +21,7 @@ abstract class DaggerFragmentWithPresenter : DaggerFragment(), Representation {
 
     override fun showError(errorMessage: String) {
         AlertDialog.Builder(context)
+            .setTitle("Error!")
             .setMessage(errorMessage)
             .setNeutralButton("OK") { dialog, _ -> dialog?.dismiss() }
             .create()
