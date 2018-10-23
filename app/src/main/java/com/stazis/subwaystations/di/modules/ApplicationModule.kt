@@ -7,7 +7,7 @@ import com.stazis.subwaystations.SubwayStationsApplication
 import com.stazis.subwaystations.helpers.ConnectionHelper
 import com.stazis.subwaystations.helpers.LocationHelper
 import com.stazis.subwaystations.model.persistence.AppDatabase
-import com.stazis.subwaystations.model.repositories.RealStationRepository
+import com.stazis.subwaystations.model.repositories.StationRepository
 import com.stazis.subwaystations.model.services.StationService
 import dagger.Module
 import dagger.Provides
@@ -39,7 +39,7 @@ class ApplicationModule {
         retrofit: Retrofit,
         database: AppDatabase,
         connectionHelper: ConnectionHelper
-    ): RealStationRepository = RealStationRepository(
+    ): StationRepository = StationRepository(
         retrofit.create(StationService::class.java),
         database.stationDao(),
         connectionHelper
