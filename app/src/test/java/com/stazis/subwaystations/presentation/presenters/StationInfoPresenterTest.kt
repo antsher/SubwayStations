@@ -3,6 +3,7 @@ package com.stazis.subwaystations.presentation.presenters
 import com.stazis.subwaystations.domain.interactors.GetStation
 import com.stazis.subwaystations.model.entities.Station
 import com.stazis.subwaystations.presentation.views.info.StationInfoRepresentation
+import com.stazis.subwaystations.testutil.TestSchedulerProvider
 import io.reactivex.Single
 import io.reactivex.schedulers.TestScheduler
 import org.junit.Before
@@ -29,7 +30,7 @@ class StationInfoPresenterTest {
     fun setUp() {
         MockitoAnnotations.initMocks(this)
         testScheduler = TestScheduler()
-        stationInfoPresenter = StationInfoPresenter(mockGetStation)
+        stationInfoPresenter = StationInfoPresenter(mockGetStation, TestSchedulerProvider(testScheduler))
     }
 
     @Test

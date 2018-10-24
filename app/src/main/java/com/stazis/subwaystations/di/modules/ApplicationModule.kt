@@ -9,6 +9,8 @@ import com.stazis.subwaystations.helpers.LocationHelper
 import com.stazis.subwaystations.model.persistence.AppDatabase
 import com.stazis.subwaystations.model.repositories.StationRepository
 import com.stazis.subwaystations.model.services.StationService
+import com.stazis.subwaystations.utils.AppSchedulerProvider
+import com.stazis.subwaystations.utils.SchedulerProvider
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -61,4 +63,8 @@ class ApplicationModule {
     @Provides
     @Singleton
     fun provideLocationHelper(context: Context) = LocationHelper(context)
+
+    @Provides
+    @Singleton
+    fun provideSchedulerProvider(): SchedulerProvider = AppSchedulerProvider()
 }

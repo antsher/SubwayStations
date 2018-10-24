@@ -4,13 +4,13 @@ import android.annotation.SuppressLint
 import com.stazis.subwaystations.domain.interactors.GetStation
 import com.stazis.subwaystations.model.entities.Station
 import com.stazis.subwaystations.presentation.views.info.StationInfoRepresentation
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.stazis.subwaystations.utils.SchedulerProvider
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class StationInfoPresenter @Inject constructor(
-    private val getStation: GetStation
+    private val getStation: GetStation,
+    private val schedulerProvider: SchedulerProvider
 ) : BasePresenter<StationInfoRepresentation>() {
 
     private var loading = false
@@ -20,8 +20,8 @@ class StationInfoPresenter @Inject constructor(
         loading = true
         getStation.execute(stationName)
             .delay(2000, TimeUnit.MILLISECONDS)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(schedulerProvider.ioScheduler())
+            .observeOn(schedulerProvider.uiScheduler())
             .subscribe(this::onSuccess, this::onFailure)
     }
 
