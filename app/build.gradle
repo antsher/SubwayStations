@@ -24,6 +24,10 @@ android {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -72,10 +76,12 @@ dependencies {
     implementation 'io.ashdavies.rx:rx-tasks:2.0.0'
 
     // Mockito
-    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.0.0-RC3"
+    testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.0.0-RC3'
+    androidTestImplementation 'org.mockito:mockito-android:2.23.0'
 
     // Testing
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    kaptAndroidTest "com.google.dagger:dagger-compiler:$dagger_version"
 }

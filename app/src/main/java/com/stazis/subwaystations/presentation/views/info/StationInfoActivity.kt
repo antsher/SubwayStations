@@ -2,7 +2,8 @@ package com.stazis.subwaystations.presentation.views.info
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.SphericalUtil
 import com.stazis.subwaystations.R
@@ -46,11 +47,11 @@ class StationInfoActivity : DaggerActivity(), StationInfoRepresentation {
     }
 
     override fun showLoading() {
-        progressBarContainer.visibility = View.VISIBLE
+        progressBarContainer.visibility = VISIBLE
     }
 
     override fun hideLoading() {
-        progressBarContainer.visibility = View.GONE
+        progressBarContainer.visibility = GONE
     }
 
     override fun showError(errorMessage: String) = AlertDialog.Builder(this)
