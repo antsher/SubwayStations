@@ -9,16 +9,14 @@ class NavigationController(activity: GeneralActivity, private val containerId: I
     private val fragmentManager: FragmentManager = activity.supportFragmentManager
 
     fun navigateToStationMap() = ifCurrentFragmentIsNot(StationMapFragment::class.java) {
-        val fragment = StationMapFragment()
         fragmentManager.transaction(allowStateLoss = true) {
-            replace(containerId, fragment)
+            replace(containerId, StationMapFragment())
         }
     }
 
     fun navigateToStationList() = ifCurrentFragmentIsNot(StationListFragment::class.java) {
-        val fragment = StationListFragment()
         fragmentManager.transaction(allowStateLoss = true) {
-            replace(containerId, fragment)
+            replace(containerId, StationListFragment())
         }
     }
 
