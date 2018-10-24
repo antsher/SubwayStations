@@ -23,12 +23,15 @@ class RealStationRepository(
         }
 
     private fun loadStationsFromNetwork(emitter: SingleEmitter<List<Station>>) = try {
-        val stations = stationService.getStations().execute().body()
-        stations?.toMutableList()?.apply {
-            map { station -> ifIncorrectCoordinates(station) { remove(station) } }
-            stationDao.insertAll(this)
-            emitter.onSuccess(this)
-        } ?: emitter.onError(Exception("No data received!"))
+        stationService.getStations()
+            .execute()
+            .body()
+            ?.toMutableList()
+            ?.apply {
+                map { station -> ifIncorrectCoordinates(station) { remove(station) } }
+                stationDao.insertAll(this)
+                emitter.onSuccess(this)
+            } ?: emitter.onError(Exception("No data received!"))
     } catch (exception: Exception) {
         emitter.onError(exception)
     }
@@ -57,23 +60,19 @@ class RealStationRepository(
         }
 
     private fun loadStationFromNetwork(emitter: SingleEmitter<Station>, stationName: String) = try {
-        stationService.getStations().execute().body().apply {
-            if (this != null) {
-                emitter.onSuccess(find { station -> station.name == stationName }!!)
-            } else {
-                emitter.onError(Exception("No data received!"))
-            }
+        stationService.getStations().execute().body()?.let {
+            emitter.onSuccess(it.find { station -> station.name == stationName }!!)
+        } ?: run {
+            emitter.onError(Exception("No data received!"))
         }
     } catch (exception: Exception) {
         emitter.onError(exception)
     }
 
     private fun loadStationFromDatabase(emitter: SingleEmitter<Station>, stationName: String) =
-        stationDao.get(stationName).apply {
-            if (this != null) {
-                emitter.onSuccess(this)
-            } else {
-                emitter.onError(Exception("Station with name $stationName not found!"))
-            }
+        stationDao.get(stationName)?.let {
+            emitter.onSuccess(it)
+        } ?: run {
+            emitter.onError(Exception("Station with name $stationName not found!"))
         }
 }
