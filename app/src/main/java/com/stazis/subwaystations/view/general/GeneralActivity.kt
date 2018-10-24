@@ -16,18 +16,16 @@ class GeneralActivity : AppCompatActivity() {
         private const val locationPermission = Manifest.permission.ACCESS_FINE_LOCATION
     }
 
-    private lateinit var permissionHelper: PermissionHelper
     private val navigationController: NavigationController = NavigationController(this, R.id.fragmentContainer)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_general)
-        permissionHelper = PermissionHelper(this)
         actAccordingToLocationPermissionState(getLocationPermissionState())
     }
 
     private fun getLocationPermissionState(): PermissionHelper.PermissionState =
-        permissionHelper.checkPermissionState(locationPermission)
+        PermissionHelper.checkPermissionState(this, locationPermission)
 
     private fun actAccordingToLocationPermissionState(state: PermissionHelper.PermissionState) {
         when (state) {
@@ -35,7 +33,7 @@ class GeneralActivity : AppCompatActivity() {
                 setListeners()
                 navigateToMap()
             }
-            PermissionHelper.PermissionState.NOT_GRANTED -> permissionHelper.requestPermission(locationPermission)
+            PermissionHelper.PermissionState.NOT_GRANTED -> PermissionHelper.requestPermission(this, locationPermission)
             PermissionHelper.PermissionState.REJECTED -> askNicelyForPermissions()
         }
     }
@@ -46,7 +44,7 @@ class GeneralActivity : AppCompatActivity() {
             .setMessage("The app cannot run without location permissions. Please, grant them")
             .setNeutralButton("OK") { dialog, _ ->
                 dialog.dismiss()
-                permissionHelper.requestPermission(locationPermission)
+                PermissionHelper.requestPermission(this, locationPermission)
             }
             .create()
             .show()

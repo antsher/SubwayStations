@@ -6,17 +6,20 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.stazis.subwaystations.view.general.GeneralActivity
 
-class PermissionHelper(private val activity: Activity) {
+class PermissionHelper {
 
     enum class PermissionState { GRANTED, NOT_GRANTED, REJECTED }
 
-    fun checkPermissionState(permissionName: String): PermissionState = when {
-        ContextCompat.checkSelfPermission(activity, permissionName) ==
-                PackageManager.PERMISSION_GRANTED -> PermissionState.GRANTED
-        ActivityCompat.shouldShowRequestPermissionRationale(activity, permissionName) -> PermissionState.REJECTED
-        else -> PermissionState.NOT_GRANTED
-    }
+    companion object {
 
-    fun requestPermission(permissionName: String) =
-        ActivityCompat.requestPermissions(activity, arrayOf(permissionName), GeneralActivity.PERMISSION_REQUEST_CODE)
+        fun checkPermissionState(activity: Activity, permissionName: String): PermissionState = when {
+            ContextCompat.checkSelfPermission(activity, permissionName) ==
+                    PackageManager.PERMISSION_GRANTED -> PermissionState.GRANTED
+            ActivityCompat.shouldShowRequestPermissionRationale(activity, permissionName) -> PermissionState.REJECTED
+            else -> PermissionState.NOT_GRANTED
+        }
+
+        fun requestPermission(activity: Activity, permissionName: String) =
+            ActivityCompat.requestPermissions(activity, arrayOf(permissionName), GeneralActivity.PERMISSION_REQUEST_CODE)
+    }
 }
