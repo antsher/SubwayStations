@@ -13,28 +13,25 @@ class RealStationRepository(
     private val connectionHelper: ConnectionHelper
 ) : StationRepository {
 
-    override fun getStations(): Single<List<Station>> {
-        return Single.create<List<Station>> { emitter: SingleEmitter<List<Station>> ->
+    override fun getStations(): Single<List<Station>> =
+        Single.create<List<Station>> { emitter: SingleEmitter<List<Station>> ->
             if (connectionHelper.isOnline()) {
                 loadStationsFromNetwork(emitter)
             } else {
                 loadStationsFromDatabase(emitter)
             }
         }
-    }
 
-    private fun loadStationsFromNetwork(emitter: SingleEmitter<List<Station>>) {
-        try {
-            val stations = stationService.getStations().execute().body()
-            if (stations != null) {
-                stationDao.insertAll(stations)
-                emitter.onSuccess(stations)
-            } else {
-                emitter.onError(Exception("No data received!"))
-            }
-        } catch (exception: Exception) {
-            emitter.onError(exception)
+    private fun loadStationsFromNetwork(emitter: SingleEmitter<List<Station>>) = try {
+        val stations = stationService.getStations().execute().body()
+        if (stations != null) {
+            stationDao.insertAll(stations)
+            emitter.onSuccess(stations)
+        } else {
+            emitter.onError(Exception("No data received!"))
         }
+    } catch (exception: Exception) {
+        emitter.onError(exception)
     }
 
     private fun loadStationsFromDatabase(emitter: SingleEmitter<List<Station>>) {
@@ -46,27 +43,24 @@ class RealStationRepository(
         }
     }
 
-    override fun getStation(stationName: String): Single<Station> {
-        return Single.create<Station> { emitter: SingleEmitter<Station> ->
+    override fun getStation(stationName: String): Single<Station> =
+        Single.create<Station> { emitter: SingleEmitter<Station> ->
             if (connectionHelper.isOnline()) {
                 loadStationFromNetwork(emitter, stationName)
             } else {
                 loadStationFromDatabase(emitter, stationName)
             }
         }
-    }
 
-    private fun loadStationFromNetwork(emitter: SingleEmitter<Station>, stationName: String) {
-        try {
-            val stations = stationService.getStations().execute().body()
-            if (stations != null) {
-                emitter.onSuccess(stations.find { it -> it.name == stationName }!!)
-            } else {
-                emitter.onError(Exception("No data received!"))
-            }
-        } catch (exception: Exception) {
-            emitter.onError(exception)
+    private fun loadStationFromNetwork(emitter: SingleEmitter<Station>, stationName: String) = try {
+        val stations = stationService.getStations().execute().body()
+        if (stations != null) {
+            emitter.onSuccess(stations.find { it -> it.name == stationName }!!)
+        } else {
+            emitter.onError(Exception("No data received!"))
         }
+    } catch (exception: Exception) {
+        emitter.onError(exception)
     }
 
     private fun loadStationFromDatabase(emitter: SingleEmitter<Station>, stationName: String) {
