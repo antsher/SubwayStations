@@ -11,9 +11,9 @@ class RealStationRepository(
     private val stationService: StationService,
     private val stationDao: StationDao,
     private val connectionHelper: ConnectionHelper
-) {
+) : StationRepository {
 
-    fun getStations(): Single<List<Station>> {
+    override fun getStations(): Single<List<Station>> {
         return Single.create<List<Station>> { emitter: SingleEmitter<List<Station>> ->
             if (connectionHelper.isOnline()) {
                 loadStationsFromNetwork(emitter)
@@ -46,7 +46,7 @@ class RealStationRepository(
         }
     }
 
-    fun getStation(stationName: String): Single<Station> {
+    override fun getStation(stationName: String): Single<Station> {
         return Single.create<Station> { emitter: SingleEmitter<Station> ->
             if (connectionHelper.isOnline()) {
                 loadStationFromNetwork(emitter, stationName)
