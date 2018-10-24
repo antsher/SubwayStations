@@ -23,10 +23,10 @@ class StationsPresenter @Inject constructor(
     @SuppressLint("CheckResult")
     fun getStationsAndLocation() {
         loading = true
-        val converter = BiFunction<List<Station>, Location, Pair<List<Station>, Location>> { stations, location ->
+        val zipper = BiFunction<List<Station>, Location, Pair<List<Station>, Location>> { stations, location ->
             stations to location
         }
-        Single.zip(getStations.execute(), getLocation.execute(), converter)
+        Single.zip(getStations.execute(), getLocation.execute(), zipper)
             .delay(2000, TimeUnit.MILLISECONDS)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
