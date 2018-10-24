@@ -4,6 +4,15 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
+    signingConfigs {
+        debug {
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storeFile file('/home/anton/AndroidStudioProjects/SubwayStations/debug.keystore')
+            storePassword 'android'
+        }
+    }
+    buildToolsVersion '28.0.3'
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.stazis.subwaystations"
@@ -19,19 +28,21 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            signingConfig signingConfigs.debug
+        }
     }
-
     compileOptions {
-        targetCompatibility 1.8
-        sourceCompatibility 1.8
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
     }
-
     testOptions {
         unitTests.returnDefaultValues = true
     }
 }
 
 dependencies {
+
     // Multidex
     implementation 'androidx.multidex:multidex:2.0.0'
 
