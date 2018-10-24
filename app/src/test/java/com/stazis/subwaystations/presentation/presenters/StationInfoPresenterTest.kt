@@ -40,8 +40,10 @@ class StationInfoPresenterTest {
 
         `when`(mockGetStation.execute(stationName)).thenReturn(single)
 
-        stationInfoPresenter.attachView(mockStationInfoRepresentation)
-        stationInfoPresenter.getStation(stationName)
+        stationInfoPresenter.let {
+            it.attachView(mockStationInfoRepresentation)
+            it.getStation(stationName)
+        }
 
         testScheduler.triggerActions()
 
@@ -58,8 +60,10 @@ class StationInfoPresenterTest {
 
         `when`(mockGetStation.execute(stationName)).thenReturn(single)
 
-        stationInfoPresenter.attachView(mockStationInfoRepresentation)
-        stationInfoPresenter.getStation(stationName)
+        stationInfoPresenter.let {
+            it.attachView(mockStationInfoRepresentation)
+            it.getStation(stationName)
+        }
 
         testScheduler.triggerActions()
 
