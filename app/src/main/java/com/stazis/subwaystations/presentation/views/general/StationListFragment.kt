@@ -37,22 +37,21 @@ class StationListFragment : DaggerFragmentWithPresenter(), StationsRepresentatio
     override fun updateStationsAndLocation(stationsAndLocation: Pair<List<Station>, Location>) =
         addStationsToContainer(initStationViews(stationsAndLocation))
 
-    private fun initStationViews(stationsAndLocation: Pair<List<Station>, Location>): List<Pair<StationView, Int>> {
-        val currentLocation = LatLng(stationsAndLocation.second.latitude, stationsAndLocation.second.longitude)
-        val stationViewsWithDistances = ArrayList<Pair<StationView, Int>>()
-        for (station in stationsAndLocation.first) {
-            val stationLocation = LatLng(station.latitude, station.longitude)
-            val distance = SphericalUtil.computeDistanceBetween(stationLocation, currentLocation).roundToInt()
-            val stationView = StationView(
-                context,
-                station.name,
-                distance,
-                Runnable { navigateToStationInfo(station.name, currentLocation) }
-            )
-            stationViewsWithDistances.add(stationView to distance)
+    private fun initStationViews(stationsAndLocation: Pair<List<Station>, Location>): List<Pair<StationView, Int>> =
+        ArrayList<Pair<StationView, Int>>().apply {
+            val currentLocation = LatLng(stationsAndLocation.second.latitude, stationsAndLocation.second.longitude)
+            for (station in stationsAndLocation.first) {
+                val stationLocation = LatLng(station.latitude, station.longitude)
+                val distance = SphericalUtil.computeDistanceBetween(stationLocation, currentLocation).roundToInt()
+                val stationView = StationView(
+                    context,
+                    station.name,
+                    distance,
+                    Runnable { navigateToStationInfo(station.name, currentLocation) }
+                )
+                add(stationView to distance)
+            }
         }
-        return stationViewsWithDistances
-    }
 
     private fun navigateToStationInfo(stationName: String, currentLocation: LatLng) =
         startActivity(Intent(context, StationInfoActivity::class.java).apply {

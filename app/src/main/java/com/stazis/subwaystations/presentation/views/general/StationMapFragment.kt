@@ -50,15 +50,15 @@ class StationMapFragment : DaggerFragmentWithPresenter(), StationsRepresentation
         }
     }
 
-    private fun initStationMarkers(stations: List<Station>, currentLocation: LatLng): List<MarkerOptions> {
-        val markers = ArrayList<MarkerOptions>()
-        for (station in stations) {
-            val stationLocation = LatLng(station.latitude, station.longitude)
-            val distanceToStation = SphericalUtil.computeDistanceBetween(stationLocation, currentLocation).roundToInt()
-            markers.add(MarkerOptions().position(stationLocation).title(station.name).snippet("${distanceToStation}m"))
+    private fun initStationMarkers(stations: List<Station>, currentLocation: LatLng): List<MarkerOptions> =
+        ArrayList<MarkerOptions>().apply {
+            for (station in stations) {
+                val stationLocation = LatLng(station.latitude, station.longitude)
+                val distanceToStation =
+                    SphericalUtil.computeDistanceBetween(stationLocation, currentLocation).roundToInt()
+                add(MarkerOptions().position(stationLocation).title(station.name).snippet("${distanceToStation}m"))
+            }
         }
-        return markers
-    }
 
     private fun navigateToStationInfo(stationName: String, currentLocation: LatLng) =
         startActivity(Intent(context, StationInfoActivity::class.java).apply {

@@ -7,7 +7,5 @@ import javax.inject.Inject
 
 class GetStation @Inject constructor(private val stationRepository: StationRepository) {
 
-    fun execute(stationName: String): Single<Station> {
-        return stationRepository.getStation(stationName)
-    }
+    fun execute(stationName: String): Single<Station> = stationRepository.getStation(stationName)
 }
