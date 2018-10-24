@@ -18,9 +18,7 @@ class TabView(context: Context?, attrs: AttributeSet? = null) : RelativeLayout(c
         val styledAttrs = context?.obtainStyledAttributes(attrs, R.styleable.TabView)
         val name = styledAttrs?.getString(R.styleable.TabView_name)
         styledAttrs?.recycle()
-        if (name != null) {
-            tabName.text = name
-        }
+        name?.let { tabName.text = it }
     }
 
     fun makeActive() {

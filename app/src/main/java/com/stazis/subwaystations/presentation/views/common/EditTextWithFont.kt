@@ -13,8 +13,8 @@ class EditTextWithFont(context: Context?, attrs: AttributeSet? = null) : AppComp
         val fontName = styledAttrs?.getString(R.styleable.EditTextWithFont_typeface)
         styledAttrs?.recycle()
 
-        if (fontName != null) {
-            val typeface = Typeface.createFromAsset(context.assets, "fonts/$fontName.ttf")
+        fontName?.let {
+            val typeface = Typeface.createFromAsset(context.assets, "fonts/$it.ttf")
             setTypeface(typeface)
         }
 
