@@ -27,10 +27,10 @@ class RealStationRepository(
             .execute()
             .body()
             ?.toMutableList()
-            ?.apply {
-                map { station -> ifIncorrectCoordinates(station) { remove(station) } }
-                stationDao.insertAll(this)
-                emitter.onSuccess(this)
+            ?.let {
+                it.map { station -> ifIncorrectCoordinates(station) { it.remove(station) } }
+                stationDao.insertAll(it)
+                emitter.onSuccess(it)
             } ?: emitter.onError(Exception("No data received!"))
     } catch (exception: Exception) {
         emitter.onError(exception)
@@ -42,9 +42,9 @@ class RealStationRepository(
         }
     }
 
-    private fun loadStationsFromDatabase(emitter: SingleEmitter<List<Station>>) = stationDao.getAll().apply {
-        if (!isEmpty()) {
-            emitter.onSuccess(this)
+    private fun loadStationsFromDatabase(emitter: SingleEmitter<List<Station>>) = stationDao.getAll().let {
+        if (!it.isEmpty()) {
+            emitter.onSuccess(it)
         } else {
             emitter.onError(Exception("Database is empty!"))
         }

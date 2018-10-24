@@ -44,26 +44,23 @@ class StationMapFragment : DaggerFragmentWithPresenter(), StationsRepresentation
         map.getMapAsync { googleMap ->
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 11f))
             googleMap.setOnInfoWindowClickListener { marker -> navigateToStationInfo(marker.title, currentLocation) }
-            for (marker in stationMarkers) {
-                googleMap.addMarker(marker)
+            stationMarkers.forEach {
+                googleMap.addMarker(it)
             }
         }
     }
 
     private fun initStationMarkers(stations: List<Station>, currentLocation: LatLng): List<MarkerOptions> =
-        ArrayList<MarkerOptions>().apply {
-            for (station in stations) {
-                val stationLocation = LatLng(station.latitude, station.longitude)
-                val distanceToStation =
-                    SphericalUtil.computeDistanceBetween(stationLocation, currentLocation).roundToInt()
-                add(MarkerOptions().position(stationLocation).title(station.name).snippet("${distanceToStation}m"))
-            }
+        stations.map {
+            val stationLocation = LatLng(it.latitude, it.longitude)
+            val distanceToStation = SphericalUtil.computeDistanceBetween(stationLocation, currentLocation).roundToInt()
+            MarkerOptions().position(stationLocation).title(it.name).snippet("${distanceToStation}m")
         }
 
     private fun navigateToStationInfo(stationName: String, currentLocation: LatLng) =
-        startActivity(Intent(context, StationInfoActivity::class.java).apply {
-            putExtra(StationInfoActivity.STATION_NAME_KEY, stationName)
-            putExtra(StationInfoActivity.CURRENT_LOCATION_KEY, currentLocation)
+        startActivity(Intent(context, StationInfoActivity::class.java).let {
+            it.putExtra(StationInfoActivity.STATION_NAME_KEY, stationName)
+            it.putExtra(StationInfoActivity.CURRENT_LOCATION_KEY, currentLocation)
         })
 
     override fun onResume() {

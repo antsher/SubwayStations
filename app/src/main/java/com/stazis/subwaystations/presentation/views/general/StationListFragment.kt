@@ -37,33 +37,27 @@ class StationListFragment : DaggerFragmentWithPresenter(), StationsRepresentatio
     override fun updateStationsAndLocation(stationsAndLocation: Pair<List<Station>, Location>) =
         addStationsToContainer(initStationViews(stationsAndLocation))
 
-    private fun initStationViews(stationsAndLocation: Pair<List<Station>, Location>): List<Pair<StationView, Int>> =
-        ArrayList<Pair<StationView, Int>>().apply {
-            val currentLocation = LatLng(stationsAndLocation.second.latitude, stationsAndLocation.second.longitude)
-            for (station in stationsAndLocation.first) {
-                val stationLocation = LatLng(station.latitude, station.longitude)
-                val distance = SphericalUtil.computeDistanceBetween(stationLocation, currentLocation).roundToInt()
-                val stationView = StationView(
-                    context,
-                    station.name,
-                    distance,
-                    Runnable { navigateToStationInfo(station.name, currentLocation) }
-                )
-                add(stationView to distance)
-            }
-        }
-
-    private fun navigateToStationInfo(stationName: String, currentLocation: LatLng) =
-        startActivity(Intent(context, StationInfoActivity::class.java).apply {
-            putExtra(StationInfoActivity.STATION_NAME_KEY, stationName)
-            putExtra(StationInfoActivity.CURRENT_LOCATION_KEY, currentLocation)
-        })
-
-    private fun addStationsToContainer(stationViewsWithDistances: List<Pair<StationView, Int>>) {
-        for (stationViewWithDistance in stationViewsWithDistances.sortedBy { it.second }) {
-            stationsContainer.addView(stationViewWithDistance.first)
+    private fun initStationViews(stationsAndLocation: Pair<List<Station>, Location>): List<Pair<StationView, Int>> {
+        val currentLocation = LatLng(stationsAndLocation.second.latitude, stationsAndLocation.second.longitude)
+        return stationsAndLocation.first.map {
+            val stationLocation = LatLng(it.latitude, it.longitude)
+            val distance = SphericalUtil.computeDistanceBetween(stationLocation, currentLocation).roundToInt()
+            val stationView =
+                StationView(context, it.name, distance, Runnable { navigateToStationInfo(it.name, currentLocation) })
+            stationView to distance
         }
     }
+
+    private fun navigateToStationInfo(stationName: String, currentLocation: LatLng) =
+        startActivity(Intent(context, StationInfoActivity::class.java).let {
+            it.putExtra(StationInfoActivity.STATION_NAME_KEY, stationName)
+            it.putExtra(StationInfoActivity.CURRENT_LOCATION_KEY, currentLocation)
+        })
+
+    private fun addStationsToContainer(stationViewsWithDistances: List<Pair<StationView, Int>>) =
+        stationViewsWithDistances.sortedBy { it.second }.forEach {
+            stationsContainer.addView(it.first)
+        }
 
     override fun onDestroyView() {
         presenter.detachView()
