@@ -21,7 +21,7 @@ class ApplicationModule {
 
     companion object {
 
-        private const val BASE_URL = "http://my-json-server.typicode.com/BeeWhy/metro/"
+        private const val BASE_URL = "https://my-json-server.typicode.com/BeeWhy/metro/"
         private const val DATABASE_NAME = "db-name"
     }
 
