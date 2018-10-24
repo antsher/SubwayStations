@@ -1,7 +1,7 @@
 package com.stazis.subwaystations.presenter
 
 import android.annotation.SuppressLint
-import com.stazis.subwaystations.domain.GetStation
+import com.stazis.subwaystations.domain.interactors.GetStation
 import com.stazis.subwaystations.model.entities.Station
 import com.stazis.subwaystations.view.info.StationInfoRepresentation
 import io.reactivex.android.schedulers.AndroidSchedulers

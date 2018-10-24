@@ -2,8 +2,8 @@ package com.stazis.subwaystations.presenter
 
 import android.annotation.SuppressLint
 import android.location.Location
-import com.stazis.subwaystations.domain.GetLocation
-import com.stazis.subwaystations.domain.GetStations
+import com.stazis.subwaystations.domain.interactors.GetLocation
+import com.stazis.subwaystations.domain.interactors.GetStations
 import com.stazis.subwaystations.model.entities.Station
 import com.stazis.subwaystations.view.general.StationsRepresentation
 import io.reactivex.Single

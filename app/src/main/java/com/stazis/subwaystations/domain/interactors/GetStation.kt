@@ -1,4 +1,4 @@
-package com.stazis.subwaystations.domain
+package com.stazis.subwaystations.domain.interactors
 
 import com.stazis.subwaystations.model.entities.Station
 import com.stazis.subwaystations.model.repositories.StationRepository

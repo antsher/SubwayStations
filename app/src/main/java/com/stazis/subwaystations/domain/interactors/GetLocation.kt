@@ -1,4 +1,4 @@
-package com.stazis.subwaystations.domain
+package com.stazis.subwaystations.domain.interactors
 
 import android.location.Location
 import com.stazis.subwaystations.helpers.LocationHelper
