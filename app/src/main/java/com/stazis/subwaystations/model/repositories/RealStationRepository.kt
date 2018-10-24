@@ -7,7 +7,7 @@ import com.stazis.subwaystations.model.services.StationService
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
 
-class StationRepository(
+class RealStationRepository(
     private val stationService: StationService,
     private val stationDao: StationDao,
     private val connectionHelper: ConnectionHelper
