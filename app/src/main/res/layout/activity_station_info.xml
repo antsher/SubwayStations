@@ -12,7 +12,7 @@
         android:layout_marginEnd="10dp"
         android:orientation="vertical">
 
-        <com.stazis.subwaystations.view.common.TextViewWithFont
+        <com.stazis.subwaystations.presentation.views.common.TextViewWithFont
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
             android:textSize="24sp"
             app:typeface="Montserrat-SemiBold" />
 
-        <com.stazis.subwaystations.view.common.TextViewWithFont
+        <com.stazis.subwaystations.presentation.views.common.TextViewWithFont
             android:id="@+id/latitude"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
             android:textSize="16sp"
             app:typeface="Montserrat-Regular" />
 
-        <com.stazis.subwaystations.view.common.TextViewWithFont
+        <com.stazis.subwaystations.presentation.views.common.TextViewWithFont
             android:id="@+id/longitude"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
             android:textSize="16sp"
             app:typeface="Montserrat-Regular" />
 
-        <com.stazis.subwaystations.view.common.TextViewWithFont
+        <com.stazis.subwaystations.presentation.views.common.TextViewWithFont
             android:id="@+id/distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

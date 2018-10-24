@@ -1,7 +1,7 @@
-package com.stazis.subwaystations.view.info
+package com.stazis.subwaystations.presentation.views.info
 
 import com.stazis.subwaystations.model.entities.Station
-import com.stazis.subwaystations.view.common.Representation
+import com.stazis.subwaystations.presentation.views.common.Representation
 
 interface StationInfoRepresentation : Representation {
 

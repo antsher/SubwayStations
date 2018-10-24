@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.stazis.subwaystations.view.common.TextViewWithFont
+    <com.stazis.subwaystations.presentation.views.common.TextViewWithFont
         android:id="@+id/tabName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.stazis.subwaystations.view.general.GeneralActivity
+import com.stazis.subwaystations.presentation.views.general.GeneralActivity
 
 class PermissionHelper {
 

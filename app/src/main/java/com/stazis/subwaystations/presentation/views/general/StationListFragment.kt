@@ -1,4 +1,4 @@
-package com.stazis.subwaystations.view.general
+package com.stazis.subwaystations.presentation.views.general
 
 import android.content.Intent
 import android.location.Location
@@ -10,9 +10,9 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.SphericalUtil
 import com.stazis.subwaystations.R
 import com.stazis.subwaystations.model.entities.Station
-import com.stazis.subwaystations.presenter.StationsPresenter
-import com.stazis.subwaystations.view.common.DaggerFragmentWithPresenter
-import com.stazis.subwaystations.view.info.StationInfoActivity
+import com.stazis.subwaystations.presentation.presenters.StationsPresenter
+import com.stazis.subwaystations.presentation.views.common.DaggerFragmentWithPresenter
+import com.stazis.subwaystations.presentation.views.info.StationInfoActivity
 import kotlinx.android.synthetic.main.fragment_station_list.*
 import javax.inject.Inject
 import kotlin.math.roundToInt

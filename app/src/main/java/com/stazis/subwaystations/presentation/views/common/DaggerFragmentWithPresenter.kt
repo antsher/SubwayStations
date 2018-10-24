@@ -1,4 +1,4 @@
-package com.stazis.subwaystations.view.common
+package com.stazis.subwaystations.presentation.views.common
 
 import android.app.AlertDialog
 import android.os.Bundle

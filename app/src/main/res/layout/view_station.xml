@@ -12,7 +12,7 @@
         android:layout_toStartOf="@+id/arrowRight"
         android:orientation="vertical">
 
-        <com.stazis.subwaystations.view.common.TextViewWithFont
+        <com.stazis.subwaystations.presentation.views.common.TextViewWithFont
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
             android:textSize="24sp"
             app:typeface="Montserrat-SemiBold" />
 
-        <com.stazis.subwaystations.view.common.TextViewWithFont
+        <com.stazis.subwaystations.presentation.views.common.TextViewWithFont
             android:id="@+id/distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

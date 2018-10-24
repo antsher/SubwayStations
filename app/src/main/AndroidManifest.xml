@@ -25,13 +25,13 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
 
-        <activity android:name="com.stazis.subwaystations.view.general.GeneralActivity">
+        <activity android:name="com.stazis.subwaystations.presentation.views.general.GeneralActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.stazis.subwaystations.view.info.StationInfoActivity" />
+        <activity android:name="com.stazis.subwaystations.presentation.views.info.StationInfoActivity" />
     </application>
 </manifest>

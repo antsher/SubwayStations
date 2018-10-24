@@ -1,4 +1,4 @@
-package com.stazis.subwaystations.view.info
+package com.stazis.subwaystations.presentation.views.info
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -7,7 +7,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.SphericalUtil
 import com.stazis.subwaystations.R
 import com.stazis.subwaystations.model.entities.Station
-import com.stazis.subwaystations.presenter.StationInfoPresenter
+import com.stazis.subwaystations.presentation.presenters.StationInfoPresenter
 import dagger.android.DaggerActivity
 import kotlinx.android.synthetic.main.activity_station_info.*
 import javax.inject.Inject

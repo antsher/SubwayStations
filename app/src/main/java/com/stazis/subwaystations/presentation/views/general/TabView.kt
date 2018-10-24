@@ -1,4 +1,4 @@
-package com.stazis.subwaystations.view.general
+package com.stazis.subwaystations.presentation.views.general
 
 import android.content.Context
 import android.graphics.Color

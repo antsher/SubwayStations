@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.general.GeneralActivity">
+    tools:context=".presentation.views.general.GeneralActivity">
 
     <LinearLayout
         android:id="@+id/tabsContainer"
@@ -13,14 +13,14 @@
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
 
-        <com.stazis.subwaystations.view.general.TabView
+        <com.stazis.subwaystations.presentation.views.general.TabView
             android:id="@+id/mapTab"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:name="@string/map" />
 
-        <com.stazis.subwaystations.view.general.TabView
+        <com.stazis.subwaystations.presentation.views.general.TabView
             android:id="@+id/listTab"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
