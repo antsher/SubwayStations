@@ -19,14 +19,12 @@ abstract class DaggerFragmentWithPresenter : DaggerFragment(), Representation {
         root.addView(progressBar)
     }
 
-    override fun showError(errorMessage: String) {
-        AlertDialog.Builder(context)
-            .setTitle("Error!")
-            .setMessage(errorMessage)
-            .setNeutralButton("OK") { dialog, _ -> dialog?.dismiss() }
-            .create()
-            .show()
-    }
+    override fun showError(errorMessage: String) = AlertDialog.Builder(context)
+        .setTitle("Error!")
+        .setMessage(errorMessage)
+        .setNeutralButton("OK") { dialog, _ -> dialog?.dismiss() }
+        .create()
+        .show()
 
     override fun showLoading() {
         progressBar.visibility = VISIBLE

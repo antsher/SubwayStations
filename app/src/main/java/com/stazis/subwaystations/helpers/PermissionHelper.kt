@@ -19,7 +19,10 @@ class PermissionHelper {
             else -> PermissionState.NOT_GRANTED
         }
 
-        fun requestPermission(activity: Activity, permissionName: String) =
-            ActivityCompat.requestPermissions(activity, arrayOf(permissionName), GeneralActivity.PERMISSION_REQUEST_CODE)
+        fun requestPermission(activity: Activity, permissionName: String) = ActivityCompat.requestPermissions(
+            activity,
+            arrayOf(permissionName),
+            GeneralActivity.PERMISSION_REQUEST_CODE
+        )
     }
 }

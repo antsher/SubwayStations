@@ -27,28 +27,24 @@ class GeneralActivity : AppCompatActivity() {
     private fun getLocationPermissionState(): PermissionHelper.PermissionState =
         PermissionHelper.checkPermissionState(this, locationPermission)
 
-    private fun actAccordingToLocationPermissionState(state: PermissionHelper.PermissionState) {
-        when (state) {
-            PermissionHelper.PermissionState.GRANTED -> {
-                setListeners()
-                navigateToMap()
-            }
-            PermissionHelper.PermissionState.NOT_GRANTED -> PermissionHelper.requestPermission(this, locationPermission)
-            PermissionHelper.PermissionState.REJECTED -> askNicelyForPermissions()
+    private fun actAccordingToLocationPermissionState(state: PermissionHelper.PermissionState) = when (state) {
+        PermissionHelper.PermissionState.GRANTED -> {
+            setListeners()
+            navigateToMap()
         }
+        PermissionHelper.PermissionState.NOT_GRANTED -> PermissionHelper.requestPermission(this, locationPermission)
+        PermissionHelper.PermissionState.REJECTED -> askNicelyForPermissions()
     }
 
-    private fun askNicelyForPermissions() {
-        AlertDialog.Builder(this)
-            .setTitle("Permission denied")
-            .setMessage("The app cannot run without location permissions. Please, grant them")
-            .setNeutralButton("OK") { dialog, _ ->
-                dialog.dismiss()
-                PermissionHelper.requestPermission(this, locationPermission)
-            }
-            .create()
-            .show()
-    }
+    private fun askNicelyForPermissions() = AlertDialog.Builder(this)
+        .setTitle("Permission denied")
+        .setMessage("The app cannot run without location permissions. Please, grant them")
+        .setNeutralButton("OK") { dialog, _ ->
+            dialog.dismiss()
+            PermissionHelper.requestPermission(this, locationPermission)
+        }
+        .create()
+        .show()
 
     private fun setListeners() {
         mapTab.setOnClickListener { navigateToMap() }

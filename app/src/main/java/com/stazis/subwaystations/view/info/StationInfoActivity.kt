@@ -53,13 +53,11 @@ class StationInfoActivity : DaggerActivity(), StationInfoRepresentation {
         progressBarContainer.visibility = View.GONE
     }
 
-    override fun showError(errorMessage: String) {
-        AlertDialog.Builder(this)
-            .setMessage(errorMessage)
-            .setNeutralButton("OK") { dialog, _ -> dialog?.dismiss() }
-            .create()
-            .show()
-    }
+    override fun showError(errorMessage: String) = AlertDialog.Builder(this)
+        .setMessage(errorMessage)
+        .setNeutralButton("OK") { dialog, _ -> dialog?.dismiss() }
+        .create()
+        .show()
 
     override fun onDestroy() {
         presenter.detachView()

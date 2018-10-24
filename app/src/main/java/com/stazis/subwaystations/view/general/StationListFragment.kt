@@ -29,7 +29,6 @@ class StationListFragment : DaggerFragmentWithPresenter(), StationsRepresentatio
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         presenter.attachView(this)
         showLoading()
         presenter.getStationsAndLocation()

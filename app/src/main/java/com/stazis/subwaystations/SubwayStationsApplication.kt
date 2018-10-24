@@ -6,7 +6,6 @@ import dagger.android.support.DaggerApplication
 
 class SubwayStationsApplication : DaggerApplication() {
 
-    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        return DaggerApplicationComponent.builder().create(this)
-    }
+    override fun applicationInjector(): AndroidInjector<out DaggerApplication> =
+        DaggerApplicationComponent.builder().create(this)
 }
