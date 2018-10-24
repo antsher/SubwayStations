@@ -26,11 +26,12 @@ class RealStationRepository(
         stationService.getStations()
             .execute()
             .body()
-            ?.toMutableList()
-            ?.let {
-                it.map { station -> ifIncorrectCoordinates(station) { it.remove(station) } }
-                stationDao.insertAll(it)
-                emitter.onSuccess(it)
+            ?.let { stations ->
+                stations.toMutableList().let {
+                    it.map { station -> ifIncorrectCoordinates(station) { it.remove(station) } }
+                    stationDao.insertAll(it)
+                    emitter.onSuccess(it)
+                }
             } ?: emitter.onError(Exception("No data received!"))
     } catch (exception: Exception) {
         emitter.onError(exception)
