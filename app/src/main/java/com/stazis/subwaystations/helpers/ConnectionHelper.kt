@@ -5,8 +5,8 @@ import android.net.ConnectivityManager
 
 class ConnectionHelper(private val context: Context) {
 
-    fun isOnline(): Boolean {
-        val netInfo = (context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).activeNetworkInfo
-        return netInfo != null && netInfo.isConnected
+    fun isOnline() = (context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
+        .activeNetworkInfo.let {
+        it != null && it.isConnected
     }
 }

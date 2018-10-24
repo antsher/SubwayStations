@@ -10,13 +10,12 @@ import com.google.android.gms.tasks.Task
 
 class LocationHelper(private val context: Context) {
 
-    fun getLocation(): Task<Location> {
+    fun getLocation(): Task<Location> =
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
             == PackageManager.PERMISSION_GRANTED
         ) {
-            return LocationServices.getFusedLocationProviderClient(context).lastLocation
+            LocationServices.getFusedLocationProviderClient(context).lastLocation
         } else {
             throw SecurityException("Missing location permissions!")
         }
-    }
 }
