@@ -9,6 +9,7 @@ android {
         applicationId "com.stazis.subwaystations"
         minSdkVersion 19
         targetSdkVersion 28
+        multiDexEnabled true
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -31,7 +32,10 @@ android {
 }
 
 dependencies {
-    // Androidx
+    // Multidex
+    implementation 'androidx.multidex:multidex:2.0.0'
+
+    // Core
     implementation "com.google.android.material:material:$androidx_version"
     implementation "androidx.core:core-ktx:$androidx_version"
     implementation "androidx.fragment:fragment-ktx:$androidx_version"
@@ -73,7 +77,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:16.0.0'
     implementation 'com.google.maps.android:android-maps-utils:0.5'
 
-    // Rx for gms tasks
+    // RxTasks
     implementation 'io.ashdavies.rx:rx-tasks:2.0.0'
 
     // Mockito
