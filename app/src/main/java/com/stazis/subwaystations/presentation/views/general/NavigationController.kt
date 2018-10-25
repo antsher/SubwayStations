@@ -11,12 +11,14 @@ class NavigationController(activity: GeneralActivity, private val containerId: I
     fun navigateToStationMap() = ifCurrentFragmentIsNot(StationMapFragment::class.java) {
         fragmentManager.transaction(allowStateLoss = true) {
             replace(containerId, StationMapFragment())
+            addToBackStack("")
         }
     }
 
     fun navigateToStationList() = ifCurrentFragmentIsNot(StationListFragment::class.java) {
         fragmentManager.transaction(allowStateLoss = true) {
             replace(containerId, StationListFragment())
+            addToBackStack("")
         }
     }
 

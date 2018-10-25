@@ -36,7 +36,7 @@ class StationsPresenter @Inject constructor(
     private fun onSuccess(stationsAndLocation: Pair<List<Station>, Location>) {
         loading = false
         view?.hideLoading()
-        view?.updateStationsAndLocation(stationsAndLocation)
+        view?.updateUI(stationsAndLocation)
     }
 
     private fun onFailure(error: Throwable) {

@@ -7,11 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.SphericalUtil
 import com.stazis.subwaystations.R
+import com.stazis.subwaystations.extensions.toLatLng
 import com.stazis.subwaystations.model.entities.Station
 import com.stazis.subwaystations.presentation.presenters.StationsPresenter
 import com.stazis.subwaystations.presentation.views.common.DaggerFragmentWithPresenter
@@ -26,15 +26,13 @@ class StationMapFragment : DaggerFragmentWithPresenter(), StationsRepresentation
 
         private const val STATIONS_KEY = "STATIONS_KEY"
         private const val LOCATION_KEY = "LOCATION_KEY"
-        private const val CAMERA_POSITION_KEY = "CAMERA_POSITION_KEY"
     }
 
     @Inject
     lateinit var presenter: StationsPresenter
 
-    private lateinit var stations: ArrayList<Station>
+    private lateinit var stations: List<Station>
     private lateinit var location: LatLng
-    private lateinit var cameraPosition: CameraPosition
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         root = inflater.inflate(R.layout.fragment_station_map, container, false) as ViewGroup
@@ -46,42 +44,36 @@ class StationMapFragment : DaggerFragmentWithPresenter(), StationsRepresentation
         map.onCreate(savedInstanceState)
         presenter.attachView(this)
 
-        if (savedInstanceState != null) {
-            stations = savedInstanceState.get(STATIONS_KEY) as ArrayList<Station>
-            location = savedInstanceState.get(LOCATION_KEY) as LatLng
-            cameraPosition = savedInstanceState.get(CAMERA_POSITION_KEY) as CameraPosition
-            map.getMapAsync { googleMap ->
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cameraPosition.target, cameraPosition.zoom))
-                googleMap.setOnCameraMoveListener { cameraPosition = googleMap.cameraPosition }
-            }
-            showMarkersOnMap(initStationMarkers())
-        } else {
+        savedInstanceState?.let {
+            restoreUI(savedInstanceState)
+        } ?: run {
             showLoading()
             presenter.getStationsAndLocation()
         }
     }
 
-    override fun updateStationsAndLocation(stationsAndLocation: Pair<List<Station>, Location>) {
-        stations = ArrayList(stationsAndLocation.first)
-        location = LatLng(stationsAndLocation.second.latitude, stationsAndLocation.second.longitude)
-        map.getMapAsync { googleMap ->
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 11f))
-            googleMap.setOnCameraMoveListener { cameraPosition = googleMap.cameraPosition }
-        }
-        showMarkersOnMap(initStationMarkers())
+    private fun restoreUI(savedInstanceState: Bundle) {
+        stations = savedInstanceState.get(STATIONS_KEY) as List<Station>
+        location = savedInstanceState.get(LOCATION_KEY) as LatLng
+        showClickableMarkersOnMap(initMarkers())
     }
 
-    private fun initStationMarkers() = stations.map {
+    override fun updateUI(stationsAndLocation: Pair<List<Station>, Location>) {
+        stations = ArrayList(stationsAndLocation.first)
+        location = stationsAndLocation.second.toLatLng()
+        map.getMapAsync { googleMap -> googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 11f)) }
+        showClickableMarkersOnMap(initMarkers())
+    }
+
+    private fun initMarkers() = stations.map {
         val stationLocation = LatLng(it.latitude, it.longitude)
         val distanceToStation = SphericalUtil.computeDistanceBetween(stationLocation, location).roundToInt()
         MarkerOptions().position(stationLocation).title(it.name).snippet("${distanceToStation}m")
     }
 
-    private fun showMarkersOnMap(markers: List<MarkerOptions>) = map.getMapAsync { googleMap ->
+    private fun showClickableMarkersOnMap(markers: List<MarkerOptions>) = map.getMapAsync { googleMap ->
         googleMap.setOnInfoWindowClickListener { marker -> navigateToStationInfo(marker.title, location) }
-        markers.forEach {
-            googleMap.addMarker(it)
-        }
+        markers.forEach { googleMap.addMarker(it) }
     }
 
     private fun navigateToStationInfo(stationName: String, currentLocation: LatLng) =
@@ -106,9 +98,9 @@ class StationMapFragment : DaggerFragmentWithPresenter(), StationsRepresentation
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelableArrayList(STATIONS_KEY, stations)
+        map?.onSaveInstanceState(outState)
+        outState.putParcelableArrayList(STATIONS_KEY, ArrayList(stations))
         outState.putParcelable(LOCATION_KEY, location)
-        outState.putParcelable(CAMERA_POSITION_KEY, cameraPosition)
         super.onSaveInstanceState(outState)
     }
 }

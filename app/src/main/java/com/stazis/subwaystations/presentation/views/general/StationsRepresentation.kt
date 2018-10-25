@@ -6,5 +6,5 @@ import com.stazis.subwaystations.presentation.views.common.Representation
 
 interface StationsRepresentation : Representation {
 
-    fun updateStationsAndLocation(stationsAndLocation: Pair<List<Station>, Location>)
+    fun updateUI(stationsAndLocation: Pair<List<Station>, Location>)
 }
