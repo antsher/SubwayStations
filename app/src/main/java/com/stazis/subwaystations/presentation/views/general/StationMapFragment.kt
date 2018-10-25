@@ -24,7 +24,7 @@ class StationMapFragment : DaggerFragmentWithPresenter(), StationsRepresentation
     @Inject
     lateinit var presenter: StationsPresenter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         root = inflater.inflate(R.layout.fragment_station_map, container, false) as ViewGroup
         return root
     }
@@ -50,12 +50,11 @@ class StationMapFragment : DaggerFragmentWithPresenter(), StationsRepresentation
         }
     }
 
-    private fun initStationMarkers(stations: List<Station>, currentLocation: LatLng): List<MarkerOptions> =
-        stations.map {
-            val stationLocation = LatLng(it.latitude, it.longitude)
-            val distanceToStation = SphericalUtil.computeDistanceBetween(stationLocation, currentLocation).roundToInt()
-            MarkerOptions().position(stationLocation).title(it.name).snippet("${distanceToStation}m")
-        }
+    private fun initStationMarkers(stations: List<Station>, currentLocation: LatLng) = stations.map {
+        val stationLocation = LatLng(it.latitude, it.longitude)
+        val distanceToStation = SphericalUtil.computeDistanceBetween(stationLocation, currentLocation).roundToInt()
+        MarkerOptions().position(stationLocation).title(it.name).snippet("${distanceToStation}m")
+    }
 
     private fun navigateToStationInfo(stationName: String, currentLocation: LatLng) =
         startActivity(Intent(context, StationInfoActivity::class.java).let {

@@ -9,12 +9,12 @@ import com.google.maps.android.SphericalUtil
 import com.stazis.subwaystations.R
 import com.stazis.subwaystations.model.entities.Station
 import com.stazis.subwaystations.presentation.presenters.StationInfoPresenter
-import dagger.android.DaggerActivity
+import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_station_info.*
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
-class StationInfoActivity : DaggerActivity(), StationInfoRepresentation {
+class StationInfoActivity : DaggerAppCompatActivity(), StationInfoRepresentation {
 
     @Inject
     lateinit var presenter: StationInfoPresenter

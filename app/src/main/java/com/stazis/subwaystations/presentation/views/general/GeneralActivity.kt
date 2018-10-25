@@ -24,8 +24,7 @@ class GeneralActivity : AppCompatActivity() {
         actAccordingToLocationPermissionState(getLocationPermissionState())
     }
 
-    private fun getLocationPermissionState(): PermissionHelper.PermissionState =
-        PermissionHelper.checkPermissionState(this, locationPermission)
+    private fun getLocationPermissionState() = PermissionHelper.checkPermissionState(this, locationPermission)
 
     private fun actAccordingToLocationPermissionState(state: PermissionHelper.PermissionState) = when (state) {
         PermissionHelper.PermissionState.GRANTED -> {

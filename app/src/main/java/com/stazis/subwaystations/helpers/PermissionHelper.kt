@@ -12,7 +12,7 @@ class PermissionHelper {
 
     companion object {
 
-        fun checkPermissionState(activity: Activity, permissionName: String): PermissionState = when {
+        fun checkPermissionState(activity: Activity, permissionName: String) = when {
             ContextCompat.checkSelfPermission(activity, permissionName) ==
                     PackageManager.PERMISSION_GRANTED -> PermissionState.GRANTED
             ActivityCompat.shouldShowRequestPermissionRationale(activity, permissionName) -> PermissionState.REJECTED
