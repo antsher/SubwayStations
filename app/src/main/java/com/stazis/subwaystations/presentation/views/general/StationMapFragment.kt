@@ -46,16 +46,24 @@ class StationMapFragment : DaggerFragmentWithPresenter(), StationsRepresentation
 
         savedInstanceState?.let {
             restoreUI(savedInstanceState)
-        } ?: run {
-            showLoading()
-            presenter.getStationsAndLocation()
-        }
+        } ?: updateData()
+    }
+
+    private fun updateData() {
+        showLoading()
+        presenter.getStationsAndLocation()
     }
 
     private fun restoreUI(savedInstanceState: Bundle) {
-        stations = savedInstanceState.get(STATIONS_KEY) as List<Station>
-        location = savedInstanceState.get(LOCATION_KEY) as LatLng
-        showClickableMarkersOnMap(initMarkers())
+        val savedStations = savedInstanceState.get(STATIONS_KEY)
+        val savedLocation = savedInstanceState.get(LOCATION_KEY)
+        if (savedStations == null || savedLocation == null) {
+            updateData()
+        } else {
+            stations = savedStations as List<Station>
+            location = savedLocation as LatLng
+            showClickableMarkersOnMap(initMarkers())
+        }
     }
 
     override fun updateUI(stationsAndLocation: Pair<List<Station>, Location>) {
@@ -99,8 +107,10 @@ class StationMapFragment : DaggerFragmentWithPresenter(), StationsRepresentation
 
     override fun onSaveInstanceState(outState: Bundle) {
         map?.onSaveInstanceState(outState)
-        outState.putParcelableArrayList(STATIONS_KEY, ArrayList(stations))
-        outState.putParcelable(LOCATION_KEY, location)
+        if (::stations.isInitialized && ::location.isInitialized) {
+            outState.putParcelableArrayList(STATIONS_KEY, ArrayList(stations))
+            outState.putParcelable(LOCATION_KEY, location)
+        }
         super.onSaveInstanceState(outState)
     }
 }

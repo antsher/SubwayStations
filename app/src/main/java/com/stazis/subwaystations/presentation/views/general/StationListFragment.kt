@@ -42,16 +42,24 @@ class StationListFragment : DaggerFragmentWithPresenter(), StationsRepresentatio
 
         savedInstanceState?.let {
             restoreUI(savedInstanceState)
-        } ?: run {
-            showLoading()
-            presenter.getStationsAndLocation()
-        }
+        } ?: updateData()
+    }
+
+    private fun updateData() {
+        showLoading()
+        presenter.getStationsAndLocation()
     }
 
     private fun restoreUI(savedInstanceState: Bundle) {
-        stationsWithDistances = savedInstanceState.get(STATIONS_WITH_DISTANCES_KEY) as List<StationWithDistance>
-        location = savedInstanceState.get(LOCATION_KEY) as LatLng
-        addStationViewsToContainer(initStationViews())
+        val savedStationsWithDistances = savedInstanceState.get(STATIONS_WITH_DISTANCES_KEY)
+        val savedLocation = savedInstanceState.get(LOCATION_KEY)
+        if (savedStationsWithDistances == null || savedLocation == null) {
+            updateData()
+        } else {
+            stationsWithDistances = savedStationsWithDistances as List<StationWithDistance>
+            location = savedLocation as LatLng
+            addStationViewsToContainer(initStationViews())
+        }
     }
 
     override fun updateUI(stationsAndLocation: Pair<List<Station>, Location>) {
@@ -85,8 +93,10 @@ class StationListFragment : DaggerFragmentWithPresenter(), StationsRepresentatio
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelableArrayList(STATIONS_WITH_DISTANCES_KEY, ArrayList(stationsWithDistances))
-        outState.putParcelable(LOCATION_KEY, location)
+        if (::stationsWithDistances.isInitialized && ::location.isInitialized) {
+            outState.putParcelableArrayList(STATIONS_WITH_DISTANCES_KEY, ArrayList(stationsWithDistances))
+            outState.putParcelable(LOCATION_KEY, location)
+        }
         super.onSaveInstanceState(outState)
     }
 }

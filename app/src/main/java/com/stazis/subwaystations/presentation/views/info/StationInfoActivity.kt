@@ -2,6 +2,7 @@ package com.stazis.subwaystations.presentation.views.info
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.TextView
@@ -20,6 +21,7 @@ class StationInfoActivity : DaggerAppCompatActivity(), StationInfoRepresentation
     @Inject
     lateinit var presenter: StationInfoPresenter
     private lateinit var currentLocation: LatLng
+    private lateinit var stationName: String
     private var distanceToStation = 0
     private lateinit var station: Station
 
@@ -37,10 +39,15 @@ class StationInfoActivity : DaggerAppCompatActivity(), StationInfoRepresentation
         presenter.attachView(this)
 
         if (savedInstanceState == null) {
-            showLoading()
             currentLocation = intent.getParcelableExtra(CURRENT_LOCATION_KEY)
-            presenter.getStation(intent.getStringExtra(STATION_NAME_KEY))
+            stationName = intent.getStringExtra(STATION_NAME_KEY)
+            updateData()
         }
+    }
+
+    private fun updateData() {
+        showLoading()
+        presenter.getStation(stationName)
     }
 
     override fun updateStationInfo(station: Station) {
@@ -78,17 +85,29 @@ class StationInfoActivity : DaggerAppCompatActivity(), StationInfoRepresentation
     }
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
-        savedInstanceState.putParcelable(STATION_KEY, station)
-        savedInstanceState.putInt(DISTANCE_TO_STATION_KEY, distanceToStation)
+        savedInstanceState.putParcelable(CURRENT_LOCATION_KEY, currentLocation)
+        savedInstanceState.putString(STATION_NAME_KEY, stationName)
+        if (::station.isInitialized) {
+            savedInstanceState.putParcelable(STATION_KEY, station)
+            savedInstanceState.putInt(DISTANCE_TO_STATION_KEY, distanceToStation)
+        }
         super.onSaveInstanceState(savedInstanceState)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
         savedInstanceState?.let {
-            distanceToStation = savedInstanceState.getInt(DISTANCE_TO_STATION_KEY)
-            station = savedInstanceState.getParcelable(STATION_KEY)!!
-            updateUI()
+            currentLocation = savedInstanceState.getParcelable(CURRENT_LOCATION_KEY) as LatLng
+            stationName = savedInstanceState.getString(STATION_NAME_KEY)!!
+            val savedDistanceToStation = savedInstanceState.getInt(DISTANCE_TO_STATION_KEY)
+            val savedStation: Parcelable? = savedInstanceState.getParcelable(STATION_KEY)
+            if (savedDistanceToStation != 0 && savedStation != null) {
+                distanceToStation = savedDistanceToStation
+                station = savedStation as Station
+                updateUI()
+            } else {
+                updateData()
+            }
         }
     }
 }
