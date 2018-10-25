@@ -14,13 +14,13 @@ import com.stazis.subwaystations.R
 import com.stazis.subwaystations.extensions.toLatLng
 import com.stazis.subwaystations.model.entities.Station
 import com.stazis.subwaystations.presentation.presenters.StationsPresenter
-import com.stazis.subwaystations.presentation.views.common.DaggerFragmentWithPresenter
+import com.stazis.subwaystations.presentation.views.common.BaseFragment
 import com.stazis.subwaystations.presentation.views.info.StationInfoActivity
 import kotlinx.android.synthetic.main.fragment_station_map.*
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
-class StationMapFragment : DaggerFragmentWithPresenter(), StationsRepresentation {
+class StationMapFragment : BaseFragment(), StationsRepresentation {
 
     companion object {
         private const val LOCATION_KEY = "LOCATION_KEY"
