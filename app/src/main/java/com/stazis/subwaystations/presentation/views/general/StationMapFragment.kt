@@ -23,16 +23,13 @@ import kotlin.math.roundToInt
 class StationMapFragment : DaggerFragmentWithPresenter(), StationsRepresentation {
 
     companion object {
-
-        private const val STATIONS_KEY = "STATIONS_KEY"
         private const val LOCATION_KEY = "LOCATION_KEY"
     }
 
     @Inject
     lateinit var presenter: StationsPresenter
-
-    private lateinit var stations: List<Station>
-    private lateinit var location: LatLng
+    private var stations by instanceState<List<Station>>(emptyList())
+    private var location by instanceState(LatLng(0.0, 0.0))
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         root = inflater.inflate(R.layout.fragment_station_map, container, false) as ViewGroup
@@ -44,9 +41,7 @@ class StationMapFragment : DaggerFragmentWithPresenter(), StationsRepresentation
         map.onCreate(savedInstanceState)
         presenter.attachView(this)
 
-        savedInstanceState?.let {
-            restoreUI(savedInstanceState)
-        } ?: updateData()
+        savedInstanceState?.let { restoreUI() } ?: updateData()
     }
 
     private fun updateData() {
@@ -54,14 +49,10 @@ class StationMapFragment : DaggerFragmentWithPresenter(), StationsRepresentation
         presenter.getStationsAndLocation()
     }
 
-    private fun restoreUI(savedInstanceState: Bundle) {
-        val savedStations = savedInstanceState.get(STATIONS_KEY)
-        val savedLocation = savedInstanceState.get(LOCATION_KEY)
-        if (savedStations == null || savedLocation == null) {
+    private fun restoreUI() {
+        if (stations.isEmpty() || location == LatLng(0.0, 0.0)) {
             updateData()
         } else {
-            stations = savedStations as List<Station>
-            location = savedLocation as LatLng
             showClickableMarkersOnMap(initMarkers())
         }
     }
@@ -107,10 +98,6 @@ class StationMapFragment : DaggerFragmentWithPresenter(), StationsRepresentation
 
     override fun onSaveInstanceState(outState: Bundle) {
         map?.onSaveInstanceState(outState)
-        if (::stations.isInitialized && ::location.isInitialized) {
-            outState.putParcelableArrayList(STATIONS_KEY, ArrayList(stations))
-            outState.putParcelable(LOCATION_KEY, location)
-        }
         super.onSaveInstanceState(outState)
     }
 }

@@ -20,16 +20,10 @@ import kotlin.math.roundToInt
 
 class StationListFragment : DaggerFragmentWithPresenter(), StationsRepresentation {
 
-    companion object {
-
-        private const val STATIONS_WITH_DISTANCES_KEY = "STATIONS_WITH_DISTANCES_KEY"
-        private const val LOCATION_KEY = "LOCATION_KEY"
-    }
-
     @Inject
     lateinit var presenter: StationsPresenter
-    private lateinit var stationsWithDistances: List<StationWithDistance>
-    private lateinit var location: LatLng
+    private var stationsWithDistances by instanceState<List<StationWithDistance>>(emptyList())
+    private var location by instanceState(LatLng(0.0, 0.0))
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         root = inflater.inflate(R.layout.fragment_station_list, container, false) as ViewGroup
@@ -40,9 +34,7 @@ class StationListFragment : DaggerFragmentWithPresenter(), StationsRepresentatio
         super.onViewCreated(view, savedInstanceState)
         presenter.attachView(this)
 
-        savedInstanceState?.let {
-            restoreUI(savedInstanceState)
-        } ?: updateData()
+        savedInstanceState?.let { restoreUI() } ?: updateData()
     }
 
     private fun updateData() {
@@ -50,14 +42,10 @@ class StationListFragment : DaggerFragmentWithPresenter(), StationsRepresentatio
         presenter.getStationsAndLocation()
     }
 
-    private fun restoreUI(savedInstanceState: Bundle) {
-        val savedStationsWithDistances = savedInstanceState.get(STATIONS_WITH_DISTANCES_KEY)
-        val savedLocation = savedInstanceState.get(LOCATION_KEY)
-        if (savedStationsWithDistances == null || savedLocation == null) {
+    private fun restoreUI() {
+        if (location == LatLng(0.0, 0.0) || stationsWithDistances.isEmpty()) {
             updateData()
         } else {
-            stationsWithDistances = savedStationsWithDistances as List<StationWithDistance>
-            location = savedLocation as LatLng
             addStationViewsToContainer(initStationViews())
         }
     }
@@ -90,13 +78,5 @@ class StationListFragment : DaggerFragmentWithPresenter(), StationsRepresentatio
     override fun onDestroyView() {
         presenter.detachView()
         super.onDestroyView()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        if (::stationsWithDistances.isInitialized && ::location.isInitialized) {
-            outState.putParcelableArrayList(STATIONS_WITH_DISTANCES_KEY, ArrayList(stationsWithDistances))
-            outState.putParcelable(LOCATION_KEY, location)
-        }
-        super.onSaveInstanceState(outState)
     }
 }
