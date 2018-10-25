@@ -5,7 +5,7 @@ import com.stazis.subwaystations.presentation.views.common.instancestate.NotNull
 import com.stazis.subwaystations.presentation.views.common.instancestate.NullableStateProvider
 import dagger.android.support.DaggerAppCompatActivity
 
-abstract class BaseActivity : DaggerAppCompatActivity() {
+abstract class BaseDaggerActivity : DaggerAppCompatActivity() {
 
     companion object {
 

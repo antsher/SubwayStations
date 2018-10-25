@@ -11,7 +11,7 @@ import com.stazis.subwaystations.presentation.views.common.instancestate.NotNull
 import com.stazis.subwaystations.presentation.views.common.instancestate.NullableStateProvider
 import dagger.android.support.DaggerFragment
 
-abstract class BaseFragment : DaggerFragment(), Representation {
+abstract class BaseDaggerFragment : DaggerFragment(), Representation {
 
     companion object {
 

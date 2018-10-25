@@ -5,9 +5,9 @@ import kotlin.reflect.KProperty
 
 class NullableStateProvider<T>(stateBundle: Bundle) : InstanceStateProvider<T>(stateBundle) {
 
-    operator fun getValue(thisRef: Any?, property: KProperty<*>): T? {
-        if (cache != null) return cache
-        if (!stateBundle.containsKey(property.name)) return null
-        return stateBundle.get(property.name) as T
+    operator fun getValue(thisRef: Any?, property: KProperty<*>) = when {
+        cache != null -> cache
+        !stateBundle.containsKey(property.name) -> null
+        else -> stateBundle.get(property.name) as T
     }
 }
