@@ -1,8 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="10dp">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+
+        <ImageButton
+            android:id="@+id/scrollLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/scroll_left"
+            android:src="@drawable/ic_arrow_left"
+            android:textSize="24sp" />
+
+        <com.stazis.subwaystations.presentation.views.common.TextViewWithFont
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@id/scrollRight"
+            android:layout_toEndOf="@id/scrollLeft"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            app:typeface="Montserrat-SemiBold" />
+
+        <ImageButton
+            android:id="@+id/scrollRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:contentDescription="@string/scroll_right"
+            android:src="@drawable/ic_arrow_right"
+            android:textSize="24sp" />
+    </RelativeLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/stationsPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>

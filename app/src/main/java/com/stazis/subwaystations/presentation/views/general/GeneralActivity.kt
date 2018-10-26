@@ -4,6 +4,7 @@ import android.Manifest
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.maps.model.LatLng
 import com.stazis.subwaystations.R
 import com.stazis.subwaystations.helpers.PermissionHelper
 import com.stazis.subwaystations.model.entities.Station
@@ -71,7 +72,8 @@ class GeneralActivity : AppCompatActivity() {
         navigationController.navigateToStationList()
     }
 
-    fun navigateToPager(stations: List<Station>) = navigationController.navigateToStationPager(stations)
+    fun navigateToPager(stations: List<Station>, location: LatLng) =
+        navigationController.navigateToStationPager(stations, location)
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) =
         when (requestCode) {
@@ -79,9 +81,9 @@ class GeneralActivity : AppCompatActivity() {
             else -> throw IllegalArgumentException("Invalid request code!")
         }
 
-    override fun onSaveInstanceState(savedInstanceState: Bundle) {
-        savedInstanceState.putSerializable(ACTIVE_TAB_KEY, activeTab)
-        super.onSaveInstanceState(savedInstanceState)
+    override fun onSaveInstanceState(savedInstanceState: Bundle) = savedInstanceState.let {
+        it.putSerializable(ACTIVE_TAB_KEY, activeTab)
+        super.onSaveInstanceState(it)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {

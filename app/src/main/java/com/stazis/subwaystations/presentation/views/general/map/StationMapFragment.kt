@@ -15,6 +15,7 @@ import com.stazis.subwaystations.extensions.toLatLng
 import com.stazis.subwaystations.model.entities.Station
 import com.stazis.subwaystations.presentation.presenters.StationsPresenter
 import com.stazis.subwaystations.presentation.views.common.BaseDaggerFragment
+import com.stazis.subwaystations.presentation.views.general.GeneralActivity
 import com.stazis.subwaystations.presentation.views.general.common.StationsRepresentation
 import com.stazis.subwaystations.presentation.views.info.StationInfoActivity
 import kotlinx.android.synthetic.main.fragment_station_map.*
@@ -42,6 +43,19 @@ class StationMapFragment : BaseDaggerFragment(),
         savedInstanceState?.let { restoreUI() } ?: updateData()
     }
 
+    private fun restoreUI() {
+        if (stations.isEmpty() || location == LatLng(0.0, 0.0)) {
+            updateData()
+        } else {
+            setupUI()
+        }
+    }
+
+    private fun setupUI() {
+        showClickableMarkersOnMap(initMarkers())
+        navigateToPager.setOnClickListener { (activity as GeneralActivity).navigateToPager(stations, location) }
+    }
+
     private fun updateData() {
         map.getMapAsync { googleMap ->
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(53.9086154, 27.5735358), 10.5f))
@@ -50,18 +64,10 @@ class StationMapFragment : BaseDaggerFragment(),
         presenter.getStationsAndLocation()
     }
 
-    private fun restoreUI() {
-        if (stations.isEmpty() || location == LatLng(0.0, 0.0)) {
-            updateData()
-        } else {
-            showClickableMarkersOnMap(initMarkers())
-        }
-    }
-
     override fun updateUI(stationsAndLocation: Pair<List<Station>, Location>) {
         stations = ArrayList(stationsAndLocation.first)
         location = stationsAndLocation.second.toLatLng()
-        showClickableMarkersOnMap(initMarkers())
+        setupUI()
     }
 
     private fun initMarkers() = stations.map {

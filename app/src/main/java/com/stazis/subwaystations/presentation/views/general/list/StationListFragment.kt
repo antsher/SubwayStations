@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.SphericalUtil
 import com.stazis.subwaystations.R
@@ -36,12 +35,6 @@ class StationListFragment : BaseDaggerFragment(), StationsRepresentation {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.attachView(this)
-
-        stationsContainer.addView(Button(context).apply {
-            text = "Pager"
-            setOnClickListener { (activity as GeneralActivity).navigateToPager(stations) }
-        })
-
         savedInstanceState?.let { restoreUI() } ?: updateData()
     }
 
@@ -54,14 +47,19 @@ class StationListFragment : BaseDaggerFragment(), StationsRepresentation {
         if (location == LatLng(0.0, 0.0) || stations.isEmpty()) {
             updateData()
         } else {
-            addStationViewsToContainer(initStationViews())
+            setupUI()
         }
+    }
+
+    private fun setupUI() {
+        addStationViewsToContainer(initStationViews())
+        navigateToPager.setOnClickListener { (activity as GeneralActivity).navigateToPager(stations, location) }
     }
 
     override fun updateUI(stationsAndLocation: Pair<List<Station>, Location>) {
         location = stationsAndLocation.second.toLatLng()
         stations = stationsAndLocation.first
-        addStationViewsToContainer(initStationViews())
+        setupUI()
     }
 
     private fun navigateToStationInfo(station: Station, currentLocation: LatLng) =
@@ -70,15 +68,13 @@ class StationListFragment : BaseDaggerFragment(), StationsRepresentation {
             it.putExtra(StationInfoActivity.CURRENT_LOCATION_KEY, currentLocation)
         })
 
-    private fun initStationViews() = stations.map { it ->
+    private fun initStationViews() = stations.asSequence().map {
         val stationLocation = LatLng(it.latitude, it.longitude)
         val distance = SphericalUtil.computeDistanceBetween(stationLocation, location).roundToInt()
-        StationView(
-            context,
-            it.name,
-            distance,
-            Runnable { navigateToStationInfo(it, location) })
-    }
+        it to distance
+    }.sortedBy { it.second }.map { it ->
+        StationView(context, it.first.name, it.second, Runnable { navigateToStationInfo(it.first, location) })
+    }.toList()
 
     private fun addStationViewsToContainer(stationViewsWithDistances: List<StationView>) =
         stationViewsWithDistances.forEach { stationsContainer.addView(it) }
