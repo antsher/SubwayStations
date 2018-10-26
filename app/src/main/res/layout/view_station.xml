@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginBottom="5dp"
-        android:layout_toStartOf="@+id/arrowRight"
+        android:layout_toStartOf="@+id/expand"
         android:orientation="vertical">
 
         <com.stazis.subwaystations.presentation.views.common.TextViewWithFont
@@ -27,16 +27,40 @@
             android:layout_marginTop="5dp"
             android:textSize="16sp"
             app:typeface="Montserrat-Light" />
+
+        <LinearLayout
+            android:id="@+id/hiddenView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.stazis.subwaystations.presentation.views.common.TextViewWithFont
+                android:id="@+id/latitude"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:textSize="18sp"
+                app:typeface="Montserrat-Italic" />
+
+            <com.stazis.subwaystations.presentation.views.common.TextViewWithFont
+                android:id="@+id/longitude"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                app:typeface="Montserrat-Italic" />
+        </LinearLayout>
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/arrowRight"
+        android:id="@+id/expand"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
-        android:contentDescription="@string/open_station_info"
-        android:src="@drawable/ic_arrow_right" />
+        android:contentDescription="@string/expand_info"
+        android:src="@drawable/ic_arrow_bottom" />
 </RelativeLayout>

@@ -30,8 +30,9 @@ abstract class BaseDaggerFragment : DaggerFragment(), Representation {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) =
-        layoutInflater.inflate(R.layout.view_progress_bar, root, false).let { root.addView(it) }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        progressBar = layoutInflater.inflate(R.layout.view_progress_bar, root, false).apply { root.addView(this) }
+    }
 
     override fun showError(errorMessage: String) = AlertDialog.Builder(context)
         .setTitle("Error!")
