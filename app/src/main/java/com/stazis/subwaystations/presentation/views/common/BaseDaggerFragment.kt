@@ -26,9 +26,7 @@ abstract class BaseDaggerFragment : DaggerFragment(), Representation {
     protected fun <T> instanceState(defaultValue: T) = NotNullStateProvider(stateBundle, defaultValue)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (savedInstanceState != null) {
-            stateBundle.putAll(savedInstanceState.getBundle(STATE_BUNDLE_KEY))
-        }
+        savedInstanceState?.let { stateBundle.putAll(savedInstanceState.getBundle(STATE_BUNDLE_KEY)) }
         super.onCreate(savedInstanceState)
     }
 
