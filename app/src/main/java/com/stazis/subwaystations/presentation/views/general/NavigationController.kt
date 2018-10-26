@@ -25,12 +25,13 @@ class NavigationController(activity: GeneralActivity, private val containerId: I
         }
     }
 
-    fun navigateToStationPager(stations: List<Station>, location: LatLng) = ifCurrentFragmentIsNot(StationPagerFragment::class.java) {
-        fragmentManager.transaction(allowStateLoss = true) {
-            add(containerId, StationPagerFragment.newInstance(stations, location))
-            addToBackStack(null)
+    fun navigateToStationPager(stations: List<Station>, location: LatLng) =
+        ifCurrentFragmentIsNot(StationPagerFragment::class.java) {
+            fragmentManager.transaction(allowStateLoss = true) {
+                add(containerId, StationPagerFragment.newInstance(stations, location))
+                addToBackStack(null)
+            }
         }
-    }
 
     private fun ifCurrentFragmentIsNot(fragmentClass: Class<out Fragment>, f: () -> Unit) {
         if (!fragmentClass.isInstance(getCurrentFragment())) {

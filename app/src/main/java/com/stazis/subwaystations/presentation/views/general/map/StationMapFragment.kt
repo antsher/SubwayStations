@@ -51,17 +51,17 @@ class StationMapFragment : BaseDaggerFragment(),
         }
     }
 
-    private fun setupUI() {
-        showClickableMarkersOnMap(initMarkers())
-        navigateToPager.setOnClickListener { (activity as GeneralActivity).navigateToPager(stations, location) }
-    }
-
     private fun updateData() {
         map.getMapAsync { googleMap ->
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(53.9086154, 27.5735358), 10.5f))
         }
         showLoading()
         presenter.getStationsAndLocation()
+    }
+
+    private fun setupUI() {
+        showClickableMarkersOnMap(initMarkers())
+        navigateToPager.setOnClickListener { (activity as GeneralActivity).navigateToPager(stations, location) }
     }
 
     override fun updateUI(stationsAndLocation: Pair<List<Station>, Location>) {

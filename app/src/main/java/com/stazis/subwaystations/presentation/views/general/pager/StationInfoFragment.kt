@@ -19,12 +19,10 @@ class StationInfoFragment : Fragment() {
         private const val STATION_KEY = "STATION_KEY"
         private const val LOCATION_KEY = "LOCATION_KEY"
 
-        fun newInstance(station: Station, location: LatLng): StationInfoFragment {
-            return StationInfoFragment().apply {
-                arguments = Bundle().apply {
-                    putParcelable(STATION_KEY, station)
-                    putParcelable(LOCATION_KEY, location)
-                }
+        fun newInstance(station: Station, location: LatLng) = StationInfoFragment().apply {
+            arguments = Bundle().apply {
+                putParcelable(STATION_KEY, station)
+                putParcelable(LOCATION_KEY, location)
             }
         }
     }

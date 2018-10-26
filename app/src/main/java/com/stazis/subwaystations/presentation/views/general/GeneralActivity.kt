@@ -33,8 +33,6 @@ class GeneralActivity : AppCompatActivity() {
         }
     }
 
-    private fun getLocationPermissionState() = PermissionHelper.checkPermissionState(this, locationPermission)
-
     private fun actAccordingToLocationPermissionState(state: PermissionHelper.PermissionState) = when (state) {
         PermissionHelper.PermissionState.GRANTED -> {
             navigateToMap()
@@ -42,6 +40,8 @@ class GeneralActivity : AppCompatActivity() {
         PermissionHelper.PermissionState.NOT_GRANTED -> PermissionHelper.requestPermission(this, locationPermission)
         PermissionHelper.PermissionState.REJECTED -> askNicelyForPermissions()
     }
+
+    private fun getLocationPermissionState() = PermissionHelper.checkPermissionState(this, locationPermission)
 
     private fun askNicelyForPermissions() = AlertDialog.Builder(this)
         .setTitle("Permission denied")

@@ -16,12 +16,10 @@ class StationPagerFragment : Fragment() {
         private const val STATIONS_KEY = "STATIONS_KEY"
         private const val LOCATION_KEY = "LOCATION_KEY"
 
-        fun newInstance(stations: List<Station>, location: LatLng): StationPagerFragment {
-            return StationPagerFragment().apply {
-                arguments = Bundle().apply {
-                    putParcelableArrayList(STATIONS_KEY, ArrayList(stations))
-                    putParcelable(LOCATION_KEY, location)
-                }
+        fun newInstance(stations: List<Station>, location: LatLng) = StationPagerFragment().apply {
+            arguments = Bundle().apply {
+                putParcelableArrayList(STATIONS_KEY, ArrayList(stations))
+                putParcelable(LOCATION_KEY, location)
             }
         }
     }

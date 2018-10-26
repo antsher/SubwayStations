@@ -13,10 +13,7 @@ class EditTextWithFont(context: Context?, attrs: AttributeSet? = null) : AppComp
         val fontName = styledAttrs?.getString(R.styleable.EditTextWithFont_typeface)
         styledAttrs?.recycle()
 
-        fontName?.let {
-            val typeface = Typeface.createFromAsset(context.assets, "fonts/$it.ttf")
-            setTypeface(typeface)
-        }
+        fontName?.let { typeface = Typeface.createFromAsset(context.assets, "fonts/$it.ttf") }
 
         includeFontPadding = false
     }

@@ -30,10 +30,8 @@ abstract class BaseDaggerFragment : DaggerFragment(), Representation {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        progressBar = layoutInflater.inflate(R.layout.view_progress_bar, root, false)
-        root.addView(progressBar)
-    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) =
+        layoutInflater.inflate(R.layout.view_progress_bar, root, false).let { root.addView(it) }
 
     override fun showError(errorMessage: String) = AlertDialog.Builder(context)
         .setTitle("Error!")
@@ -50,8 +48,8 @@ abstract class BaseDaggerFragment : DaggerFragment(), Representation {
         progressBar.visibility = GONE
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putBundle(STATE_BUNDLE_KEY, stateBundle)
-        super.onSaveInstanceState(outState)
+    override fun onSaveInstanceState(outState: Bundle) = outState.let {
+        it.putBundle(STATE_BUNDLE_KEY, stateBundle)
+        super.onSaveInstanceState(it)
     }
 }
