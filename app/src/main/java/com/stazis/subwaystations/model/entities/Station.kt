@@ -9,20 +9,13 @@ import androidx.room.PrimaryKey
 data class Station(@PrimaryKey val name: String, val latitude: Double, val longitude: Double) : Parcelable {
 
     companion object CREATOR : Parcelable.Creator<Station> {
-        override fun createFromParcel(parcel: Parcel): Station {
-            return Station(parcel)
-        }
 
-        override fun newArray(size: Int): Array<Station?> {
-            return arrayOfNulls(size)
-        }
+        override fun createFromParcel(parcel: Parcel) = Station(parcel)
+
+        override fun newArray(size: Int) = arrayOfNulls<Station?>(size)
     }
 
-    constructor(parcel: Parcel) : this(
-        parcel.readString()!!,
-        parcel.readDouble(),
-        parcel.readDouble()
-    )
+    constructor(parcel: Parcel) : this(parcel.readString()!!, parcel.readDouble(), parcel.readDouble())
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(name)
