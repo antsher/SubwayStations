@@ -22,10 +22,6 @@ import kotlin.math.roundToInt
 
 class StationMapFragment : BaseDaggerFragment(), StationsRepresentation {
 
-    companion object {
-        private const val LOCATION_KEY = "LOCATION_KEY"
-    }
-
     @Inject
     lateinit var presenter: StationsPresenter
     private var stations by instanceState<List<Station>>(emptyList())
@@ -45,6 +41,9 @@ class StationMapFragment : BaseDaggerFragment(), StationsRepresentation {
     }
 
     private fun updateData() {
+        map.getMapAsync { googleMap ->
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(53.9086154, 27.5735358), 10.5f))
+        }
         showLoading()
         presenter.getStationsAndLocation()
     }
@@ -60,7 +59,6 @@ class StationMapFragment : BaseDaggerFragment(), StationsRepresentation {
     override fun updateUI(stationsAndLocation: Pair<List<Station>, Location>) {
         stations = ArrayList(stationsAndLocation.first)
         location = stationsAndLocation.second.toLatLng()
-        map.getMapAsync { googleMap -> googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 11f)) }
         showClickableMarkersOnMap(initMarkers())
     }
 
