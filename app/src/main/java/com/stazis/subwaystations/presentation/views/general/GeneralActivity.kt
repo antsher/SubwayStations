@@ -6,8 +6,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.stazis.subwaystations.R
 import com.stazis.subwaystations.helpers.PermissionHelper
-import com.stazis.subwaystations.presentation.views.general.GeneralActivity.TabName.List
-import com.stazis.subwaystations.presentation.views.general.GeneralActivity.TabName.Map
+import com.stazis.subwaystations.model.entities.Station
 import kotlinx.android.synthetic.main.activity_general.*
 
 class GeneralActivity : AppCompatActivity() {
@@ -28,7 +27,9 @@ class GeneralActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_general)
         setListeners()
-        if (savedInstanceState == null) { actAccordingToLocationPermissionState(getLocationPermissionState()) }
+        if (savedInstanceState == null) {
+            actAccordingToLocationPermissionState(getLocationPermissionState())
+        }
     }
 
     private fun getLocationPermissionState() = PermissionHelper.checkPermissionState(this, locationPermission)
@@ -57,18 +58,20 @@ class GeneralActivity : AppCompatActivity() {
     }
 
     private fun navigateToMap() {
-        activeTab = Map
+        activeTab = TabName.Map
         listTab.makeInactive()
         mapTab.makeActive()
         navigationController.navigateToStationMap()
     }
 
     private fun navigateToList() {
-        activeTab = List
+        activeTab = TabName.List
         mapTab.makeInactive()
         listTab.makeActive()
         navigationController.navigateToStationList()
     }
+
+    fun navigateToPager(stations: List<Station>) = navigationController.navigateToStationPager(stations)
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) =
         when (requestCode) {
@@ -86,8 +89,8 @@ class GeneralActivity : AppCompatActivity() {
         savedInstanceState?.let {
             activeTab = savedInstanceState.getSerializable(ACTIVE_TAB_KEY) as TabName
             when (activeTab) {
-                Map -> mapTab.makeActive()
-                List -> listTab.makeActive()
+                TabName.Map -> mapTab.makeActive()
+                TabName.List -> listTab.makeActive()
             }
         }
     }

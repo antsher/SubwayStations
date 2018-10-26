@@ -5,7 +5,7 @@ import android.location.Location
 import com.stazis.subwaystations.domain.interactors.GetLocation
 import com.stazis.subwaystations.domain.interactors.GetStations
 import com.stazis.subwaystations.model.entities.Station
-import com.stazis.subwaystations.presentation.views.general.StationsRepresentation
+import com.stazis.subwaystations.presentation.views.general.common.StationsRepresentation
 import com.stazis.subwaystations.utils.SchedulerProvider
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction

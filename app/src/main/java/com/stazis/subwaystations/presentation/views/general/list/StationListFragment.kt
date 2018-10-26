@@ -1,4 +1,4 @@
-package com.stazis.subwaystations.presentation.views.general
+package com.stazis.subwaystations.presentation.views.general.list
 
 import android.content.Intent
 import android.location.Location
@@ -6,21 +6,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.gms.maps.CameraUpdateFactory
+import android.widget.Button
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.SphericalUtil
 import com.stazis.subwaystations.R
 import com.stazis.subwaystations.extensions.toLatLng
 import com.stazis.subwaystations.model.entities.Station
 import com.stazis.subwaystations.presentation.presenters.StationsPresenter
 import com.stazis.subwaystations.presentation.views.common.BaseDaggerFragment
+import com.stazis.subwaystations.presentation.views.general.GeneralActivity
+import com.stazis.subwaystations.presentation.views.general.common.StationsRepresentation
 import com.stazis.subwaystations.presentation.views.info.StationInfoActivity
-import kotlinx.android.synthetic.main.fragment_station_map.*
+import kotlinx.android.synthetic.main.fragment_station_list.*
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
-class StationMapFragment : BaseDaggerFragment(), StationsRepresentation {
+class StationListFragment : BaseDaggerFragment(), StationsRepresentation {
 
     @Inject
     lateinit var presenter: StationsPresenter
@@ -28,51 +29,39 @@ class StationMapFragment : BaseDaggerFragment(), StationsRepresentation {
     private var location by instanceState(LatLng(0.0, 0.0))
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        root = inflater.inflate(R.layout.fragment_station_map, container, false) as ViewGroup
+        root = inflater.inflate(R.layout.fragment_station_list, container, false) as ViewGroup
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        map.onCreate(savedInstanceState)
         presenter.attachView(this)
+
+        stationsContainer.addView(Button(context).apply {
+            text = "Pager"
+            setOnClickListener { (activity as GeneralActivity).navigateToPager(stations) }
+        })
 
         savedInstanceState?.let { restoreUI() } ?: updateData()
     }
 
     private fun updateData() {
-        map.getMapAsync { googleMap ->
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(53.9086154, 27.5735358), 10.5f))
-        }
         showLoading()
         presenter.getStationsAndLocation()
     }
 
     private fun restoreUI() {
-        if (stations.isEmpty() || location == LatLng(0.0, 0.0)) {
+        if (location == LatLng(0.0, 0.0) || stations.isEmpty()) {
             updateData()
         } else {
-            showClickableMarkersOnMap(initMarkers())
+            addStationViewsToContainer(initStationViews())
         }
     }
 
     override fun updateUI(stationsAndLocation: Pair<List<Station>, Location>) {
-        stations = ArrayList(stationsAndLocation.first)
         location = stationsAndLocation.second.toLatLng()
-        showClickableMarkersOnMap(initMarkers())
-    }
-
-    private fun initMarkers() = stations.map {
-        val stationLocation = LatLng(it.latitude, it.longitude)
-        val distanceToStation = SphericalUtil.computeDistanceBetween(stationLocation, location).roundToInt()
-        MarkerOptions().position(stationLocation).title(it.name).snippet("${distanceToStation}m")
-    }
-
-    private fun showClickableMarkersOnMap(markers: List<MarkerOptions>) = map.getMapAsync { googleMap ->
-        googleMap.setOnInfoWindowClickListener { marker ->
-            navigateToStationInfo(stations.find { it.name == marker.title }!!, location)
-        }
-        markers.forEach { googleMap.addMarker(it) }
+        stations = stationsAndLocation.first
+        addStationViewsToContainer(initStationViews())
     }
 
     private fun navigateToStationInfo(station: Station, currentLocation: LatLng) =
@@ -81,23 +70,21 @@ class StationMapFragment : BaseDaggerFragment(), StationsRepresentation {
             it.putExtra(StationInfoActivity.CURRENT_LOCATION_KEY, currentLocation)
         })
 
-    override fun onResume() {
-        super.onResume()
-        map.onResume()
+    private fun initStationViews() = stations.map { it ->
+        val stationLocation = LatLng(it.latitude, it.longitude)
+        val distance = SphericalUtil.computeDistanceBetween(stationLocation, location).roundToInt()
+        StationView(
+            context,
+            it.name,
+            distance,
+            Runnable { navigateToStationInfo(it, location) })
     }
 
-    override fun onLowMemory() {
-        super.onLowMemory()
-        map.onLowMemory()
-    }
+    private fun addStationViewsToContainer(stationViewsWithDistances: List<StationView>) =
+        stationViewsWithDistances.forEach { stationsContainer.addView(it) }
 
     override fun onDestroyView() {
         presenter.detachView()
         super.onDestroyView()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        map?.onSaveInstanceState(outState)
-        super.onSaveInstanceState(outState)
     }
 }

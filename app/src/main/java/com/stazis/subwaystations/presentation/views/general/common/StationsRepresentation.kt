@@ -1,4 +1,4 @@
-package com.stazis.subwaystations.presentation.views.general
+package com.stazis.subwaystations.presentation.views.general.common
 
 import android.location.Location
 import com.stazis.subwaystations.model.entities.Station

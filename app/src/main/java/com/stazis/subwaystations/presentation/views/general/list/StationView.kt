@@ -1,4 +1,4 @@
-package com.stazis.subwaystations.presentation.views.general
+package com.stazis.subwaystations.presentation.views.general.list
 
 import android.annotation.SuppressLint
 import android.content.Context
