@@ -13,7 +13,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:freezesText="true"
         android:textSize="24sp"
         app:typeface="Montserrat-SemiBold" />
 
@@ -22,7 +21,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:freezesText="true"
         android:textSize="16sp"
         app:typeface="Montserrat-Regular" />
 
@@ -31,7 +29,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:freezesText="true"
         android:textSize="16sp"
         app:typeface="Montserrat-Regular" />
 
@@ -40,7 +37,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:freezesText="true"
         android:textSize="24sp"
         app:typeface="Montserrat-Medium" />
 </LinearLayout>
