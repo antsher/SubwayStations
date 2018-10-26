@@ -69,13 +69,15 @@ class StationMapFragment : BaseDaggerFragment(), StationsRepresentation {
     }
 
     private fun showClickableMarkersOnMap(markers: List<MarkerOptions>) = map.getMapAsync { googleMap ->
-        googleMap.setOnInfoWindowClickListener { marker -> navigateToStationInfo(marker.title, location) }
+        googleMap.setOnInfoWindowClickListener { marker ->
+            navigateToStationInfo(stations.find { it.name == marker.title }!!, location)
+        }
         markers.forEach { googleMap.addMarker(it) }
     }
 
-    private fun navigateToStationInfo(stationName: String, currentLocation: LatLng) =
+    private fun navigateToStationInfo(station: Station, currentLocation: LatLng) =
         startActivity(Intent(context, StationInfoActivity::class.java).let {
-            it.putExtra(StationInfoActivity.STATION_NAME_KEY, stationName)
+            it.putExtra(StationInfoActivity.STATION_KEY, station)
             it.putExtra(StationInfoActivity.CURRENT_LOCATION_KEY, currentLocation)
         })
 
