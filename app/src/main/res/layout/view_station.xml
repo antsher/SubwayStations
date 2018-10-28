@@ -33,7 +33,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:alpha="0"
             android:orientation="vertical"
+            android:translationY="-50dp"
             android:visibility="gone">
 
             <com.stazis.subwaystations.presentation.views.common.TextViewWithFont
@@ -55,12 +57,10 @@
 
     <ImageView
         android:id="@+id/expand"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="68dp"
+        android:layout_height="68dp"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
         android:contentDescription="@string/expand_info"
+        android:padding="10dp"
         android:src="@drawable/ic_arrow_bottom" />
 </RelativeLayout>

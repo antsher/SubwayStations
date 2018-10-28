@@ -1,5 +1,6 @@
 package com.stazis.subwaystations.presentation.views.general.list
 
+import android.animation.Animator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
@@ -18,9 +19,12 @@ class StationView(context: Context?, station: Station, stationDistance: Int, onC
 
         private const val SUPER_STATE_KEY = "SUPER_STATE_KEY"
         private const val EXPANDED_KEY = "EXPANDED_KEY"
+        private const val ANIMATION_DURATION = 300L
     }
 
     private var expanded = false
+    private var animationInProgress = false
+    private val dpRatio = resources.displayMetrics.density
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_station, this, true)
@@ -29,33 +33,68 @@ class StationView(context: Context?, station: Station, stationDistance: Int, onC
         longitude.text = String.format("Longitude: %f", station.longitude)
         distance.text = String.format("%dm", stationDistance)
         expand.setOnClickListener { switchExpandedState() }
-//        setOnClickListener { onClicked() }
+        setOnClickListener { onClicked() }
     }
 
     private fun switchExpandedState() {
-        expanded = !expanded
-        actAccordingToExpanded()
-    }
-
-    private fun actAccordingToExpanded() {
-        if (expanded) {
-            expand()
-        } else {
-            collapse()
+        ifNotAnimationInProgress {
+            if (expanded) {
+                collapse()
+            } else {
+                expand()
+            }
         }
     }
 
-    private fun expand() {
-        expanded = true
-        hiddenView.visibility = VISIBLE
+    private fun ifNotAnimationInProgress(f: () -> Unit) {
+        if (!animationInProgress) {
+            f()
+        }
     }
 
-    private fun collapse() {
-        expanded = false
-        hiddenView.visibility = GONE
-    }
+    private fun expand() = hiddenView.animate()
+        .alpha(1f)
+        .translationY(0f)
+        .setDuration(ANIMATION_DURATION)
+        .setListener(object : Animator.AnimatorListener {
+            override fun onAnimationStart(animation: Animator) {
+                hiddenView.visibility = VISIBLE
+                animationInProgress = true
+                expanded = true
+            }
 
-    override fun onSaveInstanceState(): Parcelable? = Bundle().apply {
+            override fun onAnimationEnd(animation: Animator) {
+                animationInProgress = false
+            }
+
+            override fun onAnimationCancel(animation: Animator) {}
+
+            override fun onAnimationRepeat(animation: Animator) {}
+        })
+        .start()
+
+    private fun collapse() = hiddenView.animate()
+        .alpha(0f)
+        .translationY(-50 * dpRatio)
+        .setDuration(ANIMATION_DURATION)
+        .setListener(object : Animator.AnimatorListener {
+            override fun onAnimationStart(animation: Animator) {
+                animationInProgress = true
+                expanded = false
+            }
+
+            override fun onAnimationEnd(animation: Animator) {
+                animationInProgress = false
+                hiddenView.visibility = GONE
+            }
+
+            override fun onAnimationCancel(animation: Animator) {}
+
+            override fun onAnimationRepeat(animation: Animator) {}
+        })
+        .start()
+
+    override fun onSaveInstanceState() = Bundle().apply {
         putParcelable(SUPER_STATE_KEY, super.onSaveInstanceState())
         putBoolean(EXPANDED_KEY, expanded)
     }
@@ -63,8 +102,17 @@ class StationView(context: Context?, station: Station, stationDistance: Int, onC
     override fun onRestoreInstanceState(state: Parcelable?) {
         if (state is Bundle) {
             super.onRestoreInstanceState(state.getParcelable(SUPER_STATE_KEY))
-            expanded = state.getBoolean(EXPANDED_KEY)
-            actAccordingToExpanded()
+            expanded = state.getBoolean(EXPANDED_KEY).apply {
+                if (this) {
+                    hiddenView.visibility = VISIBLE
+                    hiddenView.alpha = 1f
+                    hiddenView.translationY = 0f
+                } else {
+                    hiddenView.visibility = GONE
+                    hiddenView.alpha = 0f
+                    hiddenView.translationY = -50 * dpRatio
+                }
+            }
         } else {
             super.onRestoreInstanceState(state)
         }
