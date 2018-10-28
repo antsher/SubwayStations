@@ -36,13 +36,11 @@ class StationView(context: Context?, station: Station, stationDistance: Int, onC
         setOnClickListener { onClicked() }
     }
 
-    private fun switchExpandedState() {
-        ifNotAnimationInProgress {
-            if (expanded) {
-                collapse()
-            } else {
-                expand()
-            }
+    private fun switchExpandedState() = ifNotAnimationInProgress {
+        if (expanded) {
+            collapse()
+        } else {
+            expand()
         }
     }
 
