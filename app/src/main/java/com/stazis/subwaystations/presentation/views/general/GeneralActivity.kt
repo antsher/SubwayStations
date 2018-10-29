@@ -1,6 +1,7 @@
 package com.stazis.subwaystations.presentation.views.general
 
 import android.Manifest
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +9,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.stazis.subwaystations.R
 import com.stazis.subwaystations.helpers.PermissionHelper
 import com.stazis.subwaystations.model.entities.Station
+import com.stazis.subwaystations.services.DataUpdateService
 import kotlinx.android.synthetic.main.activity_general.*
 
 class GeneralActivity : AppCompatActivity() {
@@ -29,7 +31,7 @@ class GeneralActivity : AppCompatActivity() {
         setContentView(R.layout.activity_general)
         setListeners()
         if (savedInstanceState == null) {
-//            startService(Intent(this, DataUpdateService::class.java))
+            startService(Intent(this, DataUpdateService::class.java))
             actAccordingToLocationPermissionState(getLocationPermissionState())
         }
     }

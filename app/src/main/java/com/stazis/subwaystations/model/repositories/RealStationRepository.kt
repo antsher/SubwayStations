@@ -6,6 +6,7 @@ import com.stazis.subwaystations.model.persistence.daos.StationDao
 import com.stazis.subwaystations.model.services.StationService
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
+import java.nio.channels.ConnectionPendingException
 
 class RealStationRepository(
     private val stationService: StationService,
@@ -29,7 +30,9 @@ class RealStationRepository(
     }
 
     private fun ifCorrectCoordinates(station: Station, f: () -> Unit) {
-        if (station.latitude != 0.0 && station.longitude != 0.0) { f() }
+        if (station.latitude != 0.0 && station.longitude != 0.0) {
+            f()
+        }
     }
 
     private fun loadStationsFromDatabase(emitter: SingleEmitter<List<Station>>) = stationDao.getAll().let {
@@ -38,5 +41,11 @@ class RealStationRepository(
         } else {
             emitter.onError(Exception("Database is empty!"))
         }
+    }
+
+    override fun updateStations(): Single<List<Station>> = if (connectionHelper.isOnline()) {
+        loadStationsFromNetwork()
+    } else {
+        Single.error(ConnectionPendingException())
     }
 }

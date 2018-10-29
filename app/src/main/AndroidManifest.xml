@@ -32,5 +32,9 @@
             </intent-filter>
         </activity>
         <activity android:name="com.stazis.subwaystations.presentation.views.info.StationInfoActivity" />
+
+        <service
+            android:name=".services.DataUpdateService"
+            android:enabled="true" />
     </application>
 </manifest>
