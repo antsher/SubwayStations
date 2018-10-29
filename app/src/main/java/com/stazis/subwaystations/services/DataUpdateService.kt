@@ -52,9 +52,4 @@ class DataUpdateService : DaggerIntentService(DataUpdateService::class.simpleNam
         Log.i("DataUpdateService", "Update failed")
         request.dispose()
     }
-
-    override fun onDestroy() {
-        backgroundTimer.cancel()
-        super.onDestroy()
-    }
 }
