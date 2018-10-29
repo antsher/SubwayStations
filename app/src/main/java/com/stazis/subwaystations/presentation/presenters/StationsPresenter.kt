@@ -34,11 +34,9 @@ class StationsPresenter @Inject constructor(
     }
 
     private fun onSuccess(stationsAndLocation: Pair<List<Station>, Location>) {
-        val filteredStations = stationsAndLocation.first.toMutableList()
-            .apply { map { if (it.latitude == 0.0 || it.longitude == 0.0) remove(it) } }
         loading = false
         view?.hideLoading()
-        view?.updateUI(filteredStations to stationsAndLocation.second)
+        view?.updateUI(stationsAndLocation)
     }
 
     private fun onFailure(error: Throwable) {
