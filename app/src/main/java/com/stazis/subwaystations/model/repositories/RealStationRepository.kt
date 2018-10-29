@@ -13,33 +13,23 @@ class RealStationRepository(
     private val connectionHelper: ConnectionHelper
 ) : StationRepository {
 
-    override fun getStations(): Single<List<Station>> = Single.create {
-        if (connectionHelper.isOnline()) {
-            loadStationsFromNetwork(it)
-        } else {
+    override fun getStations(): Single<List<Station>> = if (connectionHelper.isOnline()) {
+        loadStationsFromNetwork()
+    } else {
+        Single.create<List<Station>> {
             loadStationsFromDatabase(it)
         }
     }
 
-    private fun loadStationsFromNetwork(emitter: SingleEmitter<List<Station>>) = try {
-        stationService.getStations()
-            .execute()
-            .body()
-            ?.let { stations ->
-                stations.toMutableList().let {
-                    it.map { station -> ifIncorrectCoordinates(station) { it.remove(station) } }
-                    stationDao.insertAll(it)
-                    emitter.onSuccess(it)
-                }
-            } ?: emitter.onError(Exception("No data received!"))
-    } catch (exception: Exception) {
-        emitter.onError(exception)
+    private fun loadStationsFromNetwork() = stationService.getStations().doOnSuccess { stations ->
+        ArrayList<Station>().apply {
+            stations.forEach { ifCorrectCoordinates(it) { add(it) } }
+            stationDao.insertAll(this)
+        }
     }
 
-    private fun ifIncorrectCoordinates(station: Station, f: () -> Unit) {
-        if (station.latitude != 0.0 && station.longitude != 0.0) {
-            f()
-        }
+    private fun ifCorrectCoordinates(station: Station, f: () -> Unit) {
+        if (station.latitude != 0.0 && station.longitude != 0.0) { f() }
     }
 
     private fun loadStationsFromDatabase(emitter: SingleEmitter<List<Station>>) = stationDao.getAll().let {

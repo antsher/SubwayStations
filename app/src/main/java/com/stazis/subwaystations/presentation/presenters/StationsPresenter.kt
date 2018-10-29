@@ -34,9 +34,18 @@ class StationsPresenter @Inject constructor(
     }
 
     private fun onSuccess(stationsAndLocation: Pair<List<Station>, Location>) {
-        loading = false
-        view?.hideLoading()
-        view?.updateUI(stationsAndLocation)
+        ArrayList<Station>().let {
+            stationsAndLocation.first.map { station -> ifCorrectCoordinates(station) { it.add(station) } }
+            loading = false
+            view?.hideLoading()
+            view?.updateUI(it to stationsAndLocation.second)
+        }
+    }
+
+    private fun ifCorrectCoordinates(station: Station, f: () -> Unit) {
+        if (station.latitude != 0.0 && station.longitude != 0.0) {
+            f()
+        }
     }
 
     private fun onFailure(error: Throwable) {
