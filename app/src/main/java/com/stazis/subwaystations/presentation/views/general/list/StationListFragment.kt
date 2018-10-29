@@ -72,9 +72,9 @@ class StationListFragment : BaseDaggerFragment(), StationsRepresentation {
         val stationLocation = LatLng(it.latitude, it.longitude)
         val distance = SphericalUtil.computeDistanceBetween(stationLocation, location).roundToInt()
         it to distance
-    }.sortedBy { it.second }.map { it ->
-        StationView(context, it.first, it.second) { navigateToStationInfo(it.first, location) }.apply {
-            id = 1_000_000 + it.second
+    }.sortedBy { it.second }.map { (first, second) ->
+        StationView(context, first, second) { navigateToStationInfo(first, location) }.apply {
+            id = 1_000_000 + second
         }
     }.toList()
 
