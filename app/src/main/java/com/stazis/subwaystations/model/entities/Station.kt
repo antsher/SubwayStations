@@ -15,6 +15,8 @@ data class Station(@PrimaryKey val name: String, val latitude: Double, val longi
         override fun newArray(size: Int) = arrayOfNulls<Station?>(size)
     }
 
+    constructor() : this("", 0.0, 0.0)
+
     constructor(parcel: Parcel) : this(parcel.readString()!!, parcel.readDouble(), parcel.readDouble())
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

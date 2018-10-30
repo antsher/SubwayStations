@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import com.stazis.subwaystations.SubwayStationsApplication
 import com.stazis.subwaystations.helpers.ConnectionHelper
 import com.stazis.subwaystations.helpers.LocationHelper
+import com.stazis.subwaystations.helpers.PreferencesHelper
 import com.stazis.subwaystations.model.persistence.AppDatabase
 import com.stazis.subwaystations.model.repositories.RealStationRepository
 import com.stazis.subwaystations.model.repositories.StationRepository
@@ -41,11 +42,13 @@ class ApplicationModule {
     fun provideStationRepository(
         retrofit: Retrofit,
         database: AppDatabase,
-        connectionHelper: ConnectionHelper
+        connectionHelper: ConnectionHelper,
+        preferencesHelper: PreferencesHelper
     ): StationRepository = RealStationRepository(
         retrofit.create(StationService::class.java),
         database.stationDao(),
-        connectionHelper
+        connectionHelper,
+        preferencesHelper
     )
 
     @Provides
@@ -64,6 +67,10 @@ class ApplicationModule {
     @Provides
     @Singleton
     fun provideLocationHelper(context: Context) = LocationHelper(context)
+
+    @Provides
+    @Singleton
+    fun providePreferencesHelper(context: Context) = PreferencesHelper(context)
 
     @Provides
     @Singleton

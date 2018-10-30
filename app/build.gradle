@@ -90,6 +90,10 @@ dependencies {
     
     // Firebase
     implementation 'com.google.firebase:firebase-core:16.0.4'
+    implementation 'com.google.firebase:firebase-firestore:17.1.2'
+
+    // Anko
+    implementation 'org.jetbrains.anko:anko-commons:0.10.7'
 
     // Testing
     testImplementation 'junit:junit:4.12'
