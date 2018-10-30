@@ -90,14 +90,16 @@ dependencies {
 
     // RxTasks
     implementation 'io.ashdavies.rx:rx-tasks:2.0.0'
-
-    // Mockito
-    testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.0.0-RC3'
-    androidTestImplementation 'org.mockito:mockito-android:2.23.0'
+    
+    // Firebase
+    implementation 'com.google.firebase:firebase-core:16.0.4'
 
     // Testing
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    testImplementation "androidx.test:core:$androidx_version"
     kaptAndroidTest "com.google.dagger:dagger-compiler:$dagger_version"
+    testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.0.0-RC3'
+    androidTestImplementation 'org.mockito:mockito-android:2.23.0'
 }
+
+apply plugin: 'com.google.gms.google-services'

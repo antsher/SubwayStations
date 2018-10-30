@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "899102022695",
+    "firebase_url": "https://subwaystations-1539963623889.firebaseio.com",
+    "project_id": "subwaystations-1539963623889",
+    "storage_bucket": "subwaystations-1539963623889.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:899102022695:android:f7da8ae92e794d84",
+        "android_client_info": {
+          "package_name": "com.stazis.subwaystations"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "899102022695-bcdi08bp0v321pksgvk2obfvp2kog1du.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.stazis.subwaystations",
+            "certificate_hash": "25ef04393817a09eb293854c68755ea63fa175f5"
+          }
+        },
+        {
+          "client_id": "899102022695-cf9s3fa3rn84n34egmjekmi4e419bosm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhjB_v-b5xSjxnbL1E3r91JV12TlKEFD4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "899102022695-cf9s3fa3rn84n34egmjekmi4e419bosm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
