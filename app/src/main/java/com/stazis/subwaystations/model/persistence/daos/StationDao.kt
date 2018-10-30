@@ -4,17 +4,18 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.stazis.subwaystations.model.entities.DetailedStation
 import com.stazis.subwaystations.model.entities.Station
 
 @Dao
 interface StationDao {
 
-    @Query("SELECT * FROM station")
+    @Query("SELECT name, latitude, longitude FROM DetailedStation")
     fun getAll(): List<Station>
 
-    @Query("SELECT * FROM station WHERE name = :station_name")
-    fun get(station_name: String): Station?
+    @Query("SELECT * FROM DetailedStation WHERE name = :name")
+    fun get(name: String): DetailedStation?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(stations: List<Station>)
+    fun insertAll(stations: List<DetailedStation>)
 }
