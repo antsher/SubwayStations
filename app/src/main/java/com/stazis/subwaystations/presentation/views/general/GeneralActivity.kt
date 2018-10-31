@@ -7,7 +7,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.model.LatLng
 import com.stazis.subwaystations.R
-import com.stazis.subwaystations.helpers.PermissionHelper
+import com.stazis.subwaystations.helpers.PermissionState
+import com.stazis.subwaystations.helpers.checkPermissionState
+import com.stazis.subwaystations.helpers.requestPermission
 import com.stazis.subwaystations.model.entities.Station
 import com.stazis.subwaystations.services.DataUpdateService
 import kotlinx.android.synthetic.main.activity_general.*
@@ -32,26 +34,24 @@ class GeneralActivity : AppCompatActivity() {
         setListeners()
         if (savedInstanceState == null) {
             startService(Intent(this, DataUpdateService::class.java))
-            actAccordingToLocationPermissionState(getLocationPermissionState())
+            actAccordingToLocationPermissionState()
         }
     }
 
-    private fun actAccordingToLocationPermissionState(state: PermissionHelper.PermissionState) = when (state) {
-        PermissionHelper.PermissionState.GRANTED -> {
-            navigateToMap()
+    private fun actAccordingToLocationPermissionState() {
+        when (checkPermissionState(this, locationPermission)) {
+            PermissionState.GRANTED -> navigateToMap()
+            PermissionState.NOT_GRANTED -> requestPermission(this, locationPermission)
+            PermissionState.REJECTED -> askNicelyForPermissions()
         }
-        PermissionHelper.PermissionState.NOT_GRANTED -> PermissionHelper.requestPermission(this, locationPermission)
-        PermissionHelper.PermissionState.REJECTED -> askNicelyForPermissions()
     }
-
-    private fun getLocationPermissionState() = PermissionHelper.checkPermissionState(this, locationPermission)
 
     private fun askNicelyForPermissions() = AlertDialog.Builder(this)
         .setTitle("Permission denied")
         .setMessage("The app cannot run without location permissions. Please, grant them")
         .setNeutralButton("OK") { dialog, _ ->
             dialog.dismiss()
-            PermissionHelper.requestPermission(this, locationPermission)
+            requestPermission(this, locationPermission)
         }
         .create()
         .show()
@@ -80,7 +80,7 @@ class GeneralActivity : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) =
         when (requestCode) {
-            PERMISSION_REQUEST_CODE -> actAccordingToLocationPermissionState(getLocationPermissionState())
+            PERMISSION_REQUEST_CODE -> actAccordingToLocationPermissionState()
             else -> throw IllegalArgumentException("Invalid request code!")
         }
 

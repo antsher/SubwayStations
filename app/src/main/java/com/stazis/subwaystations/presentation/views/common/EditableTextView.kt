@@ -1,6 +1,5 @@
 package com.stazis.subwaystations.presentation.views.common
 
-import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
@@ -8,9 +7,10 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.inputmethod.InputMethodManager
 import android.widget.RelativeLayout
 import com.stazis.subwaystations.R
+import com.stazis.subwaystations.helpers.hideSoftKeyboard
+import com.stazis.subwaystations.helpers.showSoftKeyboard
 import kotlinx.android.synthetic.main.view_editable_text.view.*
 
 
@@ -23,13 +23,13 @@ class EditableTextView @JvmOverloads constructor(context: Context?, attrs: Attri
         private const val EDITABLE_SHOWN_KEY = "EDITABLE_SHOWN_KEY"
     }
 
-    var onUpdatedListener: (() -> Unit)? = null
+    var onTextUpdated = { }
     private var editableShown = false
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_editable_text, this, true)
         edit.setOnClickListener { showEditable() }
-        cancel.setOnClickListener { cancel() }
+        cancel.setOnClickListener { hideEditable() }
         save.setOnClickListener { save() }
         editableText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -41,7 +41,7 @@ class EditableTextView @JvmOverloads constructor(context: Context?, attrs: Attri
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s.toString() != nonEditableText.text) {
+                if (s.toString() != nonEditableText.text.toString()) {
                     save.show()
                 } else {
                     save.hide()
@@ -59,30 +59,24 @@ class EditableTextView @JvmOverloads constructor(context: Context?, attrs: Attri
 
     private fun showEditable() {
         editableShown = true
+        editableText.setText(nonEditableText.text)
         nonEditableContainer.visibility = GONE
         editableContainer.visibility = VISIBLE
-        getInputMethodManager().showSoftInput(editableText, 0)
-    }
-
-    private fun getInputMethodManager() = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-
-    private fun cancel() {
-        editableText.setText(nonEditableText.text)
-        hideEditable()
+        showSoftKeyboard(context, editableText)
     }
 
     private fun hideEditable() {
         editableShown = false
-        getInputMethodManager().hideSoftInputFromWindow(editableText.windowToken, 0)
+        save.hide()
+        hideSoftKeyboard(context, editableText)
         editableContainer.visibility = GONE
         nonEditableContainer.visibility = VISIBLE
     }
 
     private fun save() {
         nonEditableText.text = editableText.text
-        onUpdatedListener?.invoke()
         hideEditable()
-        save.hide()
+        onTextUpdated.invoke()
     }
 
     override fun onSaveInstanceState() = Bundle().apply {

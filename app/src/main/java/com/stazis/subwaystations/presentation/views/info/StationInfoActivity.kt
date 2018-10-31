@@ -23,15 +23,16 @@ class StationInfoActivity : BaseDaggerActivity(), StationInfoRepresentation {
 
     @Inject
     lateinit var presenter: StationInfoPresenter
-    private lateinit var stationName: String
+    private var stationName: String? by instanceState()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_station_info)
         super.onCreate(savedInstanceState)
         presenter.attachView(this)
-        if (savedInstanceState == null) {
+        if (stationName == null) {
             getDataFromIntent()
         }
+        description.onTextUpdated = this::onDescriptionUpdated
     }
 
     private fun getDataFromIntent() {
@@ -49,12 +50,11 @@ class StationInfoActivity : BaseDaggerActivity(), StationInfoRepresentation {
         longitude.text = String.format("Longitude: %f", station.longitude)
         distance.text = String.format("Distance to station from your current location is %d meters", distanceToStation)
         description.setText(station.description)
-        description.onUpdatedListener = this::onDescriptionUpdated
     }
 
     private fun onDescriptionUpdated() {
         showLoading()
-        presenter.updateStationDescription(stationName, description.getText())
+        presenter.updateStationDescription(stationName!!, description.getText())
     }
 
     override fun showSuccess(message: String) = AlertDialog.Builder(this)
@@ -63,4 +63,9 @@ class StationInfoActivity : BaseDaggerActivity(), StationInfoRepresentation {
         .setNeutralButton("OK") { dialog, _ -> dialog?.dismiss() }
         .create()
         .show()
+
+    override fun onDestroy() {
+        presenter.detachView()
+        super.onDestroy()
+    }
 }
