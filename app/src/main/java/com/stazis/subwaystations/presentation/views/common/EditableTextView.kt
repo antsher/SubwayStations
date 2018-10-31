@@ -1,5 +1,6 @@
 package com.stazis.subwaystations.presentation.views.common
 
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
@@ -7,9 +8,11 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.inputmethod.InputMethodManager
 import android.widget.RelativeLayout
 import com.stazis.subwaystations.R
 import kotlinx.android.synthetic.main.view_editable_text.view.*
+
 
 class EditableTextView @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null) :
     RelativeLayout(context, attrs) {
@@ -58,7 +61,10 @@ class EditableTextView @JvmOverloads constructor(context: Context?, attrs: Attri
         editableShown = true
         nonEditableContainer.visibility = GONE
         editableContainer.visibility = VISIBLE
+        getInputMethodManager().showSoftInput(editableText, 0)
     }
+
+    private fun getInputMethodManager() = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
 
     private fun cancel() {
         editableText.setText(nonEditableText.text)
@@ -67,6 +73,7 @@ class EditableTextView @JvmOverloads constructor(context: Context?, attrs: Attri
 
     private fun hideEditable() {
         editableShown = false
+        getInputMethodManager().hideSoftInputFromWindow(editableText.windowToken, 0)
         editableContainer.visibility = GONE
         nonEditableContainer.visibility = VISIBLE
     }
