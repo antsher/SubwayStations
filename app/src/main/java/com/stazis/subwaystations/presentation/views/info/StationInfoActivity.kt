@@ -35,5 +35,11 @@ class StationInfoActivity : AppCompatActivity() {
         latitude.text = String.format("Latitude: %f", station.latitude)
         longitude.text = String.format("Longitude: %f", station.longitude)
         distance.text = String.format("Distance to station from your current location is %d meters", distanceToStation)
+        description.setText("Description")
+        description.onUpdatedListener = this::onDescriptionUpdated
+    }
+
+    private fun onDescriptionUpdated() {
+
     }
 }

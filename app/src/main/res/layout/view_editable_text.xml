@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/nonEditableContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.stazis.subwaystations.presentation.views.common.TextViewWithFont
+            android:id="@+id/nonEditableText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/edit"
+            android:textSize="16sp"
+            app:typeface="Montserrat-Regular" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="5dp"
+            android:src="@drawable/ic_edit" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/editableContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <com.stazis.subwaystations.presentation.views.common.EditTextWithFont
+            android:id="@+id/editableText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/nonEditableButtonsContainer"
+            android:background="@android:color/transparent"
+            android:textSize="16sp"
+            app:typeface="Montserrat-Regular" />
+
+        <LinearLayout
+            android:id="@+id/nonEditableButtonsContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:orientation="vertical">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:src="@drawable/ic_check"
+                android:visibility="gone" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:src="@drawable/ic_cross" />
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

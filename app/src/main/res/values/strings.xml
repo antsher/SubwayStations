@@ -7,5 +7,6 @@
     <string name="scroll_left">Scroll left</string>
     <string name="scroll_right">Scroll right</string>
     <string name="expand_info">Expand info</string>
-    <string name="provide_any_description">Provide any description you want:</string>
+    <string name="description">Description:</string>
+    <string name="edit">Edit</string>
 </resources>

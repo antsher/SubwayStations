@@ -53,26 +53,13 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:freezesText="true"
-            android:text="@string/provide_any_description"
+            android:text="@string/description"
             android:textSize="20sp"
             app:typeface="Montserrat-SemiBold" />
 
-        <com.stazis.subwaystations.presentation.views.common.EditTextWithFont
+        <com.stazis.subwaystations.presentation.views.common.EditableTextView
             android:id="@+id/description"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:freezesText="true"
-            android:minLines="2"
-            android:textSize="16sp"
-            app:typeface="Montserrat-Regular" />
+            android:layout_height="wrap_content" />
     </LinearLayout>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/done"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="10dp"
-        android:src="@drawable/ic_check" />
 </RelativeLayout>
