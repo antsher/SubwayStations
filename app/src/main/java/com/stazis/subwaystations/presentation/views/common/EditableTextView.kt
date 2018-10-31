@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -20,18 +21,25 @@ class EditableTextView @JvmOverloads constructor(context: Context?, attrs: Attri
     companion object {
 
         private const val SUPER_STATE_KEY = "SUPER_STATE_KEY"
-        private const val EDITABLE_SHOWN_KEY = "EDITABLE_SHOWN_KEY"
+        private const val SAVED_TEXT_KEY = "SAVED_TEXT_KEY"
+        private const val EDIT_MODE_ENABLED_KEY = "EDIT_MODE_ENABLED_KEY"
     }
 
     var onTextUpdated = { }
-    private var editableShown = false
+    var savedText: String = ""
+        set(string) {
+            field = string
+            text.setText(string)
+        }
+    private var editModeEnabled = false
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_editable_text, this, true)
-        edit.setOnClickListener { showEditable() }
-        cancel.setOnClickListener { hideEditable() }
+        edit.setOnClickListener { enableEditMode() }
+        cancel.setOnClickListener { disableEditMode() }
         save.setOnClickListener { save() }
-        editableText.addTextChangedListener(object : TextWatcher {
+        text.inputType = InputType.TYPE_NULL
+        text.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
 
             }
@@ -41,7 +49,7 @@ class EditableTextView @JvmOverloads constructor(context: Context?, attrs: Attri
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s.toString() != nonEditableText.text.toString()) {
+                if (s.toString() != savedText) {
                     save.show()
                 } else {
                     save.hide()
@@ -50,47 +58,48 @@ class EditableTextView @JvmOverloads constructor(context: Context?, attrs: Attri
         })
     }
 
-    fun setText(text: String) {
-        nonEditableText.text = text
-        editableText.setText(text)
+    private fun enableEditMode() {
+        editModeEnabled = true
+        edit.hide()
+        cancel.show()
+        text.run {
+            setText(savedText)
+            inputType = InputType.TYPE_CLASS_TEXT
+            isFocusableInTouchMode = true
+            requestFocus()
+        }
+        showSoftKeyboard(context, text)
     }
 
-    fun getText(): String = nonEditableText.text.toString()
-
-    private fun showEditable() {
-        editableShown = true
-        editableText.setText(nonEditableText.text)
-        nonEditableContainer.visibility = GONE
-        editableContainer.visibility = VISIBLE
-        showSoftKeyboard(context, editableText)
-    }
-
-    private fun hideEditable() {
-        editableShown = false
+    private fun disableEditMode() {
+        editModeEnabled = false
+        cancel.hide()
         save.hide()
-        hideSoftKeyboard(context, editableText)
-        editableContainer.visibility = GONE
-        nonEditableContainer.visibility = VISIBLE
+        edit.show()
+        text.inputType = InputType.TYPE_NULL
+        hideSoftKeyboard(context, text)
     }
 
     private fun save() {
-        nonEditableText.text = editableText.text
-        hideEditable()
+        savedText = text.text.toString()
+        disableEditMode()
         onTextUpdated.invoke()
     }
 
     override fun onSaveInstanceState() = Bundle().apply {
         putParcelable(SUPER_STATE_KEY, super.onSaveInstanceState())
-        putBoolean(EDITABLE_SHOWN_KEY, editableShown)
+        putString(SAVED_TEXT_KEY, savedText)
+        putBoolean(EDIT_MODE_ENABLED_KEY, editModeEnabled)
     }
 
     override fun onRestoreInstanceState(state: Parcelable?) {
         if (state is Bundle) {
             super.onRestoreInstanceState(state.getParcelable(SUPER_STATE_KEY))
-            if (state.getBoolean(EDITABLE_SHOWN_KEY)) {
-                showEditable()
+            state.getString(SAVED_TEXT_KEY)?.let { savedText = it }
+            if (state.getBoolean(EDIT_MODE_ENABLED_KEY)) {
+                enableEditMode()
             } else {
-                hideEditable()
+                disableEditMode()
             }
         } else {
             super.onRestoreInstanceState(state)

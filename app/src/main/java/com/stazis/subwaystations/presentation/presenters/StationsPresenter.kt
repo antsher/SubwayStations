@@ -42,11 +42,12 @@ class StationsPresenter @Inject constructor(
     private fun onFailure(error: Throwable) {
         loading = false
         view?.hideLoading()
-        val errorMessage: String = if (error is NullPointerException) {
+        if (error is NullPointerException) {
             "Cannot get your current location!"
         } else {
             error.localizedMessage
+        }.run {
+            view?.showError(this)
         }
-        view?.showError(errorMessage)
     }
 }

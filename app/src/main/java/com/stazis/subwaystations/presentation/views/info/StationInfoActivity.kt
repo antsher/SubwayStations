@@ -24,13 +24,18 @@ class StationInfoActivity : BaseDaggerActivity(), StationInfoRepresentation {
     @Inject
     lateinit var presenter: StationInfoPresenter
     private var stationName: String? by instanceState()
+    private var textNotSaved by instanceState(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_station_info)
         super.onCreate(savedInstanceState)
         presenter.attachView(this)
-        if (stationName == null) {
+        if (savedInstanceState == null) {
             getDataFromIntent()
+        } else {
+            if (textNotSaved) {
+                onDescriptionUpdated()
+            }
         }
         description.onTextUpdated = this::onDescriptionUpdated
     }
@@ -49,20 +54,24 @@ class StationInfoActivity : BaseDaggerActivity(), StationInfoRepresentation {
         latitude.text = String.format("Latitude: %f", station.latitude)
         longitude.text = String.format("Longitude: %f", station.longitude)
         distance.text = String.format("Distance to station from your current location is %d meters", distanceToStation)
-        description.setText(station.description)
+        description.savedText = station.description
     }
 
     private fun onDescriptionUpdated() {
         showLoading()
-        presenter.updateStationDescription(stationName!!, description.getText())
+        textNotSaved = true
+        presenter.updateStationDescription(stationName!!, description.savedText)
     }
 
-    override fun showSuccess(message: String) = AlertDialog.Builder(this)
-        .setTitle("Success!")
-        .setMessage(message)
-        .setNeutralButton("OK") { dialog, _ -> dialog?.dismiss() }
-        .create()
-        .show()
+    override fun onSuccessMessageReceived(message: String) {
+        textNotSaved = false
+        AlertDialog.Builder(this)
+            .setTitle("Success!")
+            .setMessage(message)
+            .setNeutralButton("OK") { dialog, _ -> dialog?.dismiss() }
+            .create()
+            .show()
+    }
 
     override fun onDestroy() {
         presenter.detachView()

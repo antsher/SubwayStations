@@ -18,7 +18,7 @@ class StationInfoPresenter @Inject constructor(
     fun updateStationDescription(name: String, description: String) {
         loading = true
         updateStationDescription.execute(name, description)
-            .delay(2000, TimeUnit.MILLISECONDS)
+            .delay(10000, TimeUnit.MILLISECONDS)
             .subscribeOn(schedulerProvider.ioScheduler())
             .observeOn(schedulerProvider.uiScheduler())
             .subscribe(this::onSuccess, this::onFailure)
@@ -27,7 +27,7 @@ class StationInfoPresenter @Inject constructor(
     private fun onSuccess(successMessage: String) {
         loading = false
         view?.hideLoading()
-        view?.showSuccess(successMessage)
+        view?.onSuccessMessageReceived(successMessage)
     }
 
     private fun onFailure(error: Throwable) {
