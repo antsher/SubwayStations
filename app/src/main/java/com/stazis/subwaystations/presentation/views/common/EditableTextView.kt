@@ -52,6 +52,8 @@ class EditableTextView @JvmOverloads constructor(context: Context?, attrs: Attri
         editableText.setText(text)
     }
 
+    fun getText(): String = nonEditableText.text.toString()
+
     private fun showEditable() {
         editableShown = true
         nonEditableContainer.visibility = GONE
@@ -70,9 +72,10 @@ class EditableTextView @JvmOverloads constructor(context: Context?, attrs: Attri
     }
 
     private fun save() {
-        onUpdatedListener?.invoke()
         nonEditableText.text = editableText.text
+        onUpdatedListener?.invoke()
         hideEditable()
+        save.hide()
     }
 
     override fun onSaveInstanceState() = Bundle().apply {

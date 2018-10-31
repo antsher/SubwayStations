@@ -6,5 +6,6 @@ import io.reactivex.Single
 interface StationRepository {
 
     fun getStations(): Single<List<Station>>
-    fun updateStations()
+    fun updateLocalDatabase()
+    fun updateStationDescription(name: String, description: String): Single<String>
 }

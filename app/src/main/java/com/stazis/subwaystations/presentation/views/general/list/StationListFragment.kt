@@ -27,10 +27,8 @@ class StationListFragment : BaseDaggerFragment(), StationsRepresentation {
     private var stations by instanceState<List<Station>>(emptyList())
     private var location by instanceState(LatLng(0.0, 0.0))
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        root = inflater.inflate(R.layout.fragment_station_list, container, false) as ViewGroup
-        return root
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+        (inflater.inflate(R.layout.fragment_station_list, container, false) as ViewGroup).apply { root = this }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

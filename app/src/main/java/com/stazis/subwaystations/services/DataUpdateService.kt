@@ -2,7 +2,7 @@ package com.stazis.subwaystations.services
 
 import android.content.Intent
 import android.util.Log
-import com.stazis.subwaystations.domain.interactors.UpdateStations
+import com.stazis.subwaystations.domain.interactors.UpdateLocalDatabase
 import dagger.android.DaggerIntentService
 import java.util.*
 import javax.inject.Inject
@@ -15,7 +15,7 @@ class DataUpdateService : DaggerIntentService(DataUpdateService::class.simpleNam
     }
 
     @Inject
-    lateinit var updateStations: UpdateStations
+    lateinit var updateLocalDatabase: UpdateLocalDatabase
     private val backgroundTimer: Timer = Timer()
 
     override fun onHandleIntent(intent: Intent?) {
@@ -33,6 +33,6 @@ class DataUpdateService : DaggerIntentService(DataUpdateService::class.simpleNam
 
     private fun updateData() {
         Log.i("DataUpdateService", "Updating...")
-        updateStations.execute()
+        updateLocalDatabase.execute()
     }
 }

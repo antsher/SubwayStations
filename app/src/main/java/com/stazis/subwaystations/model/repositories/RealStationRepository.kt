@@ -4,7 +4,6 @@ import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.stazis.subwaystations.helpers.ConnectionHelper
 import com.stazis.subwaystations.helpers.PreferencesHelper
-import com.stazis.subwaystations.model.entities.DetailedStation
 import com.stazis.subwaystations.model.entities.Station
 import com.stazis.subwaystations.model.persistence.daos.StationDao
 import com.stazis.subwaystations.model.services.StationService
@@ -22,39 +21,44 @@ class RealStationRepository(
     companion object {
 
         private const val DATA_IN_FIRESTORE_KEY = "DATA_IN_FIRESTORE_KEY"
-        private const val COLLECTION_NAME = "stations"
+        private const val STATIONS_COLLECTION_NAME = "stations"
     }
 
     private val firestore = FirebaseFirestore.getInstance()
 
     override fun getStations(): Single<List<Station>> = if (connectionHelper.isOnline()) {
-        if (!preferencesHelper.retrieveBoolean(DATA_IN_FIRESTORE_KEY)) {
-            preferencesHelper.saveBoolean(DATA_IN_FIRESTORE_KEY, true)
-            loadStationsFromNetwork()
-        } else {
-            Single.create { emitter ->
-                firestore.collection(COLLECTION_NAME).get().addOnCompleteListener { task ->
-                    if (task.isSuccessful && !task.result!!.isEmpty) {
-                        emitter.onSuccess(task.result!!.toObjects(DetailedStation::class.java).map {
-                            Station(it.name, it.latitude, it.longitude)
-                        })
-                    } else {
-                        emitter.onError(task.exception!!)
-                    }
-                }
-            }
-        }
+        loadStationsFromNetworks()
     } else {
         Single.create<List<Station>> { loadStationsFromDatabase(it) }
     }
 
-    private fun loadStationsFromNetwork() = stationService.getStations().doOnSuccess { stations ->
-        ArrayList<DetailedStation>().apply {
-            stations.forEach {
-                ifCorrectCoordinates(it) { add(DetailedStation(it.name, it.latitude, it.longitude, "")) }
-            }
-            forEach { firestore.collection(COLLECTION_NAME).add(it) }
+    private fun loadStationsFromNetworks() = if (!preferencesHelper.retrieveBoolean(DATA_IN_FIRESTORE_KEY)) {
+        preferencesHelper.saveBoolean(DATA_IN_FIRESTORE_KEY, true)
+        loadStationsFromServer()
+    } else {
+        loadStationsFromFirebase()
+    }
+
+    private fun loadStationsFromServer() = stationService.getStations().doOnSuccess { stations ->
+        ArrayList<Station>().apply {
+            stations.forEach { ifCorrectCoordinates(it) { add(it) } }
+            forEach { firestore.collection(STATIONS_COLLECTION_NAME).document(it.name).set(it) }
             stationDao.insertAll(this)
+        }
+    }
+
+    private fun loadStationsFromFirebase() = Single.create<List<Station>> { emitter ->
+        firestore.collection(STATIONS_COLLECTION_NAME).get().addOnCompleteListener { task ->
+            if (task.isSuccessful && !task.result!!.isEmpty) {
+                task.result!!.toObjects(Station::class.java).let { stations ->
+                    emitter.onSuccess(ArrayList<Station>().apply {
+                        stations.forEach { ifCorrectCoordinates(it) { add(it) } }
+                        doAsync { stationDao.insertAll(this@apply) }
+                    })
+                }
+            } else {
+                emitter.onError(task.exception!!)
+            }
         }
     }
 
@@ -72,11 +76,25 @@ class RealStationRepository(
         }
     }
 
-    override fun updateStations() {
+    override fun updateStationDescription(name: String, description: String): Single<String> =
+        Single.create { emitter ->
+            firestore.collection(STATIONS_COLLECTION_NAME)
+                .document(name)
+                .update("description", description)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        emitter.onSuccess("Station updated successfully!")
+                    } else {
+                        emitter.onError(task.exception!!)
+                    }
+                }
+        }
+
+    override fun updateLocalDatabase() {
         if (connectionHelper.isOnline()) {
-            firestore.collection(COLLECTION_NAME).get().addOnCompleteListener {
+            firestore.collection(STATIONS_COLLECTION_NAME).get().addOnCompleteListener {
                 if (it.isSuccessful && !it.result!!.isEmpty) {
-                    doAsync { stationDao.insertAll(it.result!!.toObjects(DetailedStation::class.java)) }
+                    doAsync { stationDao.insertAll(it.result!!.toObjects(Station::class.java)) }
                     Log.i("StationRepository", "Data updated successfully!")
                 } else {
                     Log.i("StationRepository", "Data update failed!")
