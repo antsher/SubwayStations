@@ -12,6 +12,7 @@ import com.stazis.subwaystations.model.services.StationService
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
 import org.jetbrains.anko.doAsync
+import java.net.ConnectException
 
 class RealStationRepository(
     private val stationService: StationService,
@@ -45,17 +46,28 @@ class RealStationRepository(
     private fun loadStationsFromServer() = stationService.getStations().doOnSuccess { stations ->
         ArrayList<Station>().apply {
             stations.forEach { ifCorrectCoordinates(it) { add(it) } }
-            forEach {
-                firestore.collection(STATION_BASIC_INFO_COLLECTION_NAME)
-                    .document(it.name)
-                    .set(it)
-                firestore.collection(STATION_DETAILED_INFO_COLLECTION_NAME)
-                    .document(it.name)
-                    .set(mapOf("description" to ""))
-            }
-            detailedStationDao.insertAll(this.map { DetailedStation(it.name, it.latitude, it.longitude, "") })
+            writeBasicStationsToFirestore(this)
+            writeAdvancedStationsToFirestore(this)
+            writeBasicStationInfoToDatabase(this)
         }
     }
+
+    private fun ifCorrectCoordinates(station: Station, f: () -> Unit) {
+        if (station.latitude != 0.0 && station.longitude != 0.0) {
+            f()
+        }
+    }
+
+    private fun writeBasicStationsToFirestore(stations: List<Station>) = stations.forEach {
+        firestore.collection(STATION_BASIC_INFO_COLLECTION_NAME).document(it.name).set(it)
+    }
+
+    private fun writeAdvancedStationsToFirestore(stations: List<Station>) = stations.forEach {
+        firestore.collection(STATION_DETAILED_INFO_COLLECTION_NAME).document(it.name).set(mapOf("description" to ""))
+    }
+
+    private fun writeBasicStationInfoToDatabase(stations: List<Station>) =
+        detailedStationDao.insertAll(stations.map { DetailedStation(it.name, it.latitude, it.longitude, "") })
 
     private fun loadStationsFromFirestore() = Single.create<List<Station>> { emitter ->
         firestore.collection(STATION_BASIC_INFO_COLLECTION_NAME).get().addOnCompleteListener { task ->
@@ -63,16 +75,7 @@ class RealStationRepository(
                 task.result!!.toObjects(Station::class.java).let { stations ->
                     emitter.onSuccess(ArrayList<Station>().also { correctStations ->
                         stations.forEach { ifCorrectCoordinates(it) { correctStations.add(it) } }
-                        doAsync {
-                            stations.map {
-                                DetailedStation(
-                                    it.name,
-                                    it.latitude,
-                                    it.longitude,
-                                    detailedStationDao.get(it.name)?.description ?: ""
-                                )
-                            }
-                        }
+                        updateBasicStationsInDatabase(stations)
                     })
                 }
             } else {
@@ -81,9 +84,9 @@ class RealStationRepository(
         }
     }
 
-    private fun ifCorrectCoordinates(station: Station, f: () -> Unit) {
-        if (station.latitude != 0.0 && station.longitude != 0.0) {
-            f()
+    private fun updateBasicStationsInDatabase(stations: List<Station>) = doAsync {
+        stations.map {
+            DetailedStation(it.name, it.latitude, it.longitude, detailedStationDao.getDescription(it.name) ?: "")
         }
     }
 
@@ -102,16 +105,13 @@ class RealStationRepository(
     }
 
     private fun loadStationDescriptionFromFirestore(name: String) = Single.create<String> { emitter ->
-        firestore.collection(STATION_DETAILED_INFO_COLLECTION_NAME)
-            .document(name)
-            .get()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    emitter.onSuccess(task.result!!.toObject(StationAdvancedInfo::class.java)!!.description)
-                } else {
-                    emitter.onError(task.exception!!)
-                }
+        firestore.collection(STATION_DETAILED_INFO_COLLECTION_NAME).document(name).get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                emitter.onSuccess(task.result!!.toObject(StationAdvancedInfo::class.java)!!.description)
+            } else {
+                emitter.onError(task.exception!!)
             }
+        }
     }
 
     private fun loadStationDescriptionFromDatabase(emitter: SingleEmitter<String>, name: String) =
@@ -125,51 +125,56 @@ class RealStationRepository(
 
     override fun updateStationDescription(name: String, description: String): Single<String> =
         Single.create { emitter ->
-            firestore.collection(STATION_DETAILED_INFO_COLLECTION_NAME)
-                .document(name)
-                .update("description", description)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        emitter.onSuccess("Station updated successfully!")
-                    } else {
-                        emitter.onError(task.exception!!)
+            if (connectionHelper.isOnline()) {
+                firestore.collection(STATION_DETAILED_INFO_COLLECTION_NAME)
+                    .document(name)
+                    .update("description", description)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            emitter.onSuccess("Station updated successfully!")
+                        } else {
+                            emitter.onError(task.exception!!)
+                        }
                     }
-                }
+            } else {
+                emitter.onError(ConnectException("No internet connection present!"))
+            }
         }
 
     override fun updateLocalDatabase() {
         if (connectionHelper.isOnline()) {
-            firestore.collection(STATION_BASIC_INFO_COLLECTION_NAME)
-                .get()
-                .continueWith { basicStationsTask ->
-                    firestore.collection(STATION_DETAILED_INFO_COLLECTION_NAME)
-                        .get()
-                        .addOnCompleteListener { advancedStationsTask ->
-                            if (basicStationsTask.isSuccessful &&
-                                advancedStationsTask.isSuccessful &&
-                                !basicStationsTask.result!!.isEmpty &&
-                                !advancedStationsTask.result!!.isEmpty
-                            ) {
-                                doAsync {
-                                    advancedStationsTask.result!!.map { it.id to it.toObject(String::class.java) }.let {
-                                        detailedStationDao.insertAll(basicStationsTask.result!!
-                                            .toObjects(Station::class.java)
-                                            .map { (name, latitude, longitude) ->
-                                                DetailedStation(
-                                                    name,
-                                                    latitude,
-                                                    longitude,
-                                                    it.find { (first) -> first == name }!!.second
-                                                )
-                                            })
-                                    }
-                                }
-                                Log.i("StationRepository", "Data updated successfully!")
-                            } else {
-                                Log.i("StationRepository", "Data update failed!")
-                            }
+            firestore.collection(STATION_BASIC_INFO_COLLECTION_NAME).get().continueWith { basicStationsTask ->
+                firestore.collection(STATION_DETAILED_INFO_COLLECTION_NAME).get()
+                    .addOnCompleteListener { advancedStationsTask ->
+                        if (basicStationsTask.isSuccessful && advancedStationsTask.isSuccessful &&
+                            !basicStationsTask.result!!.isEmpty && !advancedStationsTask.result!!.isEmpty
+                        ) {
+                            writeDetailedStationsToDatabase(basicStationsTask.result!!.toObjects(Station::class.java),
+                                advancedStationsTask.result!!.map {
+                                    it.id to it.toObject(StationAdvancedInfo::class.java)
+                                })
+                            Log.i("StationRepository", "Data updated successfully!")
+                        } else {
+                            Log.i("StationRepository", "Data update failed!")
                         }
-                }
+                    }
+            }
+        }
+    }
+
+    private fun writeDetailedStationsToDatabase(
+        basicStations: List<Station>,
+        advancedStations: List<Pair<String, StationAdvancedInfo>>
+    ) = doAsync {
+        advancedStations.let {
+            detailedStationDao.insertAll(basicStations.map { (name, latitude, longitude) ->
+                DetailedStation(
+                    name,
+                    latitude,
+                    longitude,
+                    it.find { (first) -> first == name }!!.second.description
+                )
+            })
         }
     }
 }
