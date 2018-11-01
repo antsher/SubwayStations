@@ -5,4 +5,5 @@ import com.stazis.subwaystations.presentation.views.common.Representation
 interface StationInfoRepresentation : Representation {
 
     fun onSuccessMessageReceived(message: String)
+    fun onDescriptionReceived(stationDescription: String)
 }

@@ -54,7 +54,12 @@ class StationInfoActivity : BaseDaggerActivity(), StationInfoRepresentation {
         latitude.text = String.format("Latitude: %f", station.latitude)
         longitude.text = String.format("Longitude: %f", station.longitude)
         distance.text = String.format("Distance to station from your current location is %d meters", distanceToStation)
-        description.savedText = station.description
+        presenter.getDescription(stationName!!)
+        showLoading()
+    }
+
+    override fun onDescriptionReceived(stationDescription: String) {
+        description.savedText = stationDescription
     }
 
     private fun onDescriptionUpdated() {
