@@ -1,8 +1,9 @@
 package com.stazis.subwaystations.presentation.views.common
 
-interface Representation {
+interface BaseView {
 
     fun showLoading()
     fun hideLoading()
-    fun showError(errorMessage: String)
+    fun showDialog(title: String, message: String)
+    fun hideDialog()
 }

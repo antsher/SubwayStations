@@ -9,7 +9,7 @@ import com.stazis.subwaystations.presentation.views.common.instancestate.NotNull
 import com.stazis.subwaystations.presentation.views.common.instancestate.NullableStateProvider
 import dagger.android.support.DaggerAppCompatActivity
 
-abstract class BaseDaggerActivity : DaggerAppCompatActivity(), Representation {
+abstract class BaseDaggerActivity : DaggerAppCompatActivity(), BaseView {
 
     companion object {
 
@@ -18,6 +18,7 @@ abstract class BaseDaggerActivity : DaggerAppCompatActivity(), Representation {
 
     private val stateBundle = Bundle()
     private lateinit var progressBar: View
+    private lateinit var messageDialog: AlertDialog
 
     protected fun <T> instanceState() = NullableStateProvider<T>(stateBundle)
     protected fun <T> instanceState(defaultValue: T) = NotNullStateProvider(stateBundle, defaultValue)
@@ -32,12 +33,16 @@ abstract class BaseDaggerActivity : DaggerAppCompatActivity(), Representation {
         }
     }
 
-    override fun showError(errorMessage: String) = AlertDialog.Builder(this)
-        .setTitle("Error!")
-        .setMessage(errorMessage)
-        .setNeutralButton("OK") { dialog, _ -> dialog?.dismiss() }
-        .create()
-        .show()
+    override fun showDialog(title: String, message: String) {
+        messageDialog = AlertDialog.Builder(this)
+            .setTitle(title)
+            .setNeutralButton("OK") { dialog, _ -> dialog?.dismiss() }
+            .setMessage(message)
+            .create()
+            .apply { show() }
+    }
+
+    override fun hideDialog() = messageDialog.dismiss()
 
     override fun showLoading() {
         progressBar.visibility = View.VISIBLE

@@ -1,6 +1,5 @@
 package com.stazis.subwaystations.presentation.views.info
 
-import android.app.AlertDialog
 import android.os.Bundle
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.SphericalUtil
@@ -12,7 +11,7 @@ import kotlinx.android.synthetic.main.activity_station_info.*
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
-class StationInfoActivity : BaseDaggerActivity(), StationInfoRepresentation {
+class StationInfoActivity : BaseDaggerActivity(), StationInfoView {
 
     companion object {
 
@@ -23,7 +22,6 @@ class StationInfoActivity : BaseDaggerActivity(), StationInfoRepresentation {
     @Inject
     lateinit var presenter: StationInfoPresenter
     private var stationName: String? by instanceState()
-    private var textNotSaved by instanceState(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_station_info)
@@ -31,10 +29,6 @@ class StationInfoActivity : BaseDaggerActivity(), StationInfoRepresentation {
         presenter.attachView(this)
         if (savedInstanceState == null) {
             getDataFromIntent()
-        } else {
-            if (textNotSaved) {
-                onDescriptionUpdated()
-            }
         }
         description.onTextUpdated = this::onDescriptionUpdated
     }
@@ -57,24 +51,13 @@ class StationInfoActivity : BaseDaggerActivity(), StationInfoRepresentation {
         showLoading()
     }
 
-    override fun onDescriptionReceived(stationDescription: String) {
+    override fun updateUI(stationDescription: String) {
         description.savedText = stationDescription
     }
 
     private fun onDescriptionUpdated() {
         showLoading()
-        textNotSaved = true
         presenter.updateStationDescription(stationName!!, description.savedText)
-    }
-
-    override fun onSuccessMessageReceived(message: String) {
-        textNotSaved = false
-        AlertDialog.Builder(this)
-            .setTitle("Success!")
-            .setMessage(message)
-            .setNeutralButton("OK") { dialog, _ -> dialog?.dismiss() }
-            .create()
-            .show()
     }
 
     override fun onDestroy() {

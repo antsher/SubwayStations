@@ -3,7 +3,7 @@ package com.stazis.subwaystations.presentation.presenters
 import android.annotation.SuppressLint
 import com.stazis.subwaystations.domain.interactors.GetStationDescription
 import com.stazis.subwaystations.domain.interactors.UpdateStationDescription
-import com.stazis.subwaystations.presentation.views.info.StationInfoRepresentation
+import com.stazis.subwaystations.presentation.views.info.StationInfoView
 import com.stazis.subwaystations.utils.SchedulerProvider
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -12,7 +12,7 @@ class StationInfoPresenter @Inject constructor(
     private val getStationDescription: GetStationDescription,
     private val updateStationDescription: UpdateStationDescription,
     private val schedulerProvider: SchedulerProvider
-) : BasePresenter<StationInfoRepresentation>() {
+) : BasePresenter<StationInfoView>() {
 
     private var loading = false
 
@@ -28,13 +28,13 @@ class StationInfoPresenter @Inject constructor(
     private fun onDescriptionReceived(description: String) {
         loading = false
         view?.hideLoading()
-        view?.onDescriptionReceived(description)
+        view?.updateUI(description)
     }
 
     private fun onFailure(error: Throwable) {
         loading = false
         view?.hideLoading()
-        view?.showError(error.localizedMessage)
+        view?.showDialog("Error!", error.localizedMessage)
     }
 
     @SuppressLint("CheckResult")
@@ -50,6 +50,6 @@ class StationInfoPresenter @Inject constructor(
     private fun onDescriptionUpdated(successMessage: String) {
         loading = false
         view?.hideLoading()
-        view?.onSuccessMessageReceived(successMessage)
+        view?.showDialog("Success!", successMessage)
     }
 }
