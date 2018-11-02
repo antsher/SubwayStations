@@ -14,7 +14,6 @@ import kotlin.math.roundToInt
 
 class StationInfoActivity : BaseDaggerActivity(), StationInfoRepresentation {
 
-
     companion object {
 
         const val CURRENT_LOCATION_KEY = "CURRENT_LOCATION_KEY"

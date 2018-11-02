@@ -49,7 +49,7 @@ abstract class BaseDaggerFragment : DaggerFragment(), Representation {
         progressBar.visibility = GONE
     }
 
-    override fun onSaveInstanceState(outState: Bundle) = outState.let {
+    override fun onSaveInstanceState(savedInstanceState: Bundle) = savedInstanceState.let {
         it.putBundle(STATE_BUNDLE_KEY, stateBundle)
         super.onSaveInstanceState(it)
     }

@@ -3,8 +3,10 @@ package com.stazis.subwaystations.services
 import android.content.Intent
 import android.util.Log
 import com.stazis.subwaystations.domain.interactors.UpdateLocalDatabase
+import com.stazis.subwaystations.utils.SchedulerProvider
 import dagger.android.DaggerIntentService
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class DataUpdateService : DaggerIntentService(DataUpdateService::class.simpleName) {
@@ -16,6 +18,8 @@ class DataUpdateService : DaggerIntentService(DataUpdateService::class.simpleNam
 
     @Inject
     lateinit var updateLocalDatabase: UpdateLocalDatabase
+    @Inject
+    lateinit var schedulerProvider: SchedulerProvider
     private val backgroundTimer: Timer = Timer()
 
     override fun onHandleIntent(intent: Intent?) {
@@ -34,5 +38,17 @@ class DataUpdateService : DaggerIntentService(DataUpdateService::class.simpleNam
     private fun updateData() {
         Log.i("DataUpdateService", "Updating...")
         updateLocalDatabase.execute()
+            .delay(2000, TimeUnit.MILLISECONDS)
+            .subscribeOn(schedulerProvider.ioScheduler())
+            .observeOn(schedulerProvider.uiScheduler())
+            .subscribe(this::onSuccess, this::onFailure)
+    }
+
+    private fun onSuccess(message: String) {
+        Log.i("DataUpdateService", message)
+    }
+
+    private fun onFailure(error: Throwable) {
+        Log.i("DataUpdateService", error.localizedMessage)
     }
 }

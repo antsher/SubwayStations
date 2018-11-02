@@ -1,6 +1,5 @@
 package com.stazis.subwaystations.model.repositories
 
-import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.stazis.subwaystations.helpers.ConnectionHelper
 import com.stazis.subwaystations.helpers.PreferencesHelper
@@ -31,12 +30,12 @@ class RealStationRepository(
     private val firestore = FirebaseFirestore.getInstance()
 
     override fun getStations(): Single<List<Station>> = if (connectionHelper.isOnline()) {
-        loadStationsFromNetworks()
+        loadStationsFromNetwork()
     } else {
         Single.create<List<Station>> { loadStationsFromDatabase(it) }
     }
 
-    private fun loadStationsFromNetworks() = if (!preferencesHelper.retrieveBoolean(DATA_IN_FIRESTORE_KEY)) {
+    private fun loadStationsFromNetwork() = if (!preferencesHelper.retrieveBoolean(DATA_IN_FIRESTORE_KEY)) {
         preferencesHelper.saveBoolean(DATA_IN_FIRESTORE_KEY, true)
         loadStationsFromServer()
     } else {
@@ -141,7 +140,7 @@ class RealStationRepository(
             }
         }
 
-    override fun updateLocalDatabase() {
+    override fun updateLocalDatabase(): Single<String> = Single.create { emitter ->
         if (connectionHelper.isOnline()) {
             firestore.collection(STATION_BASIC_INFO_COLLECTION_NAME).get().continueWith { basicStationsTask ->
                 firestore.collection(STATION_DETAILED_INFO_COLLECTION_NAME).get()
@@ -149,13 +148,13 @@ class RealStationRepository(
                         if (basicStationsTask.isSuccessful && advancedStationsTask.isSuccessful &&
                             !basicStationsTask.result!!.isEmpty && !advancedStationsTask.result!!.isEmpty
                         ) {
+                            emitter.onSuccess("Data updated successfully!")
                             writeDetailedStationsToDatabase(basicStationsTask.result!!.toObjects(Station::class.java),
                                 advancedStationsTask.result!!.map {
                                     it.id to it.toObject(StationAdvancedInfo::class.java)
                                 })
-                            Log.i("StationRepository", "Data updated successfully!")
                         } else {
-                            Log.i("StationRepository", "Data update failed!")
+                            emitter.onError(ConnectException("Data update failed."))
                         }
                     }
             }
@@ -168,12 +167,7 @@ class RealStationRepository(
     ) = doAsync {
         advancedStations.let {
             detailedStationDao.insertAll(basicStations.map { (name, latitude, longitude) ->
-                DetailedStation(
-                    name,
-                    latitude,
-                    longitude,
-                    it.find { (first) -> first == name }!!.second.description
-                )
+                DetailedStation(name, latitude, longitude, it.find { (first) -> first == name }!!.second.description)
             })
         }
     }
