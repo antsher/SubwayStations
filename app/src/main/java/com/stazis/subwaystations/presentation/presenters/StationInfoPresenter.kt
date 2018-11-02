@@ -1,6 +1,7 @@
 package com.stazis.subwaystations.presentation.presenters
 
 import android.annotation.SuppressLint
+import com.arellomobile.mvp.MvpPresenter
 import com.stazis.subwaystations.domain.interactors.GetStationDescription
 import com.stazis.subwaystations.domain.interactors.UpdateStationDescription
 import com.stazis.subwaystations.presentation.views.info.StationInfoView
@@ -12,12 +13,11 @@ class StationInfoPresenter @Inject constructor(
     private val getStationDescription: GetStationDescription,
     private val updateStationDescription: UpdateStationDescription,
     private val schedulerProvider: SchedulerProvider
-) : BasePresenter<StationInfoView>() {
+) : MvpPresenter<StationInfoView>() {
 
-    private var loading = false
-
+    @SuppressLint("CheckResult")
     fun getDescription(name: String) {
-        loading = true
+        viewState.showLoading()
         getStationDescription.execute(name)
             .delay(2000, TimeUnit.MILLISECONDS)
             .subscribeOn(schedulerProvider.ioScheduler())
@@ -26,20 +26,18 @@ class StationInfoPresenter @Inject constructor(
     }
 
     private fun onDescriptionReceived(description: String) {
-        loading = false
-        view?.hideLoading()
-        view?.updateUI(description)
+        viewState.hideLoading()
+        viewState.updateUI(description)
     }
 
     private fun onFailure(error: Throwable) {
-        loading = false
-        view?.hideLoading()
-        view?.showDialog("Error!", error.localizedMessage)
+        viewState.hideLoading()
+        viewState.showDialog("Error!", error.localizedMessage)
     }
 
     @SuppressLint("CheckResult")
     fun updateStationDescription(name: String, description: String) {
-        loading = true
+        viewState.showLoading()
         updateStationDescription.execute(name, description)
             .delay(2000, TimeUnit.MILLISECONDS)
             .subscribeOn(schedulerProvider.ioScheduler())
@@ -48,8 +46,7 @@ class StationInfoPresenter @Inject constructor(
     }
 
     private fun onDescriptionUpdated(successMessage: String) {
-        loading = false
-        view?.hideLoading()
-        view?.showDialog("Success!", successMessage)
+        viewState.hideLoading()
+        viewState.showDialog("Success!", successMessage)
     }
 }

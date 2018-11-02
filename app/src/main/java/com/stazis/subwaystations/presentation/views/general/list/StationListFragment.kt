@@ -37,7 +37,7 @@ class StationListFragment : BaseMvpFragment(), StationsView {
     }
 
     private fun updateData() {
-        showLoading()
+//        showLoading()
         presenter.getStationsAndLocation()
     }
 
@@ -80,7 +80,7 @@ class StationListFragment : BaseMvpFragment(), StationsView {
         stationViewsWithDistances.forEach { stationsContainer.addView(it) }
 
     override fun onDestroyView() {
-        presenter.detachView()
+        presenter.detachView(this)
         super.onDestroyView()
     }
 }

@@ -22,8 +22,7 @@ import kotlinx.android.synthetic.main.fragment_station_map.*
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
-class StationMapFragment : BaseMvpFragment(),
-    StationsView {
+class StationMapFragment : BaseMvpFragment(), StationsView {
 
     @Inject
     lateinit var presenter: StationsPresenter
@@ -49,11 +48,11 @@ class StationMapFragment : BaseMvpFragment(),
     }
 
     private fun updateData() {
+        presenter.getStationsAndLocation()
         map.getMapAsync { googleMap ->
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(53.9086154, 27.5735358), 10.5f))
         }
-        showLoading()
-        presenter.getStationsAndLocation()
+//        showLoading()
     }
 
     private fun setupUI() {
@@ -97,7 +96,7 @@ class StationMapFragment : BaseMvpFragment(),
     }
 
     override fun onDestroyView() {
-        presenter.detachView()
+        presenter.detachView(this)
         super.onDestroyView()
     }
 

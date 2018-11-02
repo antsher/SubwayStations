@@ -2,6 +2,7 @@ package com.stazis.subwaystations.presentation.presenters
 
 import android.annotation.SuppressLint
 import android.location.Location
+import com.arellomobile.mvp.MvpPresenter
 import com.stazis.subwaystations.domain.interactors.GetLocation
 import com.stazis.subwaystations.domain.interactors.GetStations
 import com.stazis.subwaystations.model.entities.Station
@@ -16,13 +17,11 @@ class StationsPresenter @Inject constructor(
     private val getStations: GetStations,
     private val getLocation: GetLocation,
     private val schedulerProvider: SchedulerProvider
-) : BasePresenter<StationsView>() {
-
-    private var loading = false
+) : MvpPresenter<StationsView>() {
 
     @SuppressLint("CheckResult")
     fun getStationsAndLocation() {
-        loading = true
+        viewState.showLoading()
         val zipper = BiFunction<List<Station>, Location, Pair<List<Station>, Location>> { stations, location ->
             stations to location
         }
@@ -34,20 +33,18 @@ class StationsPresenter @Inject constructor(
     }
 
     private fun onSuccess(stationsAndLocation: Pair<List<Station>, Location>) {
-        loading = false
-        view?.hideLoading()
-        view?.updateUI(stationsAndLocation)
+        viewState.hideLoading()
+        viewState.updateUI(stationsAndLocation)
     }
 
     private fun onFailure(error: Throwable) {
-        loading = false
-        view?.hideLoading()
+        viewState.hideLoading()
         if (error is NullPointerException) {
             "Cannot get your current location!"
         } else {
             error.localizedMessage
         }.run {
-            view?.showDialog("Error!", this)
+            viewState.showDialog("Error!", this)
         }
     }
 }

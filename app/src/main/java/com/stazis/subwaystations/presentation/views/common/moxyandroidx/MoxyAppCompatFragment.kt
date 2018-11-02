@@ -1,13 +1,13 @@
 package com.stazis.subwaystations.presentation.views.common.moxyandroidx
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.MvpDelegate
+import dagger.android.support.DaggerFragment
 
-abstract class MoxyAppCompatFragment : Fragment() {
+abstract class MoxyAppCompatFragment : DaggerFragment() {
 
     private var isMvpStateSaved: Boolean = false
-    val mvpDelegate: MvpDelegate<out MoxyAppCompatFragment> by lazy { MvpDelegate(this) }
+    private val mvpDelegate: MvpDelegate<out MoxyAppCompatFragment> by lazy { MvpDelegate(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

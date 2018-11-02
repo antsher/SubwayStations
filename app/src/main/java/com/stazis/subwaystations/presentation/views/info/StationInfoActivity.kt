@@ -48,20 +48,20 @@ class StationInfoActivity : BaseMvpActivity(), StationInfoView {
         longitude.text = String.format("Longitude: %f", station.longitude)
         distance.text = String.format("Distance to station from your current location is %d meters", distanceToStation)
         presenter.getDescription(stationName!!)
-        showLoading()
     }
 
     override fun updateUI(stationDescription: String) {
+//        showLoading()
         description.savedText = stationDescription
     }
 
     private fun onDescriptionUpdated() {
-        showLoading()
+//        showLoading()
         presenter.updateStationDescription(stationName!!, description.savedText)
     }
 
     override fun onDestroy() {
-        presenter.detachView()
+        presenter.detachView(this)
         super.onDestroy()
     }
 }

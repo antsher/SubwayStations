@@ -1,6 +1,8 @@
 package com.stazis.subwaystations.presentation.views.common
 
-interface BaseView {
+import com.arellomobile.mvp.MvpView
+
+interface BaseView : MvpView {
 
     fun showLoading()
     fun hideLoading()
