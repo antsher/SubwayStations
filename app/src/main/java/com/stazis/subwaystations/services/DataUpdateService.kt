@@ -1,5 +1,6 @@
 package com.stazis.subwaystations.services
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.util.Log
 import com.stazis.subwaystations.domain.interactors.UpdateLocalDatabase
@@ -30,11 +31,11 @@ class DataUpdateService : DaggerIntentService(DataUpdateService::class.simpleNam
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
-
             }
         }, 0, UPDATE_FREQUENCY * 60_000)
     }
 
+    @SuppressLint("CheckResult")
     private fun updateData() {
         Log.i("DataUpdateService", "Updating...")
         updateLocalDatabase.execute()
