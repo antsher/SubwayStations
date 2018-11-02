@@ -12,7 +12,7 @@ import com.stazis.subwaystations.R
 import com.stazis.subwaystations.extensions.toLatLng
 import com.stazis.subwaystations.model.entities.Station
 import com.stazis.subwaystations.presentation.presenters.StationsPresenter
-import com.stazis.subwaystations.presentation.views.common.BaseDaggerFragment
+import com.stazis.subwaystations.presentation.views.common.BaseMvpFragment
 import com.stazis.subwaystations.presentation.views.general.GeneralActivity
 import com.stazis.subwaystations.presentation.views.general.common.StationsView
 import com.stazis.subwaystations.presentation.views.info.StationInfoActivity
@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.fragment_station_list.*
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
-class StationListFragment : BaseDaggerFragment(), StationsView {
+class StationListFragment : BaseMvpFragment(), StationsView {
 
     @Inject
     lateinit var presenter: StationsPresenter

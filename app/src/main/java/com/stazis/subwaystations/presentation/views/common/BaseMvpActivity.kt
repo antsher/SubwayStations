@@ -3,15 +3,13 @@ package com.stazis.subwaystations.presentation.views.common
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import com.stazis.subwaystations.R
 import com.stazis.subwaystations.presentation.views.common.instancestate.NotNullStateProvider
 import com.stazis.subwaystations.presentation.views.common.instancestate.NullableStateProvider
-import dagger.android.support.DaggerFragment
+import com.stazis.subwaystations.presentation.views.common.moxyandroidx.MoxyAppCompatActivity
 
-abstract class BaseDaggerFragment : DaggerFragment(), BaseView {
+abstract class BaseMvpActivity : MoxyAppCompatActivity(), BaseView {
 
     companion object {
 
@@ -21,7 +19,6 @@ abstract class BaseDaggerFragment : DaggerFragment(), BaseView {
     private val stateBundle = Bundle()
     private lateinit var progressBar: View
     private lateinit var messageDialog: AlertDialog
-    open lateinit var root: ViewGroup
 
     protected fun <T> instanceState() = NullableStateProvider<T>(stateBundle)
     protected fun <T> instanceState(defaultValue: T) = NotNullStateProvider(stateBundle, defaultValue)
@@ -29,14 +26,15 @@ abstract class BaseDaggerFragment : DaggerFragment(), BaseView {
     override fun onCreate(savedInstanceState: Bundle?) {
         savedInstanceState?.let { stateBundle.putAll(savedInstanceState.getBundle(STATE_BUNDLE_KEY)) }
         super.onCreate(savedInstanceState)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        progressBar = layoutInflater.inflate(R.layout.view_progress_bar, root, false).apply { root.addView(this) }
+        (findViewById<ViewGroup>(android.R.id.content)).apply {
+            progressBar = layoutInflater.inflate(R.layout.view_progress_bar, this, false).also {
+                addView(it)
+            }
+        }
     }
 
     override fun showDialog(title: String, message: String) {
-        messageDialog = AlertDialog.Builder(context)
+        messageDialog = AlertDialog.Builder(this)
             .setTitle(title)
             .setNeutralButton("OK") { dialog, _ -> dialog?.dismiss() }
             .setMessage(message)
@@ -47,14 +45,14 @@ abstract class BaseDaggerFragment : DaggerFragment(), BaseView {
     override fun hideDialog() = messageDialog.dismiss()
 
     override fun showLoading() {
-        progressBar.visibility = VISIBLE
+        progressBar.visibility = View.VISIBLE
     }
 
     override fun hideLoading() {
-        progressBar.visibility = GONE
+        progressBar.visibility = View.GONE
     }
 
-    override fun onSaveInstanceState(savedInstanceState: Bundle) = savedInstanceState.let {
+    override fun onSaveInstanceState(outState: Bundle) = outState.let {
         it.putBundle(STATE_BUNDLE_KEY, stateBundle)
         super.onSaveInstanceState(it)
     }

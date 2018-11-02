@@ -99,6 +99,10 @@ dependencies {
     // Crashlytics
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
 
+    // Moxy
+    implementation "com.arello-mobile:moxy:$moxy_version"
+    kapt "com.arello-mobile:moxy-compiler:$moxy_version"
+
     // Testing
     testImplementation 'junit:junit:4.12'
     testImplementation "androidx.test:core:$androidx_version"
