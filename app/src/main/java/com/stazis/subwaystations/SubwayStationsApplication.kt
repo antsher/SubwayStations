@@ -10,7 +10,9 @@ class SubwayStationsApplication : DaggerApplication() {
 
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
-        MultiDex.install(this)
+        if (android.os.Build.VERSION.SDK_INT < 21) {
+            MultiDex.install(this)
+        }
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> =
