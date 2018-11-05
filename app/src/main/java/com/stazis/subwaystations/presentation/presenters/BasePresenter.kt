@@ -5,5 +5,5 @@ import com.stazis.subwaystations.presentation.views.common.BaseView
 
 abstract class BasePresenter<View : BaseView> : MvpPresenter<View>() {
 
-    fun onDialogDismissed() = viewState.hideDialog()
+    fun onDialogCancelled() = viewState.hideDialog()
 }
