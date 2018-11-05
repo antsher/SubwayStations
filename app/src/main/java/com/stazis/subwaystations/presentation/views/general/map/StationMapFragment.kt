@@ -24,11 +24,11 @@ import kotlinx.android.synthetic.main.fragment_station_map.*
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
-class StationMapFragment : BaseMvpFragment(), StationsView {
+class StationMapFragment : BaseMvpFragment<StationsPresenter>(), StationsView {
 
     @Inject
     @InjectPresenter
-    lateinit var presenter: StationsPresenter
+    override lateinit var presenter: StationsPresenter
     private var stations by instanceState<List<Station>>(emptyList())
     private var location by instanceState(LatLng(0.0, 0.0))
 

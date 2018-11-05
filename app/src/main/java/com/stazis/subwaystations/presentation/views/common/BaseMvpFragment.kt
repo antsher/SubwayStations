@@ -7,17 +7,19 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import com.stazis.subwaystations.R
+import com.stazis.subwaystations.presentation.presenters.BasePresenter
 import com.stazis.subwaystations.presentation.views.common.instancestate.NotNullStateProvider
 import com.stazis.subwaystations.presentation.views.common.instancestate.NullableStateProvider
 import com.stazis.subwaystations.presentation.views.common.moxyandroidx.MoxyAppCompatFragment
 
-abstract class BaseMvpFragment : MoxyAppCompatFragment(), BaseView {
+abstract class BaseMvpFragment<Presenter : BasePresenter<out BaseView>> : MoxyAppCompatFragment(), BaseView {
 
     companion object {
 
         private const val STATE_BUNDLE_KEY = "STATE_BUNDLE_KEY"
     }
 
+    abstract var presenter: Presenter
     private val stateBundle = Bundle()
     private lateinit var progressBar: View
     private lateinit var messageDialog: AlertDialog
@@ -36,12 +38,14 @@ abstract class BaseMvpFragment : MoxyAppCompatFragment(), BaseView {
     }
 
     override fun showDialog(title: String, message: String) {
-        messageDialog = AlertDialog.Builder(context)
-            .setTitle(title)
-            .setNeutralButton("OK") { dialog, _ -> dialog?.dismiss() }
-            .setMessage(message)
-            .create()
-            .apply { show() }
+        if (!::messageDialog.isInitialized || !messageDialog.isShowing) {
+            messageDialog = AlertDialog.Builder(context)
+                .setTitle(title)
+                .setNeutralButton("OK") { _, _ -> presenter.onDialogHidden() }
+                .setMessage(message)
+                .create()
+                .apply { show() }
+        }
     }
 
     override fun hideDialog() = messageDialog.dismiss()

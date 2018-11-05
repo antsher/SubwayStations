@@ -3,7 +3,6 @@ package com.stazis.subwaystations.presentation.presenters
 import android.annotation.SuppressLint
 import android.location.Location
 import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 import com.stazis.subwaystations.domain.interactors.GetLocation
 import com.stazis.subwaystations.domain.interactors.GetStations
 import com.stazis.subwaystations.model.entities.Station
@@ -19,7 +18,7 @@ class StationsPresenter @Inject constructor(
     private val getStations: GetStations,
     private val getLocation: GetLocation,
     private val schedulerProvider: SchedulerProvider
-) : MvpPresenter<StationsView>() {
+) : BasePresenter<StationsView>() {
 
     @SuppressLint("CheckResult")
     fun getStationsAndLocation() {

@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.activity_station_info.*
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
-class StationInfoActivity : BaseMvpActivity(), StationInfoView {
+class StationInfoActivity : BaseMvpActivity<StationInfoPresenter>(), StationInfoView {
 
     companion object {
 
@@ -24,7 +24,7 @@ class StationInfoActivity : BaseMvpActivity(), StationInfoView {
 
     @Inject
     @InjectPresenter
-    lateinit var presenter: StationInfoPresenter
+    override lateinit var presenter: StationInfoPresenter
     private var stationName: String? by instanceState()
 
     @ProvidePresenter
