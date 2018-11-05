@@ -15,5 +15,9 @@ class GetLocation @Inject constructor(private val locationHelper: LocationHelper
                 emitter.onError(it.exception!!)
             }
         }
+//        emitter.onSuccess(Location("").apply {
+//            latitude = 53.8851807
+//            longitude = 27.5370945
+//        })
     }
 }
