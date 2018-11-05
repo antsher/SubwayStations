@@ -41,7 +41,8 @@ abstract class BaseMvpFragment<Presenter : BasePresenter<out BaseView>> : MoxyAp
         if (!::messageDialog.isInitialized || !messageDialog.isShowing) {
             messageDialog = AlertDialog.Builder(context)
                 .setTitle(title)
-                .setNeutralButton("OK") { _, _ -> presenter.onDialogHidden() }
+                .setNeutralButton("OK") { _, _ -> presenter.onDialogDismissed() }
+                .setOnDismissListener { presenter.onDialogDismissed() }
                 .setMessage(message)
                 .create()
                 .apply { show() }
