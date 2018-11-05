@@ -1,6 +1,7 @@
 package com.stazis.subwaystations.presentation.presenters
 
 import android.annotation.SuppressLint
+import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import com.stazis.subwaystations.domain.interactors.GetStationDescription
 import com.stazis.subwaystations.domain.interactors.UpdateStationDescription
@@ -9,6 +10,7 @@ import com.stazis.subwaystations.utils.SchedulerProvider
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
+@InjectViewState
 class StationInfoPresenter @Inject constructor(
     private val getStationDescription: GetStationDescription,
     private val updateStationDescription: UpdateStationDescription,

@@ -36,7 +36,7 @@ abstract class BaseMvpActivity : MoxyAppCompatActivity(), BaseView {
     override fun showDialog(title: String, message: String) {
         messageDialog = AlertDialog.Builder(this)
             .setTitle(title)
-            .setNeutralButton("OK") { dialog, _ -> dialog?.dismiss() }
+            .setNeutralButton("OK") { _, _ -> hideDialog() }
             .setMessage(message)
             .create()
             .apply { show() }

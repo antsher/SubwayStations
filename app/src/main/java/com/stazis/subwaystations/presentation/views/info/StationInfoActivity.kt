@@ -1,12 +1,15 @@
 package com.stazis.subwaystations.presentation.views.info
 
 import android.os.Bundle
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.SphericalUtil
 import com.stazis.subwaystations.R
 import com.stazis.subwaystations.model.entities.Station
 import com.stazis.subwaystations.presentation.presenters.StationInfoPresenter
 import com.stazis.subwaystations.presentation.views.common.BaseMvpActivity
+import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_station_info.*
 import javax.inject.Inject
 import kotlin.math.roundToInt
@@ -20,13 +23,17 @@ class StationInfoActivity : BaseMvpActivity(), StationInfoView {
     }
 
     @Inject
+    @InjectPresenter
     lateinit var presenter: StationInfoPresenter
     private var stationName: String? by instanceState()
 
+    @ProvidePresenter
+    fun providePresenter() = presenter
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         setContentView(R.layout.activity_station_info)
         super.onCreate(savedInstanceState)
-        presenter.attachView(this)
         if (savedInstanceState == null) {
             getDataFromIntent()
         }
@@ -37,10 +44,10 @@ class StationInfoActivity : BaseMvpActivity(), StationInfoView {
         val currentLocation = intent.getParcelableExtra(CURRENT_LOCATION_KEY) as LatLng
         val station = intent.getParcelableExtra(STATION_KEY) as Station
         stationName = station.name
-        updateUI(currentLocation, station)
+        updateUIWithIntentData(currentLocation, station)
     }
 
-    private fun updateUI(currentLocation: LatLng, station: Station) {
+    private fun updateUIWithIntentData(currentLocation: LatLng, station: Station) {
         val stationLocation = LatLng(station.latitude, station.longitude)
         val distanceToStation = SphericalUtil.computeDistanceBetween(stationLocation, currentLocation).roundToInt()
         name.text = stationName
@@ -51,17 +58,8 @@ class StationInfoActivity : BaseMvpActivity(), StationInfoView {
     }
 
     override fun updateUI(stationDescription: String) {
-//        showLoading()
         description.savedText = stationDescription
     }
 
-    private fun onDescriptionUpdated() {
-//        showLoading()
-        presenter.updateStationDescription(stationName!!, description.savedText)
-    }
-
-    override fun onDestroy() {
-        presenter.detachView(this)
-        super.onDestroy()
-    }
+    private fun onDescriptionUpdated() = presenter.updateStationDescription(stationName!!, description.savedText)
 }

@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.SphericalUtil
 import com.stazis.subwaystations.R
@@ -23,30 +25,28 @@ import kotlin.math.roundToInt
 class StationListFragment : BaseMvpFragment(), StationsView {
 
     @Inject
+    @InjectPresenter
     lateinit var presenter: StationsPresenter
     private var stations by instanceState<List<Station>>(emptyList())
     private var location by instanceState(LatLng(0.0, 0.0))
+
+    @ProvidePresenter
+    fun providePresenter() = presenter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         (inflater.inflate(R.layout.fragment_station_list, container, false) as ViewGroup).apply { root = this }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.attachView(this)
         savedInstanceState?.let { restoreUI() } ?: updateData()
     }
 
-    private fun updateData() {
-//        showLoading()
-        presenter.getStationsAndLocation()
-    }
+    private fun updateData() = presenter.getStationsAndLocation()
 
-    private fun restoreUI() {
-        if (location == LatLng(0.0, 0.0) || stations.isEmpty()) {
-            updateData()
-        } else {
-            setupUI()
-        }
+    private fun restoreUI() = if (location == LatLng(0.0, 0.0) || stations.isEmpty()) {
+        updateData()
+    } else {
+        setupUI()
     }
 
     private fun setupUI() {
@@ -78,9 +78,4 @@ class StationListFragment : BaseMvpFragment(), StationsView {
 
     private fun addStationViewsToContainer(stationViewsWithDistances: List<StationView>) =
         stationViewsWithDistances.forEach { stationsContainer.addView(it) }
-
-    override fun onDestroyView() {
-        presenter.detachView(this)
-        super.onDestroyView()
-    }
 }

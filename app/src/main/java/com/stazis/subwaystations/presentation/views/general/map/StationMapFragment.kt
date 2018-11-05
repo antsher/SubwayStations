@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
@@ -25,9 +27,13 @@ import kotlin.math.roundToInt
 class StationMapFragment : BaseMvpFragment(), StationsView {
 
     @Inject
+    @InjectPresenter
     lateinit var presenter: StationsPresenter
     private var stations by instanceState<List<Station>>(emptyList())
     private var location by instanceState(LatLng(0.0, 0.0))
+
+    @ProvidePresenter
+    fun providePresenter() = presenter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         (inflater.inflate(R.layout.fragment_station_map, container, false) as ViewGroup).apply { root = this }
@@ -35,7 +41,6 @@ class StationMapFragment : BaseMvpFragment(), StationsView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         map.onCreate(savedInstanceState)
-        presenter.attachView(this)
         savedInstanceState?.let { restoreUI() } ?: updateData()
     }
 
@@ -52,7 +57,6 @@ class StationMapFragment : BaseMvpFragment(), StationsView {
         map.getMapAsync { googleMap ->
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(53.9086154, 27.5735358), 10.5f))
         }
-//        showLoading()
     }
 
     private fun setupUI() {
@@ -93,11 +97,6 @@ class StationMapFragment : BaseMvpFragment(), StationsView {
     override fun onLowMemory() {
         super.onLowMemory()
         map.onLowMemory()
-    }
-
-    override fun onDestroyView() {
-        presenter.detachView(this)
-        super.onDestroyView()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

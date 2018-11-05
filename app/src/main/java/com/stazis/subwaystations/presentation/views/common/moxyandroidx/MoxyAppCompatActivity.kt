@@ -5,15 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.arellomobile.mvp.MvpDelegate
 
 abstract class MoxyAppCompatActivity : AppCompatActivity() {
-    private var mMvpDelegate: MvpDelegate<out MoxyAppCompatActivity>? = null
 
-    val mvpDelegate: MvpDelegate<*>
-        get() {
-            if (mMvpDelegate == null) {
-                mMvpDelegate = MvpDelegate(this)
-            }
-            return mMvpDelegate!!
-        }
+    private val mvpDelegate: MvpDelegate<out MoxyAppCompatActivity> by lazy { MvpDelegate(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
