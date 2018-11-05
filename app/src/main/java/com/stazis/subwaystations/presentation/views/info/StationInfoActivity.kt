@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.maps.android.SphericalUtil
 import com.stazis.subwaystations.R
 import com.stazis.subwaystations.model.entities.Station
@@ -26,6 +27,7 @@ class StationInfoActivity : BaseMvpActivity<StationInfoPresenter>(), StationInfo
     @InjectPresenter
     override lateinit var presenter: StationInfoPresenter
     private var stationName: String? by instanceState()
+    private val firebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
     @ProvidePresenter
     fun providePresenter() = presenter
@@ -61,5 +63,8 @@ class StationInfoActivity : BaseMvpActivity<StationInfoPresenter>(), StationInfo
         description.savedText = stationDescription
     }
 
-    private fun onDescriptionUpdated() = presenter.updateStationDescription(stationName!!, description.savedText)
+    private fun onDescriptionUpdated() {
+        firebaseAnalytics.logEvent("updated_station_description", null)
+        presenter.updateStationDescription(stationName!!, description.savedText)
+    }
 }

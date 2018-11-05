@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.stazis.subwaystations.R
 import com.stazis.subwaystations.helpers.PermissionState
 import com.stazis.subwaystations.helpers.checkPermissionState
@@ -25,8 +26,9 @@ class GeneralActivity : AppCompatActivity() {
 
     enum class TabName { Map, List }
 
-    private val navigationController: NavigationController = NavigationController(this, R.id.fragmentContainer)
     private lateinit var activeTab: TabName
+    private val navigationController: NavigationController = NavigationController(this, R.id.fragmentContainer)
+    private val firebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +44,10 @@ class GeneralActivity : AppCompatActivity() {
         when (checkPermissionState(this, locationPermission)) {
             PermissionState.GRANTED -> navigateToMap()
             PermissionState.NOT_GRANTED -> requestPermission(this, locationPermission)
-            PermissionState.REJECTED -> askNicelyForPermissions()
+            PermissionState.REJECTED -> {
+                firebaseAnalytics.logEvent("permissions_are_rejected", null)
+                askNicelyForPermissions()
+            }
         }
     }
 
@@ -62,6 +67,7 @@ class GeneralActivity : AppCompatActivity() {
     }
 
     private fun navigateToMap() {
+        firebaseAnalytics.logEvent("navigated_to_map", null)
         activeTab = TabName.Map
         listTab.makeInactive()
         mapTab.makeActive()
@@ -69,14 +75,17 @@ class GeneralActivity : AppCompatActivity() {
     }
 
     private fun navigateToList() {
+        firebaseAnalytics.logEvent("navigated_to_list", null)
         activeTab = TabName.List
         mapTab.makeInactive()
         listTab.makeActive()
         navigationController.navigateToStationList()
     }
 
-    fun navigateToPager(stations: List<Station>, location: LatLng) =
+    fun navigateToPager(stations: List<Station>, location: LatLng) {
+        firebaseAnalytics.logEvent("navigated_to_pager", null)
         navigationController.navigateToStationPager(stations, location)
+    }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) =
         when (requestCode) {
