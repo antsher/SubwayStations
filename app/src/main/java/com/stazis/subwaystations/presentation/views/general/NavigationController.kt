@@ -33,7 +33,7 @@ class NavigationController(activity: GeneralActivity, private val containerId: I
             }
         }
 
-    private fun ifCurrentFragmentIsNot(fragmentClass: Class<out Fragment>, f: () -> Unit) {
+    private inline fun ifCurrentFragmentIsNot(fragmentClass: Class<out Fragment>, f: () -> Unit) {
         if (!fragmentClass.isInstance(getCurrentFragment())) {
             f()
         }

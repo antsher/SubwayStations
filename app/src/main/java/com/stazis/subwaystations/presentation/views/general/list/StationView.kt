@@ -44,7 +44,7 @@ class StationView(context: Context?, station: Station, stationDistance: Int, onC
         }
     }
 
-    private fun ifNotAnimationInProgress(f: () -> Unit) {
+    private inline fun ifNotAnimationInProgress(f: () -> Unit) {
         if (!animationInProgress) {
             f()
         }

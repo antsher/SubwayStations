@@ -51,7 +51,7 @@ class RealStationRepository(
         }
     }
 
-    private fun ifCorrectCoordinates(station: Station, f: () -> Unit) {
+    private inline fun ifCorrectCoordinates(station: Station, f: () -> Unit) {
         if (station.latitude != 0.0 && station.longitude != 0.0) {
             f()
         }
