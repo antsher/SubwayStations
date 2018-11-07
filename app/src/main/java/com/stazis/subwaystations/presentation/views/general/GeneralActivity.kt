@@ -28,7 +28,7 @@ class GeneralActivity : AppCompatActivity() {
 
     private lateinit var activeTab: TabName
     private val navigationController: NavigationController = NavigationController(this, R.id.fragmentContainer)
-    private val firebaseAnalytics = FirebaseAnalytics.getInstance(this)
+    private val firebaseAnalytics by lazy { FirebaseAnalytics.getInstance(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

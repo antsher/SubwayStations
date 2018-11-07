@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Typeface
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.withStyledAttributes
 import com.stazis.subwaystations.R
 
 class TextViewWithFont @JvmOverloads constructor(
@@ -13,10 +14,11 @@ class TextViewWithFont @JvmOverloads constructor(
 ) : AppCompatTextView(context, attrs, defStyleAttr) {
 
     init {
-        val styledAttrs = context?.obtainStyledAttributes(attrs, R.styleable.TextViewWithFont)
-        val fontName = styledAttrs?.getString(R.styleable.TextViewWithFont_typeface)
-        styledAttrs?.recycle()
-        fontName?.let { typeface = Typeface.createFromAsset(context.assets, "fonts/$it.ttf") }
+        context?.withStyledAttributes(attrs, R.styleable.TextViewWithFont) {
+            getString(R.styleable.TextViewWithFont_typeface)?.let {
+                typeface = Typeface.createFromAsset(context.assets, "fonts/$it.ttf")
+            }
+        }
         includeFontPadding = false
     }
 }

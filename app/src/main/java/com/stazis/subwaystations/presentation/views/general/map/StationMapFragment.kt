@@ -29,8 +29,8 @@ class StationMapFragment : BaseMvpFragment<StationsPresenter>(), StationsView {
     @Inject
     @InjectPresenter
     override lateinit var presenter: StationsPresenter
-    private var stations by instanceState<List<Station>>(emptyList())
-    private var location by instanceState(LatLng(0.0, 0.0))
+    private lateinit var stations: List<Station>
+    private lateinit var location: LatLng
 
     @ProvidePresenter
     fun providePresenter() = presenter
@@ -41,21 +41,11 @@ class StationMapFragment : BaseMvpFragment<StationsPresenter>(), StationsView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         map.onCreate(savedInstanceState)
-        savedInstanceState?.let { restoreUI() } ?: updateData()
-    }
-
-    private fun restoreUI() {
-        if (stations.isEmpty() || location == LatLng(0.0, 0.0)) {
-            updateData()
-        } else {
-            setupUI()
-        }
-    }
-
-    private fun updateData() {
-        presenter.getStationsAndLocation()
-        map.getMapAsync { googleMap ->
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(53.9086154, 27.5735358), 10.5f))
+        if (savedInstanceState == null) {
+            presenter.getStationsAndLocation()
+            map.getMapAsync { googleMap ->
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(53.9086154, 27.5735358), 10.5f))
+            }
         }
     }
 

@@ -27,8 +27,8 @@ class StationListFragment : BaseMvpFragment<StationsPresenter>(), StationsView {
     @Inject
     @InjectPresenter
     override lateinit var presenter: StationsPresenter
-    private var stations by instanceState<List<Station>>(emptyList())
-    private var location by instanceState(LatLng(0.0, 0.0))
+    private lateinit var stations: List<Station>
+    private lateinit var location: LatLng
 
     @ProvidePresenter
     fun providePresenter() = presenter
@@ -38,15 +38,9 @@ class StationListFragment : BaseMvpFragment<StationsPresenter>(), StationsView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        savedInstanceState?.let { restoreUI() } ?: updateData()
-    }
-
-    private fun updateData() = presenter.getStationsAndLocation()
-
-    private fun restoreUI() = if (location == LatLng(0.0, 0.0) || stations.isEmpty()) {
-        updateData()
-    } else {
-        setupUI()
+        if (savedInstanceState == null) {
+            presenter.getStationsAndLocation()
+        }
     }
 
     private fun setupUI() {
