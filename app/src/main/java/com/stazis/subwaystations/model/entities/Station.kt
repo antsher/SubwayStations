@@ -19,10 +19,10 @@ data class Station(@PrimaryKey val name: String, val latitude: Double, val longi
 
     constructor(parcel: Parcel) : this(parcel.readString()!!, parcel.readDouble(), parcel.readDouble())
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(name)
-        parcel.writeDouble(latitude)
-        parcel.writeDouble(longitude)
+    override fun writeToParcel(parcel: Parcel, flags: Int) = with(parcel) {
+        writeString(name)
+        writeDouble(latitude)
+        writeDouble(longitude)
     }
 
     override fun describeContents() = 0

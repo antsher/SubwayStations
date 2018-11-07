@@ -11,18 +11,20 @@ abstract class InstanceStateProvider<T>(protected val stateBundle: Bundle) {
 
     operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
         cache = value
-        when (value) {
-            null -> stateBundle.remove(property.name)
-            is Int -> stateBundle.putInt(property.name, value)
-            is Long -> stateBundle.putLong(property.name, value)
-            is Float -> stateBundle.putFloat(property.name, value)
-            is Double -> stateBundle.putDouble(property.name, value)
-            is String -> stateBundle.putString(property.name, value)
-            is Boolean -> stateBundle.putBoolean(property.name, value)
-            is Bundle -> stateBundle.putBundle(property.name, value)
-            is Parcelable -> stateBundle.putParcelable(property.name, value)
-            is Serializable -> stateBundle.putSerializable(property.name, value)
-            else -> throw IllegalArgumentException("Unsupported type")
+        with(property) {
+            when (value) {
+                null -> stateBundle.remove(name)
+                is Int -> stateBundle.putInt(name, value)
+                is Long -> stateBundle.putLong(name, value)
+                is Float -> stateBundle.putFloat(name, value)
+                is Double -> stateBundle.putDouble(name, value)
+                is String -> stateBundle.putString(name, value)
+                is Boolean -> stateBundle.putBoolean(name, value)
+                is Bundle -> stateBundle.putBundle(name, value)
+                is Parcelable -> stateBundle.putParcelable(name, value)
+                is Serializable -> stateBundle.putSerializable(name, value)
+                else -> throw IllegalArgumentException("Unsupported type")
+            }
         }
     }
 }

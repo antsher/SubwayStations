@@ -33,19 +33,16 @@ class StationsPresenter @Inject constructor(
             .subscribe(this::onSuccess, this::onFailure)
     }
 
-    private fun onSuccess(stationsAndLocation: Pair<List<Station>, Location>) {
-        viewState.hideLoading()
-        viewState.updateUI(stationsAndLocation)
+    private fun onSuccess(stationsAndLocation: Pair<List<Station>, Location>) = with(viewState) {
+        hideLoading()
+        updateUI(stationsAndLocation)
     }
 
-    private fun onFailure(error: Throwable) {
-        viewState.hideLoading()
-        if (error is NullPointerException) {
-            "Cannot get your current location!"
-        } else {
-            error.localizedMessage
-        }.run {
-            viewState.showDialog("Error!", this)
+    private fun onFailure(error: Throwable) = with(viewState) {
+        hideLoading()
+        when (error) {
+            is NullPointerException -> showDialog("Error!", "Cannot get your current location!")
+            else -> showDialog("Error!", error.localizedMessage)
         }
     }
 }

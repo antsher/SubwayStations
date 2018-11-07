@@ -29,8 +29,10 @@ abstract class MoxyAppCompatFragment : DaggerFragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         isMvpStateSaved = true
-        mvpDelegate.onSaveInstanceState(outState)
-        mvpDelegate.onDetach()
+        with(mvpDelegate) {
+            onSaveInstanceState(outState)
+            onDetach()
+        }
     }
 
     override fun onStop() {
@@ -40,8 +42,10 @@ abstract class MoxyAppCompatFragment : DaggerFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mvpDelegate.onDetach()
-        mvpDelegate.onDestroyView()
+        with(mvpDelegate) {
+            onDetach()
+            onDestroyView()
+        }
     }
 
     override fun onDestroy() {
@@ -60,7 +64,6 @@ abstract class MoxyAppCompatFragment : DaggerFragment() {
             anyParentIsRemoving = parent.isRemoving
             parent = parent.parentFragment
         }
-
         if (isRemoving || anyParentIsRemoving) {
             mvpDelegate.onDestroy()
         }

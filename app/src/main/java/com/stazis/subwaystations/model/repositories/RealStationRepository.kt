@@ -90,10 +90,12 @@ class RealStationRepository(
     }
 
     private fun loadStationsFromDatabase(emitter: SingleEmitter<List<Station>>) = detailedStationDao.getAll().let {
-        if (!it.isEmpty()) {
-            emitter.onSuccess(it)
-        } else {
-            emitter.onError(Exception("The database is empty!"))
+        with(emitter) {
+            if (!it.isEmpty()) {
+                onSuccess(it)
+            } else {
+                onError(Exception("The database is empty!"))
+            }
         }
     }
 
@@ -104,59 +106,68 @@ class RealStationRepository(
     }
 
     private fun loadStationDescriptionFromFirestore(name: String) = Single.create<String> { emitter ->
-        firestore.collection(STATION_DETAILED_INFO_COLLECTION_NAME).document(name).get().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                emitter.onSuccess(task.result!!.toObject(StationAdvancedInfo::class.java)!!.description)
-            } else {
-                emitter.onError(task.exception!!)
-            }
+        with(emitter) {
+            firestore.collection(STATION_DETAILED_INFO_COLLECTION_NAME).document(name).get()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        onSuccess(task.result!!.toObject(StationAdvancedInfo::class.java)!!.description)
+                    } else {
+                        onError(task.exception!!)
+                    }
+                }
         }
     }
 
     private fun loadStationDescriptionFromDatabase(emitter: SingleEmitter<String>, name: String) =
         detailedStationDao.getDescription(name).let {
-            if (it != null) {
-                emitter.onSuccess(it)
-            } else {
-                emitter.onError(Exception("No description found in the database!"))
+            with(emitter) {
+                if (it != null) {
+                    onSuccess(it)
+                } else {
+                    onError(Exception("No description found in the database!"))
+                }
             }
         }
 
     override fun updateStationDescription(name: String, description: String): Single<String> =
         Single.create { emitter ->
-            if (connectionHelper.isOnline()) {
-                firestore.collection(STATION_DETAILED_INFO_COLLECTION_NAME)
-                    .document(name)
-                    .update("description", description)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            emitter.onSuccess("Station updated successfully!")
-                        } else {
-                            emitter.onError(task.exception!!)
+            with(emitter) {
+                if (connectionHelper.isOnline()) {
+                    firestore.collection(STATION_DETAILED_INFO_COLLECTION_NAME)
+                        .document(name)
+                        .update("description", description)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                onSuccess("Station updated successfully!")
+                            } else {
+                                onError(task.exception!!)
+                            }
                         }
-                    }
-            } else {
-                emitter.onError(ConnectException("No internet connection present!"))
+                } else {
+                    onError(ConnectException("No internet connection present!"))
+                }
             }
         }
 
     override fun updateLocalDatabase(): Single<String> = Single.create { emitter ->
-        if (connectionHelper.isOnline()) {
-            firestore.collection(STATION_BASIC_INFO_COLLECTION_NAME).get().continueWith { basicStationsTask ->
-                firestore.collection(STATION_DETAILED_INFO_COLLECTION_NAME).get()
-                    .addOnCompleteListener { advancedStationsTask ->
-                        if (basicStationsTask.isSuccessful && advancedStationsTask.isSuccessful &&
-                            !basicStationsTask.result!!.isEmpty && !advancedStationsTask.result!!.isEmpty
-                        ) {
-                            emitter.onSuccess("Data updated successfully!")
-                            writeDetailedStationsToDatabase(basicStationsTask.result!!.toObjects(Station::class.java),
-                                advancedStationsTask.result!!.map {
-                                    it.id to it.toObject(StationAdvancedInfo::class.java)
-                                })
-                        } else {
-                            emitter.onError(ConnectException("Data update failed."))
+        with(emitter) {
+            if (connectionHelper.isOnline()) {
+                firestore.collection(STATION_BASIC_INFO_COLLECTION_NAME).get().continueWith { basicStationsTask ->
+                    firestore.collection(STATION_DETAILED_INFO_COLLECTION_NAME).get()
+                        .addOnCompleteListener { advancedStationsTask ->
+                            if (basicStationsTask.isSuccessful && advancedStationsTask.isSuccessful &&
+                                !basicStationsTask.result!!.isEmpty && !advancedStationsTask.result!!.isEmpty
+                            ) {
+                                onSuccess("Data updated successfully!")
+                                writeDetailedStationsToDatabase(basicStationsTask.result!!.toObjects(Station::class.java),
+                                    advancedStationsTask.result!!.map {
+                                        it.id to it.toObject(StationAdvancedInfo::class.java)
+                                    })
+                            } else {
+                                onError(ConnectException("Data update failed."))
+                            }
                         }
-                    }
+                }
             }
         }
     }

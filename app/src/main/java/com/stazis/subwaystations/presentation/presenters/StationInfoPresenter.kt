@@ -26,14 +26,14 @@ class StationInfoPresenter @Inject constructor(
             .subscribe(this::onDescriptionReceived, this::onFailure)
     }
 
-    private fun onDescriptionReceived(description: String) {
-        viewState.hideLoading()
-        viewState.updateUI(description)
+    private fun onDescriptionReceived(description: String) = with(viewState) {
+        hideLoading()
+        updateUI(description)
     }
 
-    private fun onFailure(error: Throwable) {
-        viewState.hideLoading()
-        viewState.showDialog("Error!", error.localizedMessage)
+    private fun onFailure(error: Throwable) = with(viewState) {
+        hideLoading()
+        showDialog("Error!", error.localizedMessage)
     }
 
     @SuppressLint("CheckResult")
@@ -46,8 +46,8 @@ class StationInfoPresenter @Inject constructor(
             .subscribe(this::onDescriptionUpdated, this::onFailure)
     }
 
-    private fun onDescriptionUpdated(successMessage: String) {
-        viewState.hideLoading()
-        viewState.showDialog("Success!", successMessage)
+    private fun onDescriptionUpdated(successMessage: String) = with(viewState) {
+        hideLoading()
+        showDialog("Success!", successMessage)
     }
 }

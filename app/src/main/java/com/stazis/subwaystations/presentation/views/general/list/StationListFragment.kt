@@ -61,9 +61,9 @@ class StationListFragment : BaseMvpFragment<StationsPresenter>(), StationsView {
     }
 
     private fun navigateToStationInfo(station: Station, currentLocation: LatLng) =
-        startActivity(Intent(context, StationInfoActivity::class.java).let {
-            it.putExtra(StationInfoActivity.STATION_KEY, station)
-            it.putExtra(StationInfoActivity.CURRENT_LOCATION_KEY, currentLocation)
+        startActivity(with(Intent(context, StationInfoActivity::class.java)) {
+            putExtra(StationInfoActivity.STATION_KEY, station)
+            putExtra(StationInfoActivity.CURRENT_LOCATION_KEY, currentLocation)
         })
 
     private fun initStationViews() = stations.asSequence().map {

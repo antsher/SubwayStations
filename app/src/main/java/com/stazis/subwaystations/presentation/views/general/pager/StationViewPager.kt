@@ -18,20 +18,21 @@ class StationViewPager(context: Context?, attrs: AttributeSet? = null) : LinearL
     }
 
     fun initialize(fragmentManager: FragmentManager, stations: List<Station>, location: LatLng) {
-        val adapter = StationPagerAdapter(fragmentManager, stations, location)
-        stationsPager.adapter = adapter
-        stationsPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+        with(stationsPager) {
+            adapter = StationPagerAdapter(fragmentManager, stations, location)
+            addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
 
-            override fun onPageScrollStateChanged(state: Int) {}
+                override fun onPageScrollStateChanged(state: Int) {}
 
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+                override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
 
-            override fun onPageSelected(position: Int) {
-                title.text = adapter.getPageTitle(position)
-            }
-        })
-        title.text = adapter.getPageTitle(stationsPager.currentItem)
-        scrollLeft.setOnClickListener { stationsPager.currentItem -= 1 }
-        scrollRight.setOnClickListener { stationsPager.currentItem += 1 }
+                override fun onPageSelected(position: Int) {
+                    title.text = adapter!!.getPageTitle(position)
+                }
+            })
+            title.text = adapter!!.getPageTitle(currentItem)
+            scrollLeft.setOnClickListener { currentItem -= 1 }
+            scrollRight.setOnClickListener { currentItem += 1 }
+        }
     }
 }

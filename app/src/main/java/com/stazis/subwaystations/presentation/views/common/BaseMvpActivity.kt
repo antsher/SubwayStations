@@ -26,12 +26,16 @@ abstract class BaseMvpActivity<Presenter : BasePresenter<out BaseView>> : MoxyAp
     protected fun <T> instanceState(defaultValue: T) = NotNullStateProvider(stateBundle, defaultValue)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        savedInstanceState?.let { stateBundle.putAll(savedInstanceState.getBundle(STATE_BUNDLE_KEY)) }
-        super.onCreate(savedInstanceState)
-        (findViewById<ViewGroup>(android.R.id.content)).apply {
-            progressBar = layoutInflater.inflate(R.layout.view_progress_bar, this, false).also {
-                addView(it)
-            }
+        with(savedInstanceState) {
+            this?.let { stateBundle.putAll(getBundle(STATE_BUNDLE_KEY)) }
+            super.onCreate(this)
+        }
+        inflateProgressBar()
+    }
+
+    private fun inflateProgressBar() = with(findViewById<ViewGroup>(android.R.id.content)) {
+        progressBar = layoutInflater.inflate(R.layout.view_progress_bar, this, false).also {
+            addView(it)
         }
     }
 
@@ -57,8 +61,8 @@ abstract class BaseMvpActivity<Presenter : BasePresenter<out BaseView>> : MoxyAp
         progressBar.visibility = View.GONE
     }
 
-    override fun onSaveInstanceState(outState: Bundle) = outState.let {
-        it.putBundle(STATE_BUNDLE_KEY, stateBundle)
-        super.onSaveInstanceState(it)
+    override fun onSaveInstanceState(outState: Bundle) = with(outState) {
+        putBundle(STATE_BUNDLE_KEY, stateBundle)
+        super.onSaveInstanceState(this)
     }
 }

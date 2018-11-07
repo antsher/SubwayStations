@@ -28,9 +28,9 @@ abstract class BaseMvpFragment<Presenter : BasePresenter<out BaseView>> : MoxyAp
     protected fun <T> instanceState() = NullableStateProvider<T>(stateBundle)
     protected fun <T> instanceState(defaultValue: T) = NotNullStateProvider(stateBundle, defaultValue)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        savedInstanceState?.let { stateBundle.putAll(savedInstanceState.getBundle(STATE_BUNDLE_KEY)) }
-        super.onCreate(savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) = with(savedInstanceState) {
+        this?.let { stateBundle.putAll(getBundle(STATE_BUNDLE_KEY)) }
+        super.onCreate(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,8 +59,8 @@ abstract class BaseMvpFragment<Presenter : BasePresenter<out BaseView>> : MoxyAp
         progressBar.visibility = GONE
     }
 
-    override fun onSaveInstanceState(outState: Bundle) = outState.let {
-        it.putBundle(STATE_BUNDLE_KEY, stateBundle)
-        super.onSaveInstanceState(it)
+    override fun onSaveInstanceState(outState: Bundle) = with(outState) {
+        putBundle(STATE_BUNDLE_KEY, stateBundle)
+        super.onSaveInstanceState(this)
     }
 }

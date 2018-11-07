@@ -10,7 +10,7 @@ fun hideSoftKeyboard(context: Context, view: View) {
     view.clearFocus()
 }
 
+fun showSoftKeyboard(context: Context, view: View) = getInputMethodManager(context).showSoftInput(view, 0)
+
 private fun getInputMethodManager(context: Context) =
     context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-
-fun showSoftKeyboard(context: Context, view: View) = getInputMethodManager(context).showSoftInput(view, 0)

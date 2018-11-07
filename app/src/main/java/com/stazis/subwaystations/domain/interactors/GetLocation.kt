@@ -8,11 +8,13 @@ import javax.inject.Inject
 class GetLocation @Inject constructor(private val locationHelper: LocationHelper) {
 
     fun execute(): Single<Location> = Single.create { emitter ->
-        locationHelper.getLocation().addOnCompleteListener {
-            if (it.isSuccessful) {
-                emitter.onSuccess(it.result!!)
-            } else {
-                emitter.onError(it.exception!!)
+        with(emitter) {
+            locationHelper.getLocation().addOnCompleteListener {
+                if (it.isSuccessful) {
+                    onSuccess(it.result!!)
+                } else {
+                    onError(it.exception!!)
+                }
             }
         }
 //        emitter.onSuccess(Location("").apply {

@@ -25,8 +25,10 @@ abstract class MoxyAppCompatActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        mvpDelegate.onSaveInstanceState(outState)
-        mvpDelegate.onDetach()
+        with(mvpDelegate) {
+            onSaveInstanceState(outState)
+            onDetach()
+        }
     }
 
     override fun onStop() {
@@ -36,9 +38,11 @@ abstract class MoxyAppCompatActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mvpDelegate.onDestroyView()
-        if (isFinishing) {
-            mvpDelegate.onDestroy()
+        with(mvpDelegate) {
+            onDestroyView()
+            if (isFinishing) {
+                onDestroy()
+            }
         }
     }
 }
