@@ -4,7 +4,6 @@ import com.arellomobile.mvp.MvpView
 
 interface AnimatedStationView : MvpView {
 
-    fun onSwitch()
-    fun expand()
-    fun collapse()
+    fun makeExpanded()
+    fun makeCollapsed()
 }

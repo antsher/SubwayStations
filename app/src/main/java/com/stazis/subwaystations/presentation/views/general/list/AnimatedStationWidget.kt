@@ -25,6 +25,7 @@ class AnimatedStationWidget(context: Context?, station: Station, stationDistance
     @InjectPresenter
     lateinit var presenter: AnimatedStationPresenter
     private lateinit var mvpDelegate: MvpDelegate<AnimatedStationWidget>
+    private var expanded = false
     private var animationInProgress = false
     private val dpRatio = resources.displayMetrics.density
 
@@ -34,7 +35,7 @@ class AnimatedStationWidget(context: Context?, station: Station, stationDistance
         latitude.text = String.format("Latitude: %f", station.latitude)
         longitude.text = String.format("Longitude: %f", station.longitude)
         distance.text = String.format("%dm", stationDistance)
-        expand.setOnClickListener { onSwitch() }
+        switchState.setOnClickListener { switch() }
         setOnClickListener { onClicked() }
     }
 
@@ -51,8 +52,15 @@ class AnimatedStationWidget(context: Context?, station: Station, stationDistance
         mvpDelegate.onDetach()
     }
 
-    override fun onSwitch() = ifNotAnimationInProgress {
-        presenter.onSwitch()
+    private fun switch() = ifNotAnimationInProgress {
+        expanded = !expanded
+        if (expanded) {
+            animateExpand()
+            presenter.makeExpanded()
+        } else {
+            animateCollapse()
+            presenter.makeCollapsed()
+        }
     }
 
     private inline fun ifNotAnimationInProgress(f: () -> Unit) {
@@ -61,7 +69,7 @@ class AnimatedStationWidget(context: Context?, station: Station, stationDistance
         }
     }
 
-    override fun expand() = hiddenView.animate()
+    private fun animateExpand() = hiddenView.animate()
         .alpha(1f)
         .translationY(0f)
         .setDuration(ANIMATION_DURATION)
@@ -81,7 +89,18 @@ class AnimatedStationWidget(context: Context?, station: Station, stationDistance
         })
         .start()
 
-    override fun collapse() {
+    override fun makeExpanded() {
+        expanded = true
+        if (!animationInProgress) {
+            with(hiddenView) {
+                hiddenView.alpha = 1f
+                hiddenView.translationY = 0f
+                hiddenView.visibility = VISIBLE
+            }
+        }
+    }
+
+    private fun animateCollapse() {
         if (hiddenView.visibility != View.GONE) {
             hiddenView.animate()
                 .alpha(0f)
@@ -102,6 +121,17 @@ class AnimatedStationWidget(context: Context?, station: Station, stationDistance
                     override fun onAnimationRepeat(animation: Animator) {}
                 })
                 .start()
+        }
+    }
+
+    override fun makeCollapsed() {
+        expanded = false
+        if (!animationInProgress) {
+            with(hiddenView) {
+                hiddenView.alpha = 0f
+                hiddenView.translationY = -50 * dpRatio
+                hiddenView.visibility = GONE
+            }
         }
     }
 }

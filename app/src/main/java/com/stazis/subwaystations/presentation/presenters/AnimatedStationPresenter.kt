@@ -7,14 +7,11 @@ import com.stazis.subwaystations.presentation.views.general.list.AnimatedStation
 @InjectViewState
 class AnimatedStationPresenter : MvpPresenter<AnimatedStationView>() {
 
-    private var expanded = false
+    fun makeExpanded() {
+        viewState.makeExpanded()
+    }
 
-    fun onSwitch() {
-        expanded = !expanded
-        if (expanded) {
-            viewState.expand()
-        } else {
-            viewState.collapse()
-        }
+    fun makeCollapsed() {
+        viewState.makeCollapsed()
     }
 }
