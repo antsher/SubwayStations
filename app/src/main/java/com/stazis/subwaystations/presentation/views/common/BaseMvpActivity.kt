@@ -6,30 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import com.stazis.subwaystations.R
 import com.stazis.subwaystations.presentation.presenters.BasePresenter
-import com.stazis.subwaystations.presentation.views.common.instancestate.NotNullStateProvider
-import com.stazis.subwaystations.presentation.views.common.instancestate.NullableStateProvider
 import com.stazis.subwaystations.presentation.views.common.moxyandroidx.MoxyAppCompatActivity
 
 abstract class BaseMvpActivity<Presenter : BasePresenter<out BaseView>> : MoxyAppCompatActivity(), BaseView {
 
-    companion object {
-
-        private const val STATE_BUNDLE_KEY = "STATE_BUNDLE_KEY"
-    }
-
     abstract var presenter: Presenter
-    private val stateBundle = Bundle()
     private lateinit var progressBar: View
     private lateinit var messageDialog: AlertDialog
 
-    protected fun <T> instanceState() = NullableStateProvider<T>(stateBundle)
-    protected fun <T> instanceState(defaultValue: T) = NotNullStateProvider(stateBundle, defaultValue)
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        with(savedInstanceState) {
-            this?.let { stateBundle.putAll(getBundle(STATE_BUNDLE_KEY)) }
-            super.onCreate(this)
-        }
+        super.onCreate(savedInstanceState)
         inflateProgressBar()
     }
 
@@ -59,10 +45,4 @@ abstract class BaseMvpActivity<Presenter : BasePresenter<out BaseView>> : MoxyAp
 
     override fun hideLoading() {
         progressBar.visibility = View.GONE
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) = with(outState) {
-        putBundle(STATE_BUNDLE_KEY, stateBundle)
-        super.onSaveInstanceState(this)
-    }
-}
+    }}
