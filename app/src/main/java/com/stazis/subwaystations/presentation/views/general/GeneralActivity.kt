@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.stazis.subwaystations.R
@@ -94,8 +93,10 @@ class GeneralActivity : AppCompatActivity() {
             else -> throw IllegalArgumentException("Invalid request code!")
         }
 
-    override fun onSaveInstanceState(savedInstanceState: Bundle) =
-        super.onSaveInstanceState(bundleOf(ACTIVE_TAB_KEY to activeTab))
+    override fun onSaveInstanceState(savedInstanceState: Bundle) = with(savedInstanceState) {
+        putSerializable(ACTIVE_TAB_KEY, activeTab)
+        super.onSaveInstanceState(this)
+    }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
