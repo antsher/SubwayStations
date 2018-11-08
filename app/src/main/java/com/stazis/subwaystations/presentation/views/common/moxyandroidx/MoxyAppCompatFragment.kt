@@ -6,8 +6,8 @@ import dagger.android.support.DaggerFragment
 
 abstract class MoxyAppCompatFragment : DaggerFragment() {
 
+    val mvpDelegate by lazy { MvpDelegate(this) }
     private var isMvpStateSaved: Boolean = false
-    private val mvpDelegate by lazy { MvpDelegate(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

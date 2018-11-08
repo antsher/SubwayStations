@@ -65,11 +65,11 @@ class StationListFragment : BaseMvpFragment<StationsPresenter>(), StationsView {
         val distance = SphericalUtil.computeDistanceBetween(stationLocation, location).roundToInt()
         it to distance
     }.sortedBy { it.second }.map { (first, second) ->
-        AnimatedStationView(context, first, second) { navigateToStationInfo(first, location) }.apply {
-            id = 1_000_000 + second
+        AnimatedStationWidget(context, first, second) { navigateToStationInfo(first, location) }.apply {
+            initDelegate(mvpDelegate, first.name)
         }
     }.toList()
 
-    private fun addStationViewsToContainer(stationViewsWithDistances: List<AnimatedStationView>) =
+    private fun addStationViewsToContainer(stationViewsWithDistances: List<AnimatedStationWidget>) =
         stationViewsWithDistances.forEach { stationsContainer.addView(it) }
 }
