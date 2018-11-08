@@ -90,7 +90,7 @@ dependencies {
     implementation 'com.google.maps.android:android-maps-utils:0.5'
     
     // Firebase
-    implementation 'com.google.firebase:firebase-core:16.0.4'
+    implementation 'com.google.firebase:firebase-core:16.0.5'
     implementation 'com.google.firebase:firebase-firestore:17.1.2'
 
     // Anko

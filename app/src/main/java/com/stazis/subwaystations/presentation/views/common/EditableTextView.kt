@@ -9,6 +9,7 @@ import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.RelativeLayout
+import androidx.core.os.bundleOf
 import com.stazis.subwaystations.R
 import com.stazis.subwaystations.helpers.hideSoftKeyboard
 import com.stazis.subwaystations.helpers.showSoftKeyboard
@@ -92,11 +93,11 @@ class EditableTextView @JvmOverloads constructor(context: Context?, attrs: Attri
         onTextUpdated.invoke()
     }
 
-    override fun onSaveInstanceState() = Bundle().apply {
-        putParcelable(SUPER_STATE_KEY, super.onSaveInstanceState())
-        putString(SAVED_TEXT_KEY, savedText)
-        putBoolean(EDIT_MODE_ENABLED_KEY, editModeEnabled)
-    }
+    override fun onSaveInstanceState() = bundleOf(
+        SUPER_STATE_KEY to super.onSaveInstanceState(),
+        SAVED_TEXT_KEY to savedText,
+        EDIT_MODE_ENABLED_KEY to editModeEnabled
+    )
 
     override fun onRestoreInstanceState(state: Parcelable?) {
         if (state is Bundle) {
