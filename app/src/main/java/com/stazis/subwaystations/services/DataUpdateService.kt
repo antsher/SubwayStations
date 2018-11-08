@@ -42,14 +42,14 @@ class DataUpdateService : DaggerIntentService(DataUpdateService::class.simpleNam
             .delay(2000, TimeUnit.MILLISECONDS)
             .subscribeOn(schedulerProvider.ioScheduler())
             .observeOn(schedulerProvider.uiScheduler())
-            .subscribe(this::onSuccess, this::onFailure)
+            .subscribe(this::onComplete, this::onError)
     }
 
-    private fun onSuccess(message: String) {
-        Log.i("DataUpdateService", message)
+    private fun onComplete() {
+        Log.i("DataUpdateService", "Data updated successfully!")
     }
 
-    private fun onFailure(error: Throwable) {
+    private fun onError(error: Throwable) {
         Log.i("DataUpdateService", error.localizedMessage)
     }
 }

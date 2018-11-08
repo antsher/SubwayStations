@@ -8,6 +8,7 @@ import com.stazis.subwaystations.model.entities.Station
 import com.stazis.subwaystations.model.entities.StationAdvancedInfo
 import com.stazis.subwaystations.model.persistence.daos.DetailedStationDao
 import com.stazis.subwaystations.model.services.StationService
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
 import org.jetbrains.anko.doAsync
@@ -149,7 +150,7 @@ class RealStationRepository(
             }
         }
 
-    override fun updateLocalDatabase(): Single<String> = Single.create { emitter ->
+    override fun updateLocalDatabase(): Completable = Completable.create { emitter ->
         with(emitter) {
             if (connectionHelper.isOnline()) {
                 firestore.collection(STATION_BASIC_INFO_COLLECTION_NAME).get().continueWith { basicStationsTask ->
@@ -158,7 +159,7 @@ class RealStationRepository(
                             if (basicStationsTask.isSuccessful && advancedStationsTask.isSuccessful &&
                                 !basicStationsTask.result!!.isEmpty && !advancedStationsTask.result!!.isEmpty
                             ) {
-                                onSuccess("Data updated successfully!")
+                                onComplete()
                                 writeDetailedStationsToDatabase(basicStationsTask.result!!.toObjects(Station::class.java),
                                     advancedStationsTask.result!!.map {
                                         it.id to it.toObject(StationAdvancedInfo::class.java)
