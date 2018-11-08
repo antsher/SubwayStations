@@ -12,7 +12,7 @@ import com.stazis.subwaystations.model.entities.Station
 import kotlinx.android.synthetic.main.view_station.view.*
 
 @SuppressLint("ViewConstructor")
-class StationView(context: Context?, station: Station, stationDistance: Int, onClicked: () -> Unit) :
+class AnimatedStationView(context: Context?, station: Station, stationDistance: Int, onClicked: () -> Unit) :
     RelativeLayout(context) {
 
     companion object {
