@@ -35,10 +35,16 @@ class EditableTextView @JvmOverloads constructor(context: Context?, attrs: Attri
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_editable_text, this, true)
-        edit.setOnClickListener { enableEditMode() }
-        cancel.setOnClickListener { disableEditMode() }
-        save.setOnClickListener { save() }
         text.inputType = InputType.TYPE_NULL
+    }
+
+    fun enable() {
+        edit.setOnClickListener { enableEditMode() }
+        cancel.setOnClickListener {
+            disableEditMode()
+            text.setText(savedText)
+        }
+        save.setOnClickListener { save() }
         text.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
 

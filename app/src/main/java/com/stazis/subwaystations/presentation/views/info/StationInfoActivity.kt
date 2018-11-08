@@ -56,6 +56,7 @@ class StationInfoActivity : BaseMvpActivity<StationInfoPresenter>(), StationInfo
 
     override fun updateUI(stationDescription: String) {
         description.savedText = stationDescription
+        description.enable()
     }
 
     private fun onDescriptionUpdated() {
