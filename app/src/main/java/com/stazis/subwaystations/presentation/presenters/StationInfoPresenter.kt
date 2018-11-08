@@ -16,8 +16,10 @@ class StationInfoPresenter @Inject constructor(
     private val schedulerProvider: SchedulerProvider
 ) : BasePresenter<StationInfoView>() {
 
+    lateinit var name: String
+
     @SuppressLint("CheckResult")
-    fun getDescription(name: String) {
+    fun getDescription() {
         viewState.showLoading()
         getStationDescription.execute(name)
             .delay(2000, TimeUnit.MILLISECONDS)
@@ -37,7 +39,7 @@ class StationInfoPresenter @Inject constructor(
     }
 
     @SuppressLint("CheckResult")
-    fun updateStationDescription(name: String, description: String) {
+    fun updateStationDescription(description: String) {
         viewState.showLoading()
         updateStationDescription.execute(name, description)
             .delay(2000, TimeUnit.MILLISECONDS)

@@ -26,37 +26,32 @@ class StationInfoActivity : BaseMvpActivity<StationInfoPresenter>(), StationInfo
     @Inject
     @InjectPresenter
     override lateinit var presenter: StationInfoPresenter
-    private var stationName: String? by instanceState()
     private val firebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
     @ProvidePresenter
-    fun providePresenter() = presenter
+    fun providePresenter() = presenter.apply { name = intent.getParcelableExtra<Station>(STATION_KEY).name }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         setContentView(R.layout.activity_station_info)
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
-            getDataFromIntent()
+            updateUIWithIntentData(
+                intent.getParcelableExtra(CURRENT_LOCATION_KEY),
+                intent.getParcelableExtra(STATION_KEY)
+            )
         }
         description.onTextUpdated = this::onDescriptionUpdated
-    }
-
-    private fun getDataFromIntent() {
-        val currentLocation = intent.getParcelableExtra(CURRENT_LOCATION_KEY) as LatLng
-        val station = intent.getParcelableExtra(STATION_KEY) as Station
-        stationName = station.name
-        updateUIWithIntentData(currentLocation, station)
     }
 
     private fun updateUIWithIntentData(currentLocation: LatLng, station: Station) {
         val stationLocation = LatLng(station.latitude, station.longitude)
         val distanceToStation = SphericalUtil.computeDistanceBetween(stationLocation, currentLocation).roundToInt()
-        name.text = stationName
+        name.text = station.name
         latitude.text = String.format("Latitude: %f", station.latitude)
         longitude.text = String.format("Longitude: %f", station.longitude)
         distance.text = String.format("Distance to station from your current location is %d meters", distanceToStation)
-        presenter.getDescription(stationName!!)
+        presenter.getDescription()
     }
 
     override fun updateUI(stationDescription: String) {
@@ -65,6 +60,6 @@ class StationInfoActivity : BaseMvpActivity<StationInfoPresenter>(), StationInfo
 
     private fun onDescriptionUpdated() {
         firebaseAnalytics.logEvent("updated_station_description", null)
-        presenter.updateStationDescription(stationName!!, description.savedText)
+        presenter.updateStationDescription(description.savedText)
     }
 }
