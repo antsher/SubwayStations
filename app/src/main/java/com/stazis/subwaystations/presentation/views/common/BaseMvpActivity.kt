@@ -45,4 +45,5 @@ abstract class BaseMvpActivity<Presenter : BasePresenter<out BaseView>> : MoxyAp
 
     override fun hideLoading() {
         progressBar.visibility = View.GONE
-    }}
+    }
+}
