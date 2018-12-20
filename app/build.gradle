@@ -45,12 +45,12 @@ android {
 dependencies {
 
     // Multidex
-    implementation 'androidx.multidex:multidex:2.0.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
 
     // Core
-    implementation "com.google.android.material:material:$androidx_version"
-    implementation "androidx.core:core-ktx:$androidx_version"
-    implementation "androidx.fragment:fragment-ktx:$androidx_version"
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.core:core-ktx:1.0.1'
+    implementation 'androidx.fragment:fragment-ktx:1.0.0'
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
@@ -90,14 +90,14 @@ dependencies {
     implementation 'com.google.maps.android:android-maps-utils:0.5'
     
     // Firebase
-    implementation 'com.google.firebase:firebase-core:16.0.5'
-    implementation 'com.google.firebase:firebase-firestore:17.1.2'
+    implementation 'com.google.firebase:firebase-core:16.0.6'
+    implementation 'com.google.firebase:firebase-firestore:17.1.5'
 
     // Anko
-    implementation 'org.jetbrains.anko:anko-commons:0.10.7'
+    implementation 'org.jetbrains.anko:anko-commons:0.10.8'
 
     // Crashlytics
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.6'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.7'
 
     // Moxy
     implementation "com.arello-mobile:moxy:$moxy_version"
@@ -105,7 +105,7 @@ dependencies {
 
     // Testing
     testImplementation 'junit:junit:4.12'
-    testImplementation "androidx.test:core:$androidx_version"
+    testImplementation 'androidx.test:core:1.1.0'
     kaptAndroidTest "com.google.dagger:dagger-compiler:$dagger_version"
     testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.0.0-RC3'
     androidTestImplementation 'org.mockito:mockito-android:2.23.0'
