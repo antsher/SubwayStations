@@ -22,3 +22,9 @@ build/
 .idea/libraries
 .idea/caches
 .idea
+
+# Release keystore
+release_keystore.jks
+
+# Release outputs
+app/release/
