@@ -43,32 +43,16 @@ android {
 }
 
 dependencies {
-
-    // Multidex
-    implementation 'androidx.multidex:multidex:2.0.1'
+    // Anko
+    implementation 'org.jetbrains.anko:anko-commons:0.10.8'
 
     // Core
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.core:core-ktx:1.0.1'
     implementation 'androidx.fragment:fragment-ktx:1.0.0'
 
-    // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-
-    // Gson
-    implementation 'com.google.code.gson:gson:2.8.5'
-
-    // Retrofit
-    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
-    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
-
-    // RxJava
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.2'
-
-    // RxAndroid
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    // Crashlytics
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.8'
 
     // Dagger
     implementation "com.google.dagger:dagger:$dagger_version"
@@ -77,10 +61,16 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
-    // Room
-    implementation "androidx.room:room-runtime:$room_version"
-    implementation "androidx.room:room-rxjava2:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
+    // Firebase
+    implementation 'com.google.firebase:firebase-core:16.0.6'
+    implementation 'com.google.firebase:firebase-firestore:17.1.5'
+
+    // Gson
+    implementation 'com.google.code.gson:gson:2.8.5'
+
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
     // Location
     implementation 'com.google.android.gms:play-services-location:16.0.0'
@@ -88,20 +78,29 @@ dependencies {
     // Maps
     implementation 'com.google.android.gms:play-services-maps:16.0.0'
     implementation 'com.google.maps.android:android-maps-utils:0.5'
-    
-    // Firebase
-    implementation 'com.google.firebase:firebase-core:16.0.6'
-    implementation 'com.google.firebase:firebase-firestore:17.1.5'
-
-    // Anko
-    implementation 'org.jetbrains.anko:anko-commons:0.10.8'
-
-    // Crashlytics
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.8'
 
     // Moxy
     implementation "com.arello-mobile:moxy:$moxy_version"
     kapt "com.arello-mobile:moxy-compiler:$moxy_version"
+
+    // Multidex
+    implementation 'androidx.multidex:multidex:2.0.1'
+
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
+
+    // Room
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-rxjava2:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+
+    // RxJava
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.2'
+
+    // RxAndroid
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
 
     // Testing
     testImplementation 'junit:junit:4.12'
