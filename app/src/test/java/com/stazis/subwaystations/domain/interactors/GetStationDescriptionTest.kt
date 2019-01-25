@@ -35,13 +35,13 @@ class GetStationDescriptionTest {
 
     @Test
     fun `getStationDescription IfNonEmptyString ReturnsSameString`() {
-        "Description".let { emptyString ->
+        "Description".let { nonEmptyString ->
             `when`(mockStationRepository.getStationDescription(STATION_NAME))
-                .thenReturn(Single.create<String> { it.onSuccess(emptyString) })
+                .thenReturn(Single.create<String> { it.onSuccess(nonEmptyString) })
 
             with(getStationDescription.execute(STATION_NAME).test()) {
                 assertNoErrors()
-                assertValue { it == emptyString }
+                assertValue { it == nonEmptyString }
             }
         }
     }
