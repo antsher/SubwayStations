@@ -1,19 +1,20 @@
 package model.repositories
 
-import com.nhaarman.mockitokotlin2.verify
 import com.stazis.subwaystations.helpers.ConnectionHelper
+import com.stazis.subwaystations.helpers.PreferencesHelper
+import com.stazis.subwaystations.model.entities.DetailedStation
 import com.stazis.subwaystations.model.entities.Station
-import com.stazis.subwaystations.model.persistence.daos.StationDao
+import com.stazis.subwaystations.model.persistence.daos.DetailedStationDao
 import com.stazis.subwaystations.model.repositories.RealStationRepository
 import com.stazis.subwaystations.model.repositories.StationRepository
 import com.stazis.subwaystations.model.services.StationService
+import io.reactivex.Single
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
+import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
-import retrofit2.Call
-import retrofit2.Response
 
 class StationRepositoryTest {
 
@@ -21,54 +22,60 @@ class StationRepositoryTest {
     lateinit var mockStationService: StationService
 
     @Mock
-    lateinit var mockStationDao: StationDao
+    lateinit var mockDetailedStationDao: DetailedStationDao
 
     @Mock
     lateinit var mockConnectionHelper: ConnectionHelper
 
     @Mock
-    lateinit var mockStationsCall: Call<List<Station>>
+    lateinit var mockPreferencesHelper: PreferencesHelper
 
     @Mock
-    lateinit var mockStationResponse: Response<List<Station>>
+    lateinit var mockStationsSingle: Single<List<Station>>
 
     private lateinit var stationRepository: StationRepository
 
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        stationRepository = RealStationRepository(mockStationService, mockStationDao, mockConnectionHelper)
+        stationRepository = RealStationRepository(
+            mockStationService,
+            mockDetailedStationDao,
+            mockConnectionHelper,
+            mockPreferencesHelper
+        )
     }
 
     @Test
     fun testGetStations_isOnlineReceivedEmptyList_emitEmptyList() {
-        val stations = emptyList<Station>()
-
-        setUpMocks(stations, true)
-        val testObserver = stationRepository.getStations().test()
-
-        testObserver.assertNoErrors()
-        testObserver.assertValue { stationsResult: List<Station> -> stationsResult.isEmpty() }
-        verify(mockStationDao).insertAll(stations)
+        emptyList<DetailedStation>().let { stations ->
+            setUpMocks(stations, true)
+            with(stationRepository.getStations().test()) {
+                assertNoErrors()
+                assertValue { it.isEmpty() }
+            }
+            verify(mockDetailedStationDao).insertAll(stations)
+        }
     }
 
     @Test
     fun testGetStations_isOnlineReceivedStationsWithOneItem_emitListWithOneStation() {
-        val stations = listOf(Station("Уручча", 53.9453522, 27.687875))
-
-        setUpMocks(stations, true)
-        val testObserver = stationRepository.getStations().test()
-
-        testObserver.assertNoErrors()
-        testObserver.assertValue { stationsResult: List<Station> -> stationsResult.size == 1 }
-        verify(mockStationDao).insertAll(stations)
+        listOf(DetailedStation("Уручча", 53.9453522, 27.687875, "")).let { stations ->
+            setUpMocks(stations, true)
+            with(stationRepository.getStations().test()) {
+                assertNoErrors()
+                assertValue { it == stations }
+            }
+            verify(mockDetailedStationDao).insertAll(stations)
+        }
     }
 
-    private fun setUpMocks(stations: List<Station>, isOnline: Boolean) {
+    private fun setUpMocks(stations: List<DetailedStation>, isOnline: Boolean) {
         `when`(mockConnectionHelper.isOnline()).thenReturn(isOnline)
-        `when`(mockStationService.getStations()).thenReturn(mockStationsCall)
-        `when`(mockStationsCall.execute()).thenReturn(mockStationResponse)
-        `when`(mockStationResponse.body()).thenReturn(stations)
-        `when`(mockStationDao.getAll()).thenReturn(stations)
+        mockStationsSingle =
+                Single.create { stations.map { station -> Station(station.name, station.latitude, station.longitude) } }
+        `when`(mockStationService.getStations()).thenReturn(mockStationsSingle)
+        `when`(stationRepository.getStations()).thenReturn(mockStationsSingle)
+        `when`(mockDetailedStationDao.getAll()).thenReturn(stations.map { Station(it.name, it.latitude, it.longitude) })
     }
 }

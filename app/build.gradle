@@ -62,8 +62,8 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
     // Firebase
-    implementation 'com.google.firebase:firebase-core:16.0.6'
-    implementation 'com.google.firebase:firebase-firestore:17.1.5'
+    implementation 'com.google.firebase:firebase-core:16.0.7'
+    implementation 'com.google.firebase:firebase-firestore:18.0.0'
 
     // Gson
     implementation 'com.google.code.gson:gson:2.8.5'
