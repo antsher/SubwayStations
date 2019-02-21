@@ -107,7 +107,7 @@ dependencies {
     testImplementation 'androidx.test:core:1.1.0'
     kaptAndroidTest "com.google.dagger:dagger-compiler:$dagger_version"
     testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.0.0-RC3'
-    androidTestImplementation 'org.mockito:mockito-android:2.23.0'
+    androidTestImplementation 'org.mockito:mockito-android:2.24.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
