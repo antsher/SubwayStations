@@ -23,8 +23,6 @@ class DataUpdateService : DaggerIntentService(DataUpdateService::class.simpleNam
     lateinit var schedulerProvider: SchedulerProvider
     private val backgroundTimer: Timer = Timer()
 
-    override fun onBind(intent: Intent?) = null
-
     override fun onHandleIntent(intent: Intent?) {
         backgroundTimer.schedule(object : TimerTask() {
             override fun run() {
