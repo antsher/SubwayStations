@@ -69,7 +69,7 @@ dependencies {
     kapt("com.google.dagger:dagger-compiler:${Deps.daggerVersion}")
 
     // Firebase
-    implementation("com.google.firebase:firebase-core:16.0.7")
+    implementation("com.google.firebase:firebase-core:16.0.8")
     implementation("com.google.firebase:firebase-firestore:18.1.0")
 
     // Gson
