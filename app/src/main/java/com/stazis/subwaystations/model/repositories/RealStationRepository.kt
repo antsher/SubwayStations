@@ -130,8 +130,8 @@ class RealStationRepository(
             }
         }
 
-    override fun updateStationDescription(name: String, description: String): Single<String> =
-        Single.create { emitter ->
+    override fun updateStationDescription(name: String, description: String): Completable =
+        Completable.create { emitter ->
             with(emitter) {
                 if (connectionHelper.isOnline()) {
                     firestore.collection(STATION_DETAILED_INFO_COLLECTION_NAME)
@@ -139,7 +139,7 @@ class RealStationRepository(
                         .update("description", description)
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
-                                onSuccess("Station updated successfully!")
+                                onComplete()
                             } else {
                                 onError(task.exception!!)
                             }

@@ -48,8 +48,8 @@ class StationInfoPresenter @Inject constructor(
             .subscribe(this::onDescriptionUpdated, this::onFailure)
     }
 
-    private fun onDescriptionUpdated(successMessage: String) = with(viewState) {
+    private fun onDescriptionUpdated() = with(viewState) {
         hideLoading()
-        showDialog("Success!", successMessage)
+        showDialog("Success!", "Station updated successfully")
     }
 }
