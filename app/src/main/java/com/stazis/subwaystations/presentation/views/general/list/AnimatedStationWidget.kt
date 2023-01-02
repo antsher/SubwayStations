@@ -8,10 +8,9 @@ import android.view.View
 import android.widget.RelativeLayout
 import com.arellomobile.mvp.MvpDelegate
 import com.arellomobile.mvp.presenter.InjectPresenter
-import com.stazis.subwaystations.R
+import com.stazis.subwaystations.databinding.ViewStationBinding
 import com.stazis.subwaystations.model.entities.Station
 import com.stazis.subwaystations.presentation.presenters.AnimatedStationPresenter
-import kotlinx.android.synthetic.main.view_station.view.*
 
 @SuppressLint("ViewConstructor")
 class AnimatedStationWidget(context: Context?, station: Station, stationDistance: Int, onClicked: () -> Unit) :
@@ -27,15 +26,16 @@ class AnimatedStationWidget(context: Context?, station: Station, stationDistance
     private lateinit var mvpDelegate: MvpDelegate<AnimatedStationWidget>
     private var expanded = false
     private var animationInProgress = false
+    private val binding: ViewStationBinding
     private val dpRatio = resources.displayMetrics.density
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.view_station, this, true)
-        name.text = station.name
-        latitude.text = String.format("Latitude: %f", station.latitude)
-        longitude.text = String.format("Longitude: %f", station.longitude)
-        distance.text = String.format("%dm", stationDistance)
-        switchState.setOnClickListener { switch() }
+        binding = ViewStationBinding.inflate(LayoutInflater.from(context), this, true)
+        binding.name.text = station.name
+        binding.latitude.text = String.format("Latitude: %f", station.latitude)
+        binding.longitude.text = String.format("Longitude: %f", station.longitude)
+        binding.distance.text = String.format("%dm", stationDistance)
+        binding.switchState.setOnClickListener { switch() }
         setOnClickListener { onClicked() }
     }
 
@@ -69,13 +69,13 @@ class AnimatedStationWidget(context: Context?, station: Station, stationDistance
         }
     }
 
-    private fun animateExpand() = hiddenView.animate()
+    private fun animateExpand() = binding.hiddenView.animate()
         .alpha(1f)
         .translationY(0f)
         .setDuration(ANIMATION_DURATION)
         .setListener(object : Animator.AnimatorListener {
             override fun onAnimationStart(animation: Animator) {
-                hiddenView.visibility = VISIBLE
+                binding.hiddenView.visibility = VISIBLE
                 animationInProgress = true
             }
 
@@ -92,17 +92,17 @@ class AnimatedStationWidget(context: Context?, station: Station, stationDistance
     override fun makeExpanded() {
         expanded = true
         if (!animationInProgress) {
-            with(hiddenView) {
-                hiddenView.alpha = 1f
-                hiddenView.translationY = 0f
-                hiddenView.visibility = VISIBLE
+            with(binding.hiddenView) {
+                alpha = 1f
+                translationY = 0f
+                visibility = VISIBLE
             }
         }
     }
 
     private fun animateCollapse() {
-        if (hiddenView.visibility != View.GONE) {
-            hiddenView.animate()
+        if (binding.hiddenView.visibility != View.GONE) {
+            binding.hiddenView.animate()
                 .alpha(0f)
                 .translationY(-50 * dpRatio)
                 .setDuration(ANIMATION_DURATION)
@@ -113,7 +113,7 @@ class AnimatedStationWidget(context: Context?, station: Station, stationDistance
 
                     override fun onAnimationEnd(animation: Animator) {
                         animationInProgress = false
-                        hiddenView.visibility = GONE
+                        binding.hiddenView.visibility = GONE
                     }
 
                     override fun onAnimationCancel(animation: Animator) {}
@@ -127,10 +127,10 @@ class AnimatedStationWidget(context: Context?, station: Station, stationDistance
     override fun makeCollapsed() {
         expanded = false
         if (!animationInProgress) {
-            with(hiddenView) {
-                hiddenView.alpha = 0f
-                hiddenView.translationY = -50 * dpRatio
-                hiddenView.visibility = GONE
+            with(binding.hiddenView) {
+                alpha = 0f
+                translationY = -50 * dpRatio
+                visibility = GONE
             }
         }
     }

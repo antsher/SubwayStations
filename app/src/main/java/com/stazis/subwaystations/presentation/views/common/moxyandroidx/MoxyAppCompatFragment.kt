@@ -50,7 +50,7 @@ abstract class MoxyAppCompatFragment : DaggerFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (activity!!.isFinishing) {
+        if (requireActivity().isFinishing) {
             mvpDelegate.onDestroy()
             return
         }

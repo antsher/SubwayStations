@@ -7,30 +7,32 @@ import android.widget.LinearLayout
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.maps.model.LatLng
-import com.stazis.subwaystations.R
+import com.stazis.subwaystations.databinding.ViewStationPagerBinding
 import com.stazis.subwaystations.model.entities.Station
-import kotlinx.android.synthetic.main.view_station_pager.view.*
 
 class StationViewPager(context: Context?, attrs: AttributeSet? = null) : LinearLayout(context, attrs) {
 
+    private val binding: ViewStationPagerBinding
+
     init {
-        LayoutInflater.from(context).inflate(R.layout.view_station_pager, this, true)
+        binding = ViewStationPagerBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
     fun initialize(fragmentManager: FragmentManager, stations: List<Station>, location: LatLng) {
-        stationsPager.adapter = StationPagerAdapter(fragmentManager, stations, location)
-        stationsPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+        binding.stationsPager.adapter = StationPagerAdapter(fragmentManager, stations, location)
+        binding.stationsPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
 
             override fun onPageScrollStateChanged(state: Int) {}
 
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
 
             override fun onPageSelected(position: Int) {
-                title.text = stationsPager.adapter!!.getPageTitle(position)
+                binding.title.text = binding.stationsPager.adapter!!.getPageTitle(position)
             }
         })
-        title.text = (stationsPager.adapter as StationPagerAdapter).getPageTitle(stationsPager.currentItem)
-        scrollLeft.setOnClickListener { stationsPager.currentItem -= 1 }
-        scrollRight.setOnClickListener { stationsPager.currentItem += 1 }
+        binding.title.text =
+            (binding.stationsPager.adapter as StationPagerAdapter).getPageTitle(binding.stationsPager.currentItem)
+        binding.scrollLeft.setOnClickListener { binding.stationsPager.currentItem -= 1 }
+        binding.scrollRight.setOnClickListener { binding.stationsPager.currentItem += 1 }
     }
 }

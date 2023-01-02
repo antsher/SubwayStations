@@ -8,12 +8,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.stazis.subwaystations.R
+import com.stazis.subwaystations.databinding.ActivityGeneralBinding
 import com.stazis.subwaystations.helpers.PermissionState
 import com.stazis.subwaystations.helpers.checkPermissionState
 import com.stazis.subwaystations.helpers.requestPermission
 import com.stazis.subwaystations.model.entities.Station
 import com.stazis.subwaystations.services.DataUpdateService
-import kotlinx.android.synthetic.main.activity_general.*
 
 class GeneralActivity : AppCompatActivity() {
 
@@ -27,12 +27,15 @@ class GeneralActivity : AppCompatActivity() {
     enum class TabName { Map, List }
 
     private lateinit var activeTab: TabName
-    private val navigationController: NavigationController = NavigationController(this, R.id.fragmentContainer)
+    private lateinit var binding: ActivityGeneralBinding
+    private val navigationController: NavigationController =
+        NavigationController(this, R.id.fragmentContainer)
     private val firebaseAnalytics by lazy { FirebaseAnalytics.getInstance(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_general)
+        binding = ActivityGeneralBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         setListeners()
         if (savedInstanceState == null) {
             startService(Intent(this, DataUpdateService::class.java))
@@ -62,23 +65,23 @@ class GeneralActivity : AppCompatActivity() {
         .show()
 
     private fun setListeners() {
-        mapTab.setOnClickListener { navigateToMap() }
-        listTab.setOnClickListener { navigateToList() }
+        binding.mapTab.setOnClickListener { navigateToMap() }
+        binding.listTab.setOnClickListener { navigateToList() }
     }
 
     private fun navigateToMap() {
         firebaseAnalytics.logEvent("navigated_to_map", null)
         activeTab = TabName.Map
-        listTab.makeInactive()
-        mapTab.makeActive()
+        binding.listTab.makeInactive()
+        binding.mapTab.makeActive()
         navigationController.navigateToStationMap()
     }
 
     private fun navigateToList() {
         firebaseAnalytics.logEvent("navigated_to_list", null)
         activeTab = TabName.List
-        mapTab.makeInactive()
-        listTab.makeActive()
+        binding.mapTab.makeInactive()
+        binding.listTab.makeActive()
         navigationController.navigateToStationList()
     }
 
@@ -87,25 +90,26 @@ class GeneralActivity : AppCompatActivity() {
         navigationController.navigateToStationPager(stations, location)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) =
-        when (requestCode) {
-            PERMISSION_REQUEST_CODE -> actAccordingToLocationPermissionState()
-            else -> throw IllegalArgumentException("Invalid request code!")
-        }
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) = when (requestCode) {
+        PERMISSION_REQUEST_CODE -> actAccordingToLocationPermissionState()
+        else -> throw IllegalArgumentException("Invalid request code!")
+    }
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) = with(savedInstanceState) {
         putSerializable(ACTIVE_TAB_KEY, activeTab)
         super.onSaveInstanceState(this)
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        savedInstanceState?.let {
-            activeTab = savedInstanceState.getSerializable(ACTIVE_TAB_KEY) as TabName
-            when (activeTab) {
-                TabName.Map -> mapTab.makeActive()
-                TabName.List -> listTab.makeActive()
-            }
+        activeTab = savedInstanceState.getSerializable(ACTIVE_TAB_KEY) as TabName
+        when (activeTab) {
+            TabName.Map -> binding.mapTab.makeActive()
+            TabName.List -> binding.listTab.makeActive()
         }
     }
 }

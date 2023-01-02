@@ -23,6 +23,7 @@ class DataUpdateService : DaggerIntentService(DataUpdateService::class.simpleNam
     lateinit var schedulerProvider: SchedulerProvider
     private val backgroundTimer: Timer = Timer()
 
+    @Deprecated("Deprecated in Java")
     override fun onHandleIntent(intent: Intent?) {
         backgroundTimer.schedule(object : TimerTask() {
             override fun run() {
@@ -50,6 +51,6 @@ class DataUpdateService : DaggerIntentService(DataUpdateService::class.simpleNam
     }
 
     private fun onError(error: Throwable) {
-        Log.i("DataUpdateService", error.localizedMessage)
+        Log.i("DataUpdateService", error.localizedMessage ?: "Unknown error")
     }
 }

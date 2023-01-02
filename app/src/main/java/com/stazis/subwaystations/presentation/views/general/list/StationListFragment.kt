@@ -10,7 +10,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.SphericalUtil
-import com.stazis.subwaystations.R
+import com.stazis.subwaystations.databinding.FragmentStationListBinding
 import com.stazis.subwaystations.extensions.toLatLng
 import com.stazis.subwaystations.model.entities.Station
 import com.stazis.subwaystations.presentation.presenters.StationsPresenter
@@ -18,7 +18,6 @@ import com.stazis.subwaystations.presentation.views.common.BaseMvpFragment
 import com.stazis.subwaystations.presentation.views.general.GeneralActivity
 import com.stazis.subwaystations.presentation.views.general.common.StationsView
 import com.stazis.subwaystations.presentation.views.info.StationInfoActivity
-import kotlinx.android.synthetic.main.fragment_station_list.*
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
@@ -27,14 +26,18 @@ class StationListFragment : BaseMvpFragment<StationsPresenter>(), StationsView {
     @Inject
     @InjectPresenter
     override lateinit var presenter: StationsPresenter
+    private lateinit var binding: FragmentStationListBinding
     private lateinit var stations: List<Station>
     private lateinit var location: LatLng
 
     @ProvidePresenter
     fun providePresenter() = presenter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-        (inflater.inflate(R.layout.fragment_station_list, container, false) as ViewGroup).apply { root = this }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = FragmentStationListBinding.inflate(inflater, container, false)
+        root = binding.root
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -45,7 +48,7 @@ class StationListFragment : BaseMvpFragment<StationsPresenter>(), StationsView {
 
     private fun setupUI() {
         addStationViewsToContainer(initStationViews())
-        navigateToPager.setOnClickListener { (activity as GeneralActivity).navigateToPager(stations, location) }
+        binding.navigateToPager.setOnClickListener { (activity as GeneralActivity).navigateToPager(stations, location) }
     }
 
     override fun updateUI(stationsAndLocation: Pair<List<Station>, Location>) {
@@ -71,5 +74,5 @@ class StationListFragment : BaseMvpFragment<StationsPresenter>(), StationsView {
     }.toList()
 
     private fun addStationViewsToContainer(stationViewsWithDistances: List<AnimatedStationWidget>) =
-        stationViewsWithDistances.forEach { stationsContainer.addView(it) }
+        stationViewsWithDistances.forEach { binding.stationsContainer.addView(it) }
 }

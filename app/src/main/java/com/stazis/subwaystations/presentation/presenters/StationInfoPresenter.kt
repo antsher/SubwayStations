@@ -35,7 +35,7 @@ class StationInfoPresenter @Inject constructor(
 
     private fun onFailure(error: Throwable) = with(viewState) {
         hideLoading()
-        showDialog("Error!", error.localizedMessage)
+        showDialog("Error!", error.localizedMessage ?: "Unknown error")
     }
 
     @SuppressLint("CheckResult")

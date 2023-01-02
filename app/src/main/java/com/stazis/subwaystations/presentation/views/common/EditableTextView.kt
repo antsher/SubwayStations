@@ -10,11 +10,9 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.RelativeLayout
 import androidx.core.os.bundleOf
-import com.stazis.subwaystations.R
+import com.stazis.subwaystations.databinding.ViewEditableTextBinding
 import com.stazis.subwaystations.helpers.hideSoftKeyboard
 import com.stazis.subwaystations.helpers.showSoftKeyboard
-import kotlinx.android.synthetic.main.view_editable_text.view.*
-
 
 class EditableTextView @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null) :
     RelativeLayout(context, attrs) {
@@ -26,27 +24,28 @@ class EditableTextView @JvmOverloads constructor(context: Context?, attrs: Attri
         private const val EDIT_MODE_ENABLED_KEY = "EDIT_MODE_ENABLED_KEY"
     }
 
+    private val binding: ViewEditableTextBinding
     var onTextUpdated = { }
     var savedText: String = ""
         set(string) {
             field = string
-            text.setText(string)
+            binding.text.setText(string)
         }
     private var editModeEnabled = false
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.view_editable_text, this, true)
-        text.inputType = InputType.TYPE_NULL
+        binding = ViewEditableTextBinding.inflate(LayoutInflater.from(context), this, true)
+        binding.text.inputType = InputType.TYPE_NULL
     }
 
     fun enable() {
-        edit.setOnClickListener { enableEditMode() }
-        cancel.setOnClickListener {
+        binding.edit.setOnClickListener { enableEditMode() }
+        binding.cancel.setOnClickListener {
             disableEditMode()
-            text.setText(savedText)
+            binding.text.setText(savedText)
         }
-        save.setOnClickListener { save() }
-        text.addTextChangedListener(object : TextWatcher {
+        binding.save.setOnClickListener { save() }
+        binding.text.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
 
             }
@@ -57,9 +56,9 @@ class EditableTextView @JvmOverloads constructor(context: Context?, attrs: Attri
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.toString() != savedText) {
-                    save.show()
+                    binding.save.show()
                 } else {
-                    save.hide()
+                    binding.save.hide()
                 }
             }
         })
@@ -67,28 +66,28 @@ class EditableTextView @JvmOverloads constructor(context: Context?, attrs: Attri
 
     private fun enableEditMode() {
         editModeEnabled = true
-        edit.hide()
-        cancel.show()
-        text.run {
+        binding.edit.hide()
+        binding.cancel.show()
+        binding.text.run {
             setText(savedText)
             inputType = InputType.TYPE_CLASS_TEXT
             isFocusableInTouchMode = true
             requestFocus()
         }
-        showSoftKeyboard(context, text)
+        showSoftKeyboard(context, binding.text)
     }
 
     private fun disableEditMode() {
         editModeEnabled = false
-        cancel.hide()
-        save.hide()
-        edit.show()
-        text.inputType = InputType.TYPE_NULL
-        hideSoftKeyboard(context, text)
+        binding.cancel.hide()
+        binding.save.hide()
+        binding.edit.show()
+        binding.text.inputType = InputType.TYPE_NULL
+        hideSoftKeyboard(context, binding.text)
     }
 
     private fun save() {
-        savedText = text.text.toString()
+        savedText = binding.text.text.toString()
         disableEditMode()
         onTextUpdated.invoke()
     }

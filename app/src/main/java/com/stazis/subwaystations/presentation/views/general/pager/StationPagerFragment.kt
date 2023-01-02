@@ -27,7 +27,7 @@ class StationPagerFragment : Fragment() {
     @Suppress("UNCHECKED_CAST")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         (inflater.inflate(R.layout.fragment_station_pager, container, false) as StationViewPager).apply {
-            with(arguments!!) {
+            with(requireArguments()) {
                 initialize(childFragmentManager, get(STATIONS_KEY) as List<Station>, get(LOCATION_KEY) as LatLng)
             }
         }

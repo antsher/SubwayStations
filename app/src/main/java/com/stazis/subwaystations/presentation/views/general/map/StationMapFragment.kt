@@ -12,7 +12,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.SphericalUtil
-import com.stazis.subwaystations.R
+import com.stazis.subwaystations.databinding.FragmentStationMapBinding
 import com.stazis.subwaystations.extensions.toLatLng
 import com.stazis.subwaystations.model.entities.Station
 import com.stazis.subwaystations.presentation.presenters.StationsPresenter
@@ -20,7 +20,6 @@ import com.stazis.subwaystations.presentation.views.common.BaseMvpFragment
 import com.stazis.subwaystations.presentation.views.general.GeneralActivity
 import com.stazis.subwaystations.presentation.views.general.common.StationsView
 import com.stazis.subwaystations.presentation.views.info.StationInfoActivity
-import kotlinx.android.synthetic.main.fragment_station_map.*
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
@@ -29,21 +28,25 @@ class StationMapFragment : BaseMvpFragment<StationsPresenter>(), StationsView {
     @Inject
     @InjectPresenter
     override lateinit var presenter: StationsPresenter
+    private lateinit var binding: FragmentStationMapBinding
     private lateinit var stations: List<Station>
     private lateinit var location: LatLng
 
     @ProvidePresenter
     fun providePresenter() = presenter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-        (inflater.inflate(R.layout.fragment_station_map, container, false) as ViewGroup).apply { root = this }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = FragmentStationMapBinding.inflate(inflater, container, false)
+        root = binding.root
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        map.onCreate(savedInstanceState)
+        binding.map.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
             presenter.getStationsAndLocation()
-            map.getMapAsync { googleMap ->
+            binding.map.getMapAsync { googleMap ->
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(53.9086154, 27.5735358), 10.5f))
             }
         }
@@ -51,7 +54,7 @@ class StationMapFragment : BaseMvpFragment<StationsPresenter>(), StationsView {
 
     private fun setupUI() {
         showClickableMarkersOnMap(initMarkers())
-        navigateToPager.setOnClickListener { (activity as GeneralActivity).navigateToPager(stations, location) }
+        binding.navigateToPager.setOnClickListener { (activity as GeneralActivity).navigateToPager(stations, location) }
     }
 
     override fun updateUI(stationsAndLocation: Pair<List<Station>, Location>) {
@@ -66,7 +69,7 @@ class StationMapFragment : BaseMvpFragment<StationsPresenter>(), StationsView {
         MarkerOptions().position(stationLocation).title(it.name).snippet("${distanceToStation}m")
     }
 
-    private fun showClickableMarkersOnMap(markers: List<MarkerOptions>) = map.getMapAsync { googleMap ->
+    private fun showClickableMarkersOnMap(markers: List<MarkerOptions>) = binding.map.getMapAsync { googleMap ->
         googleMap.setOnInfoWindowClickListener { marker ->
             navigateToStationInfo(stations.find { it.name == marker.title }!!, location)
         }
@@ -81,16 +84,16 @@ class StationMapFragment : BaseMvpFragment<StationsPresenter>(), StationsView {
 
     override fun onResume() {
         super.onResume()
-        map.onResume()
+        binding.map.onResume()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        map.onLowMemory()
+        binding.map.onLowMemory()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        map?.onSaveInstanceState(outState)
+        binding.map.onSaveInstanceState(outState)
         super.onSaveInstanceState(outState)
     }
 }

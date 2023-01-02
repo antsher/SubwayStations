@@ -42,7 +42,7 @@ class StationsPresenter @Inject constructor(
         hideLoading()
         when (error) {
             is NullPointerException -> showDialog("Error!", "Cannot get your current location!")
-            else -> showDialog("Error!", error.localizedMessage)
+            else -> showDialog("Error!", error.localizedMessage ?: "Unknown error")
         }
     }
 }
