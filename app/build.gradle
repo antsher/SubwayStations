@@ -53,7 +53,7 @@ android {
 dependencies {
 
     // Core
-    implementation("com.google.android.material:material:1.7.0")
+    implementation("com.google.android.material:material:1.8.0")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.fragment:fragment-ktx:1.5.5")
 
@@ -61,16 +61,16 @@ dependencies {
 //    implementation("com.google.firebase:firebase-crashlytics:18.3.2")
 
     // Dagger
-    implementation("com.google.dagger:dagger:2.35.1")
-    implementation("com.google.dagger:dagger-android:2.35.1")
-    implementation("com.google.dagger:dagger-android-support:2.35.1")
-    kapt("com.google.dagger:dagger-android-processor:2.35.1")
-    kapt("com.google.dagger:dagger-compiler:2.35.1")
+    implementation("com.google.dagger:dagger:2.44.2")
+    implementation("com.google.dagger:dagger-android:2.44.2")
+    implementation("com.google.dagger:dagger-android-support:2.44.2")
+    kapt("com.google.dagger:dagger-android-processor:2.44.2")
+    kapt("com.google.dagger:dagger-compiler:2.44.2")
 
     // Firebase
     implementation("com.google.firebase:firebase-analytics:21.2.0")
     implementation("com.google.firebase:firebase-core:21.1.1")
-    implementation("com.google.firebase:firebase-firestore:24.4.1")
+    implementation("com.google.firebase:firebase-firestore:24.4.2")
 
     // Gson
     implementation("com.google.code.gson:gson:2.9.0")
@@ -84,7 +84,7 @@ dependencies {
 
     // Maps
     implementation("com.google.android.gms:play-services-maps:18.1.0")
-    implementation("com.google.maps.android:android-maps-utils:0.5")
+    implementation("com.google.maps.android:android-maps-utils:2.4.0")
 
     // Moxy
     implementation("com.arello-mobile:moxy:1.5.5")
@@ -94,9 +94,9 @@ dependencies {
     implementation("androidx.multidex:multidex:2.0.1")
 
     // Retrofit
-    implementation("com.squareup.retrofit2:retrofit:2.4.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.4.0")
-    implementation("com.squareup.retrofit2:adapter-rxjava2:2.4.0")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.retrofit2:adapter-rxjava2:2.9.0")
 
     // Room
     implementation("androidx.room:room-runtime:2.5.0")
@@ -104,13 +104,13 @@ dependencies {
     kapt("androidx.room:room-compiler:2.5.0")
 
     // RxJava
-    implementation("io.reactivex.rxjava2:rxjava:2.2.9")
+    implementation("io.reactivex.rxjava2:rxjava:2.2.19")
 
     // RxAndroid
     implementation("io.reactivex.rxjava2:rxandroid:2.1.0")
 
     // Testing
-    testImplementation("junit:junit:4.12")
+    testImplementation("junit:junit:4.13.2")
     testImplementation("androidx.test:core:1.5.0")
     kaptAndroidTest("com.google.dagger:dagger-compiler:2.35.1")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.0.0-RC3")
