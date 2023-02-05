@@ -5,5 +5,5 @@ import javax.inject.Inject
 
 class UpdateLocalDatabase @Inject constructor(private val stationRepository: StationRepository) {
 
-    fun execute() = stationRepository.updateLocalDatabase()
+    operator fun invoke() = stationRepository.updateLocalDatabase()
 }

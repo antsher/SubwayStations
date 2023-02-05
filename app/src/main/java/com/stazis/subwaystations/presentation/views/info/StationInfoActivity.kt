@@ -7,6 +7,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.maps.android.SphericalUtil
 import com.stazis.subwaystations.databinding.ActivityStationInfoBinding
+import com.stazis.subwaystations.extensions.parcelable
 import com.stazis.subwaystations.model.entities.Station
 import com.stazis.subwaystations.presentation.presenters.StationInfoPresenter
 import com.stazis.subwaystations.presentation.views.common.BaseMvpActivity
@@ -29,7 +30,9 @@ class StationInfoActivity : BaseMvpActivity<StationInfoPresenter>(), StationInfo
     private val firebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
     @ProvidePresenter
-    fun providePresenter() = presenter.apply { name = intent.getParcelableExtra<Station>(STATION_KEY)!!.name }
+    fun providePresenter() = presenter.apply {
+        name = intent.parcelable<Station>(STATION_KEY)?.name.orEmpty()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -38,20 +41,26 @@ class StationInfoActivity : BaseMvpActivity<StationInfoPresenter>(), StationInfo
         setContentView(binding.root)
         if (savedInstanceState == null) {
             updateUIWithIntentData(
-                intent.getParcelableExtra(CURRENT_LOCATION_KEY)!!,
-                intent.getParcelableExtra(STATION_KEY)!!
+                intent.parcelable(CURRENT_LOCATION_KEY),
+                intent.parcelable(STATION_KEY)
             )
         }
         binding.description.onTextUpdated = this::onDescriptionUpdated
     }
 
-    private fun updateUIWithIntentData(currentLocation: LatLng, station: Station) {
-        val stationLocation = LatLng(station.latitude, station.longitude)
-        val distanceToStation = SphericalUtil.computeDistanceBetween(stationLocation, currentLocation).roundToInt()
-        binding.name.text = station.name
-        binding.latitude.text = String.format("Latitude: %f", station.latitude)
-        binding.longitude.text = String.format("Longitude: %f", station.longitude)
-        binding.distance.text = String.format("Distance to station from your current location is %d meters", distanceToStation)
+    private fun updateUIWithIntentData(currentLocation: LatLng?, station: Station?) {
+        station?.let {
+            val stationLocation = LatLng(it.latitude, it.longitude)
+            val distanceToStation =
+                SphericalUtil.computeDistanceBetween(stationLocation, currentLocation).roundToInt()
+            binding.name.text = it.name
+            binding.latitude.text = String.format("Latitude: %f", it.latitude)
+            binding.longitude.text = String.format("Longitude: %f", it.longitude)
+            binding.distance.text = String.format(
+                "Distance to station from your current location is %d meters",
+                distanceToStation
+            )
+        }
         presenter.getDescription()
     }
 

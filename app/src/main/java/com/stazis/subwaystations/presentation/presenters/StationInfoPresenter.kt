@@ -6,7 +6,6 @@ import com.stazis.subwaystations.domain.interactors.GetStationDescription
 import com.stazis.subwaystations.domain.interactors.UpdateStationDescription
 import com.stazis.subwaystations.presentation.views.info.StationInfoView
 import com.stazis.subwaystations.utils.SchedulerProvider
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @InjectViewState
@@ -21,8 +20,7 @@ class StationInfoPresenter @Inject constructor(
     @SuppressLint("CheckResult")
     fun getDescription() {
         viewState.showLoading()
-        getStationDescription.execute(name)
-            .delay(2000, TimeUnit.MILLISECONDS)
+        getStationDescription(name)
             .subscribeOn(schedulerProvider.ioScheduler())
             .observeOn(schedulerProvider.uiScheduler())
             .subscribe(this::onDescriptionReceived, this::onFailure)
@@ -41,8 +39,7 @@ class StationInfoPresenter @Inject constructor(
     @SuppressLint("CheckResult")
     fun updateStationDescription(description: String) {
         viewState.showLoading()
-        updateStationDescription.execute(name, description)
-            .delay(2000, TimeUnit.MILLISECONDS)
+        updateStationDescription(name, description)
             .subscribeOn(schedulerProvider.ioScheduler())
             .observeOn(schedulerProvider.uiScheduler())
             .subscribe(this::onDescriptionUpdated, this::onFailure)

@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.model.LatLng
 import com.stazis.subwaystations.R
+import com.stazis.subwaystations.extensions.parcelable
+import com.stazis.subwaystations.extensions.parcelableArrayList
 import com.stazis.subwaystations.model.entities.Station
 
 class StationPagerFragment : Fragment() {
@@ -17,18 +20,29 @@ class StationPagerFragment : Fragment() {
         private const val LOCATION_KEY = "LOCATION_KEY"
 
         fun newInstance(stations: List<Station>, location: LatLng) = StationPagerFragment().apply {
-            arguments = Bundle().apply {
-                putParcelableArrayList(STATIONS_KEY, ArrayList(stations))
-                putParcelable(LOCATION_KEY, location)
-            }
+            arguments = bundleOf(
+                STATIONS_KEY to ArrayList(stations),
+                LOCATION_KEY to location
+            )
         }
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-        (inflater.inflate(R.layout.fragment_station_pager, container, false) as StationViewPager).apply {
-            with(requireArguments()) {
-                initialize(childFragmentManager, get(STATIONS_KEY) as List<Station>, get(LOCATION_KEY) as LatLng)
-            }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = (inflater.inflate(
+        R.layout.fragment_station_pager,
+        container,
+        false
+    ) as StationViewPager).apply {
+        with(requireArguments()) {
+            initialize(
+                childFragmentManager,
+                parcelableArrayList(STATIONS_KEY),
+                parcelable(LOCATION_KEY)
+            )
         }
+    }
 }

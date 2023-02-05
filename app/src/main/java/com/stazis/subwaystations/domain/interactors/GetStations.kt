@@ -5,5 +5,5 @@ import javax.inject.Inject
 
 class GetStations @Inject constructor(private val stationRepository: StationRepository) {
 
-    fun execute() = stationRepository.getStations()
+    operator fun invoke() = stationRepository.getStations()
 }

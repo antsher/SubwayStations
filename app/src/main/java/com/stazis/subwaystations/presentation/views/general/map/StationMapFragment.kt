@@ -1,5 +1,6 @@
 package com.stazis.subwaystations.presentation.views.general.map
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.location.Location
 import android.os.Bundle
@@ -69,6 +70,7 @@ class StationMapFragment : BaseMvpFragment<StationsPresenter>(), StationsView {
         MarkerOptions().position(stationLocation).title(it.name).snippet("${distanceToStation}m")
     }
 
+    @SuppressLint("PotentialBehaviorOverride")
     private fun showClickableMarkersOnMap(markers: List<MarkerOptions>) = binding.map.getMapAsync { googleMap ->
         googleMap.setOnInfoWindowClickListener { marker ->
             navigateToStationInfo(stations.find { it.name == marker.title }!!, location)

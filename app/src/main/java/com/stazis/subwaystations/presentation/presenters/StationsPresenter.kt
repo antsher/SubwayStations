@@ -10,7 +10,6 @@ import com.stazis.subwaystations.presentation.views.general.common.StationsView
 import com.stazis.subwaystations.utils.SchedulerProvider
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @InjectViewState
@@ -26,8 +25,7 @@ class StationsPresenter @Inject constructor(
         val zipper = BiFunction<List<Station>, Location, Pair<List<Station>, Location>> { stations, location ->
             stations to location
         }
-        Single.zip(getStations.execute(), getLocation.execute(), zipper)
-            .delay(2000, TimeUnit.MILLISECONDS)
+        Single.zip(getStations(), getLocation(), zipper)
             .subscribeOn(schedulerProvider.ioScheduler())
             .observeOn(schedulerProvider.uiScheduler())
             .subscribe(this::onSuccess, this::onFailure)

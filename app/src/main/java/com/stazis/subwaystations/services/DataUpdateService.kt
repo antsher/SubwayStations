@@ -7,7 +7,6 @@ import com.stazis.subwaystations.domain.interactors.UpdateLocalDatabase
 import com.stazis.subwaystations.utils.SchedulerProvider
 import dagger.android.DaggerIntentService
 import java.util.*
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class DataUpdateService : DaggerIntentService(DataUpdateService::class.simpleName) {
@@ -39,8 +38,7 @@ class DataUpdateService : DaggerIntentService(DataUpdateService::class.simpleNam
     @SuppressLint("CheckResult")
     private fun updateData() {
         Log.i("DataUpdateService", "Updating...")
-        updateLocalDatabase.execute()
-            .delay(2000, TimeUnit.MILLISECONDS)
+        updateLocalDatabase()
             .subscribeOn(schedulerProvider.ioScheduler())
             .observeOn(schedulerProvider.uiScheduler())
             .subscribe(this::onComplete, this::onError)

@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class GetLocation @Inject constructor(private val locationHelper: LocationHelper) {
 
-    fun execute(): Single<Location> = Single.create { emitter ->
+    operator fun invoke(): Single<Location> = Single.create { emitter ->
 //        with(emitter) {
 //            locationHelper.getLocation().addOnCompleteListener {
 //                if (it.isSuccessful) {

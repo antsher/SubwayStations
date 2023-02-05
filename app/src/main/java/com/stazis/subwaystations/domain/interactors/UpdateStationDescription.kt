@@ -5,5 +5,6 @@ import javax.inject.Inject
 
 class UpdateStationDescription @Inject constructor(private val stationRepository: StationRepository) {
 
-    fun execute(name: String, description: String) = stationRepository.updateStationDescription(name, description)
+    operator fun invoke(name: String, description: String) =
+        stationRepository.updateStationDescription(name, description)
 }

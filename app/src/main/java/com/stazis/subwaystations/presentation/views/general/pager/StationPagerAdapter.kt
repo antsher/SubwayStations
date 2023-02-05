@@ -8,8 +8,8 @@ import com.stazis.subwaystations.model.entities.Station
 class StationPagerAdapter(
     fragmentManager: FragmentManager,
     private val stations: List<Station>,
-    private val location: LatLng
-) : FragmentPagerAdapter(fragmentManager) {
+    private val location: LatLng?
+) : FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     override fun getItem(position: Int) = StationInfoFragment.newInstance(stations[position], location)
 

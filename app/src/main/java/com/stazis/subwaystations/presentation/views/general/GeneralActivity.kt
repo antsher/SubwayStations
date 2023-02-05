@@ -9,6 +9,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.stazis.subwaystations.R
 import com.stazis.subwaystations.databinding.ActivityGeneralBinding
+import com.stazis.subwaystations.extensions.serializable
 import com.stazis.subwaystations.helpers.PermissionState
 import com.stazis.subwaystations.helpers.checkPermissionState
 import com.stazis.subwaystations.helpers.requestPermission
@@ -106,7 +107,7 @@ class GeneralActivity : AppCompatActivity() {
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        activeTab = savedInstanceState.getSerializable(ACTIVE_TAB_KEY) as TabName
+        activeTab = savedInstanceState.serializable(ACTIVE_TAB_KEY) ?: TabName.Map
         when (activeTab) {
             TabName.Map -> binding.mapTab.makeActive()
             TabName.List -> binding.listTab.makeActive()
