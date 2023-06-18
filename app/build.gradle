@@ -42,11 +42,6 @@ android {
         }
     }
 
-    compileOptions {
-        targetCompatibility JavaVersion.VERSION_1_8
-        sourceCompatibility JavaVersion.VERSION_1_8
-    }
-
     testOptions {
         unitTests.returnDefaultValues = true
     }
@@ -56,13 +51,13 @@ android {
 
 dependencies {
     // Core
-    implementation 'com.google.android.material:material:1.8.0'
-    implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.fragment:fragment-ktx:1.5.5'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.core:core-ktx:1.10.1'
+    implementation 'androidx.fragment:fragment-ktx:1.6.0'
 
     // Crashlytics
-    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.3.3'
-    implementation 'com.google.firebase:firebase-analytics-ktx:21.2.0'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.3.7'
+    implementation 'com.google.firebase:firebase-analytics-ktx:21.3.0'
 
     // Dagger
     implementation("com.google.dagger:dagger:$dagger_version")
@@ -72,9 +67,9 @@ dependencies {
     kapt("com.google.dagger:dagger-compiler:$dagger_version")
 
     // Firebase
-    implementation 'com.google.firebase:firebase-analytics:21.2.0'
+    implementation 'com.google.firebase:firebase-analytics:21.3.0'
     implementation 'com.google.firebase:firebase-core:21.1.1'
-    implementation 'com.google.firebase:firebase-firestore:24.4.2'
+    implementation 'com.google.firebase:firebase-firestore:24.6.1'
 
     // Gson
     implementation 'com.google.code.gson:gson:2.9.0'
