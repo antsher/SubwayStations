@@ -4,7 +4,7 @@ buildscript {
         kotlin_version = '1.8.20'
         moxy_version = '1.5.5'
         retrofit_version = '2.9.0'
-        room_version = '2.5.1'
+        room_version = '2.5.2'
     }
 
     repositories {
