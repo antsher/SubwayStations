@@ -22,9 +22,9 @@ class GetStationsTest {
     @Test
     fun `getStations IfStationsEmpty ReturnsEmptyList`() {
         `when`(mockStationRepository.getStations())
-            .thenReturn(Single.create<List<Station>> { it.onSuccess(emptyList()) })
+            .thenReturn(Single.create { it.onSuccess(emptyList()) })
 
-        with(getStations.execute().test()) {
+        with(getStations().test()) {
             assertNoErrors()
             assertValue { it.isEmpty() }
         }
@@ -34,9 +34,9 @@ class GetStationsTest {
     fun `getStations IfStationsContainsOne ReturnsOneStation`() {
         Station("Уручча", 53.9453522, 27.687875).let { station ->
             `when`(mockStationRepository.getStations())
-                .thenReturn(Single.create<List<Station>> { it.onSuccess(listOf(station)) })
+                .thenReturn(Single.create { it.onSuccess(listOf(station)) })
 
-            with(getStations.execute().test()) {
+            with(getStations().test()) {
                 assertNoErrors()
                 assertValue { it == listOf(station) }
             }
@@ -52,9 +52,9 @@ class GetStationsTest {
             Station("Уручча4", 53.9453525, 27.687878)
         ).let { stations ->
             `when`(mockStationRepository.getStations())
-                .thenReturn(Single.create<List<Station>> { it.onSuccess(stations) })
+                .thenReturn(Single.create { it.onSuccess(stations) })
 
-            with(getStations.execute().test()) {
+            with(getStations().test()) {
                 assertNoErrors()
                 assertValue { it == stations }
             }

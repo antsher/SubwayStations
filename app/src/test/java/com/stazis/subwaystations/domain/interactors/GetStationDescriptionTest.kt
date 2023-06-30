@@ -24,9 +24,9 @@ class GetStationDescriptionTest {
     fun `getStationDescription IfEmptyString ReturnsEmptyString`() {
         "".let { emptyString ->
             `when`(mockStationRepository.getStationDescription(STATION_NAME))
-                .thenReturn(Single.create<String> { it.onSuccess(emptyString) })
+                .thenReturn(Single.create { it.onSuccess(emptyString) })
 
-            with(getStationDescription.execute(STATION_NAME).test()) {
+            with(getStationDescription(STATION_NAME).test()) {
                 assertNoErrors()
                 assertValue { it == emptyString }
             }
@@ -37,9 +37,9 @@ class GetStationDescriptionTest {
     fun `getStationDescription IfNonEmptyString ReturnsSameString`() {
         "Description".let { nonEmptyString ->
             `when`(mockStationRepository.getStationDescription(STATION_NAME))
-                .thenReturn(Single.create<String> { it.onSuccess(nonEmptyString) })
+                .thenReturn(Single.create { it.onSuccess(nonEmptyString) })
 
-            with(getStationDescription.execute(STATION_NAME).test()) {
+            with(getStationDescription(STATION_NAME).test()) {
                 assertNoErrors()
                 assertValue { it == nonEmptyString }
             }
