@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.widget.RelativeLayout
 import androidx.core.os.bundleOf
 import com.stazis.subwaystations.databinding.ViewEditableTextBinding
+import com.stazis.subwaystations.extensions.parcelable
 import com.stazis.subwaystations.helpers.hideSoftKeyboard
 import com.stazis.subwaystations.helpers.showSoftKeyboard
 
@@ -100,7 +101,7 @@ class EditableTextView @JvmOverloads constructor(context: Context?, attrs: Attri
 
     override fun onRestoreInstanceState(state: Parcelable?) {
         if (state is Bundle) {
-            super.onRestoreInstanceState(state.getParcelable(SUPER_STATE_KEY))
+            super.onRestoreInstanceState(state.parcelable(SUPER_STATE_KEY))
             state.getString(SAVED_TEXT_KEY)?.let { savedText = it }
             if (state.getBoolean(EDIT_MODE_ENABLED_KEY)) {
                 enableEditMode()

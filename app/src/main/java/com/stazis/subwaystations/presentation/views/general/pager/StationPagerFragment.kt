@@ -27,7 +27,6 @@ class StationPagerFragment : Fragment() {
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
