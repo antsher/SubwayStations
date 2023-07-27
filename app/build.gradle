@@ -5,6 +5,7 @@ plugins {
     id 'com.google.firebase.crashlytics'
     id 'com.google.gms.google-services'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.devtools.ksp'
 }
 
 android {
@@ -102,7 +103,7 @@ dependencies {
     // Room
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-rxjava2:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
+    ksp "androidx.room:room-compiler:$room_version"
 
     // RxJava
     implementation 'io.reactivex.rxjava2:rxjava:2.2.19'
