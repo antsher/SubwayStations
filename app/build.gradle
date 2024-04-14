@@ -62,8 +62,8 @@ dependencies {
     implementation 'androidx.fragment:fragment-ktx:1.6.2'
 
     // Crashlytics
-    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.6.2'
-    implementation 'com.google.firebase:firebase-analytics-ktx:21.5.1'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.6.4'
+    implementation 'com.google.firebase:firebase-analytics-ktx:21.6.2'
 
     // Dagger
     implementation("com.google.dagger:dagger:$dagger_version")
@@ -73,9 +73,9 @@ dependencies {
     kapt("com.google.dagger:dagger-compiler:$dagger_version")
 
     // Firebase
-    implementation 'com.google.firebase:firebase-analytics:21.5.1'
+    implementation 'com.google.firebase:firebase-analytics:21.6.2'
     implementation 'com.google.firebase:firebase-core:21.1.1'
-    implementation 'com.google.firebase:firebase-firestore:24.10.3'
+    implementation 'com.google.firebase:firebase-firestore:24.11.1'
 
     // Gson
     implementation 'com.google.code.gson:gson:2.10.1'
